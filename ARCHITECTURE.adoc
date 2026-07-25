@@ -140,7 +140,7 @@ Phase 1 may ship a CSS/markup stub only (select may be non-functional). Wire sco
 
 ==== Upstream lunr-extension (propose, do not fork)
 
-Lunr's UI today is weak for multi-value facets (often a single checkbox-style filter). *Propose upstream* a documented filter API / multi-value facet UI on `@antora/lunr-extension`. Until that lands, this package ships the scope dropdown in *search-chat*, wrapping *existing* lunr store metadata (component / version / etc.) first — compose layer, not a fork of index build.
+Lunr's UI today is weak for multi-value facets (often a single checkbox-style filter). *Propose upstream* a documented filter API / multi-value facet UI on `@antora/lunr-extension` — tracked in https://gitlab.com/antora/antora-lunr-extension/-/work_items/87[antora/antora-lunr-extension#87]. Until that lands, this package ships the scope dropdown in *search-chat*, wrapping *existing* lunr store metadata (component / version / etc.) first — compose layer, not a fork of index build.
 
 ==== Layout coordination
 
