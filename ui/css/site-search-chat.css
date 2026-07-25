@@ -90,7 +90,10 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   position: relative;
 }
 
-/* Compound scope + input: one pill, shared border, inner rule (visual stub). */
+/* Compound scope + input: one pill, shared border, inner rule (visual stub).
+   Must stay overflow:visible — #search-field is this node, and lunr appends
+   .search-result-dropdown-menu as a child (position:absolute; top:100%).
+   overflow:hidden clipped all results. Round/clip chrome on the segments instead. */
 .adt-search-compound {
   display: flex;
   align-items: stretch;
@@ -100,7 +103,7 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, var(--adt-border, #d9dee7));
   border-radius: 0.5rem;
   background: var(--adt-elevated, #fff);
-  overflow: hidden;
+  overflow: visible;
   color: var(--adt-ink, #141820);
 }
 
@@ -123,7 +126,10 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   min-height: 100%;
   box-sizing: border-box;
   border-inline-end: 1px solid color-mix(in srgb, var(--adt-ink, #141820) 18%, transparent);
+  border-start-start-radius: calc(0.5rem - 1px);
+  border-end-start-radius: calc(0.5rem - 1px);
   background-color: var(--adt-elevated, #fff);
+  overflow: hidden;
   cursor: default;
   transition: background-color 0.15s ease;
 }
@@ -214,6 +220,9 @@ html.dark-theme .adt-search-scope:active {
   min-width: 0;
   display: flex;
   align-items: stretch;
+  border-start-end-radius: calc(0.5rem - 1px);
+  border-end-end-radius: calc(0.5rem - 1px);
+  overflow: hidden;
 }
 
 /* Beat theme .adt-nav-search #search-input !important rules. */
