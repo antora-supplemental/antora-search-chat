@@ -135,6 +135,29 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   transition: background-color 0.15s ease;
 }
 
+/* Chevron lives on the slot (::after), not dual CSS-gradient triangles on the
+   select — those two half-squares misaligned into a “tongue” at the tip. */
+.adt-search-scope-slot::after {
+  content: "";
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--adt-ink-muted, #5a6270);
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 6L8 11L12.5 6' stroke='black' stroke-width='1.85' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 6L8 11L12.5 6' stroke='black' stroke-width='1.85' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
 .adt-search-scope {
   position: absolute;
   inset: 0;
@@ -145,6 +168,7 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   border: 0;
   border-radius: 0;
   background-color: transparent;
+  background-image: none;
   color: var(--adt-ink, #141820);
   font: inherit;
   font-size: 0.75rem;
@@ -155,13 +179,6 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   -webkit-appearance: none;
   outline: none;
   box-shadow: none;
-  background-image: linear-gradient(45deg, transparent 50%, var(--adt-ink, #141820) 50%),
-    linear-gradient(135deg, var(--adt-ink, #141820) 50%, transparent 50%);
-  background-position:
-    calc(100% - 0.7rem) 50%,
-    calc(100% - 0.5rem) 50%;
-  background-size: 0.28rem 0.28rem, 0.28rem 0.28rem;
-  background-repeat: no-repeat;
 }
 
 .adt-search-scope option {
@@ -179,12 +196,15 @@ html.dark-theme .adt-search-scope option {
 html.dark-theme .adt-search-scope {
   color: var(--adt-ink, #e8eaed);
   background-color: transparent;
-  background-image: linear-gradient(45deg, transparent 50%, var(--adt-ink, #e8eaed) 50%),
-    linear-gradient(135deg, var(--adt-ink, #e8eaed) 50%, transparent 50%);
+  background-image: none;
 }
 
 html.dark-theme .adt-search-scope-slot {
   border-inline-end-color: color-mix(in srgb, var(--adt-ink, #e8eaed) 18%, transparent);
+}
+
+html.dark-theme .adt-search-scope-slot::after {
+  color: var(--adt-ink-muted, #9aa3b2);
 }
 
 /* Soft fill on the whole left segment (not the native select content box). */
@@ -210,8 +230,7 @@ html.dark-theme .adt-search-scope:focus,
 html.dark-theme .adt-search-scope:focus-visible,
 html.dark-theme .adt-search-scope:active {
   background-color: transparent;
-  background-image: linear-gradient(45deg, transparent 50%, var(--adt-ink, #e8eaed) 50%),
-    linear-gradient(135deg, var(--adt-ink, #e8eaed) 50%, transparent 50%);
+  background-image: none;
 }
 
 /* Input + fake placeholder share one flex cell of the compound pill.
