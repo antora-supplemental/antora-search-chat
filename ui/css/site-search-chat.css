@@ -91,9 +91,10 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
 }
 
 /* Compound scope + input: one pill, shared border, inner rule (visual stub).
-   Must stay overflow:visible — #search-field is this node, and lunr appends
-   .search-result-dropdown-menu as a child (position:absolute; top:100%).
-   overflow:hidden clipped all results. Round/clip chrome on the segments instead. */
+   Must stay overflow:visible — lunr's search-ui.js does
+   searchInput.parentNode.appendChild(.search-result-dropdown-menu), and with
+   compound markup that parent is .adt-search-input-wrap (not #search-field).
+   Absolute results (top:100%) must not be clipped by compound or the wrap. */
 .adt-search-compound {
   display: flex;
   align-items: stretch;
@@ -213,7 +214,9 @@ html.dark-theme .adt-search-scope:active {
     linear-gradient(135deg, var(--adt-ink, #e8eaed) 50%, transparent 50%);
 }
 
-/* Input + fake placeholder share one flex cell of the compound pill. */
+/* Input + fake placeholder share one flex cell of the compound pill.
+   overflow must stay visible: lunr mounts .search-result-dropdown-menu here
+   (#search-input's parentNode). Clip only the scope slot, not this wrap. */
 .adt-search-input-wrap {
   position: relative;
   flex: 1 1 auto;
@@ -222,7 +225,7 @@ html.dark-theme .adt-search-scope:active {
   align-items: stretch;
   border-start-end-radius: calc(0.5rem - 1px);
   border-end-end-radius: calc(0.5rem - 1px);
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Beat theme .adt-nav-search #search-input !important rules. */

@@ -146,7 +146,7 @@ Lunr's UI today is weak for multi-value facets (often a single checkbox-style fi
 
 The omnibox (compound scope + field + results) lives in `.adt-site-navbar` (`.adt-navbar-search`) as a site-wide command palette. Its width is independent of `--adt-doc-max` and the nav column. Page read-width stays in `.adt-tool-band` centered over the doc column. Prior “search over nav / resize over doc” in the tool band inverted that model for a command-palette search — corrected in 2.0.1. Search-chat owns the control; layout owns the unclipped navbar slot.
 
-*Do not* set `overflow: hidden` on `#search-field` / `.adt-search-compound`. Lunr appends `.search-result-dropdown-menu` as an absolutely positioned child (`top: 100%`); clipping the compound hides all results. Round the pill via radii/`overflow` on `.adt-search-scope-slot` and `.adt-search-input-wrap` instead.
+*Do not* set `overflow: hidden` on `#search-field` / `.adt-search-compound` *or* `.adt-search-input-wrap`. Lunr's `search-ui.js` mounts `.search-result-dropdown-menu` on `#search-input.parentNode` (`position:absolute; top:100%`). With compound markup that parent is `.adt-search-input-wrap`, not `#search-field` — so clipping the wrap (a common "move overflow off the compound" mistake) still hides all results. Keep both compound and input-wrap `overflow: visible`; clip only `.adt-search-scope-slot` for the left segment chrome.
 
 === No speculative AI on keystrokes
 
