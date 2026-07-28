@@ -47,6 +47,110 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   background: var(--adt-elevated, var(--color-background, #1a1a1a));
 }
 
+/* ——— Collapse-to-icon (narrow / collision) ——— */
+.adt-search-chat__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2.15rem;
+  height: 2.15rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, var(--adt-border, #d9dee7));
+  border-radius: 0.5rem;
+  background: var(--adt-elevated, #fff);
+  color: var(--adt-ink, #141820);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.adt-search-chat__toggle:hover,
+.adt-search-chat__toggle:focus-visible {
+  border-color: var(--adt-accent, #0d9488);
+  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #0d9488) 12%, var(--adt-elevated, #fff)));
+  outline: none;
+}
+
+.adt-search-chat__toggle:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--adt-accent, #0d9488) 35%, transparent);
+}
+
+.adt-search-chat__toggle-icon {
+  display: block;
+}
+
+html.dark-theme .adt-search-chat__toggle {
+  background: var(--adt-elevated, #1a1a1a);
+  color: var(--adt-ink, #e8eaed);
+  border-color: color-mix(in srgb, var(--adt-accent, #2dd4bf) 28%, var(--adt-border, #3a4454));
+}
+
+html.dark-theme .adt-search-chat__toggle:hover,
+html.dark-theme .adt-search-chat__toggle:focus-visible {
+  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #2dd4bf) 16%, var(--adt-elevated, #1a1a1a)));
+}
+
+/* Expanded (default): popover is the in-flow omnibox; toggle stays hidden. */
+.adt-search-chat__popover {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Collapsed to icon: only the toggle shows until opened. */
+.adt-search-chat.is-collapsed {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto;
+  min-width: 0;
+}
+
+.adt-search-chat.is-collapsed .adt-search-chat__toggle {
+  display: inline-flex;
+}
+
+.adt-search-chat.is-collapsed .adt-search-chat__popover {
+  display: none;
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 0.4rem);
+  inset-inline-end: 0;
+  width: min(36rem, calc(100vw - 1.5rem));
+  min-width: min(18rem, calc(100vw - 1.5rem));
+  padding: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, var(--adt-border, #d9dee7));
+  border-radius: 0.65rem;
+  background: var(--adt-elevated, var(--color-background, #fff));
+  box-shadow: 0 0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
+  box-sizing: border-box;
+}
+
+.adt-search-chat.is-collapsed.is-open .adt-search-chat__popover {
+  display: block;
+}
+
+.adt-search-chat.is-collapsed.is-open .adt-search-chat__toggle {
+  border-color: var(--adt-accent, #0d9488);
+  color: var(--adt-accent, #0d9488);
+}
+
+html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
+  background: var(--adt-elevated, var(--color-background, #1a1a1a));
+  border-color: color-mix(in srgb, var(--adt-accent, #2dd4bf) 28%, var(--adt-border, #3a4454));
+}
+
+/* In collapsed open mode, Ask panel is in-flow inside the popover (not a second absolute layer). */
+.adt-search-chat.is-collapsed .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
+  position: static;
+  inset: auto;
+  top: auto;
+  margin-top: 0.5rem;
+  box-shadow: none;
+}
+
 .adt-search-chat__tabs {
   display: flex;
   gap: 0.25rem;
@@ -94,7 +198,8 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
    Must stay overflow:visible — lunr's search-ui.js does
    searchInput.parentNode.appendChild(.search-result-dropdown-menu), and with
    compound markup that parent is .adt-search-input-wrap (not #search-field).
-   Absolute results (top:100%) must not be clipped by compound or the wrap. */
+   Absolute results (top:100%) must not be clipped by compound or the wrap.
+   container-type: inline-size → 100cqi = full pill width for results alignment. */
 .adt-search-compound {
   display: flex;
   align-items: stretch;
@@ -106,6 +211,8 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   background: var(--adt-elevated, #fff);
   overflow: visible;
   color: var(--adt-ink, #141820);
+  container-type: inline-size;
+  container-name: adt-search-compound;
 }
 
 /* Accent border whenever something inside is focused; glow only while typing. */
@@ -123,7 +230,7 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   flex: 0 0 auto;
   align-self: stretch;
   min-width: 9.5rem;
-  max-width: 12rem;
+  max-width: 14rem;
   min-height: 100%;
   box-sizing: border-box;
   border-inline-end: 1px solid color-mix(in srgb, var(--adt-ink, #141820) 18%, transparent);
@@ -135,6 +242,43 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   transition: background-color 0.15s ease;
 }
 
+/* Dual-tone closed face (primary kind + muted current name/version).
+   Select sits on top with transparent text so the menu still works. */
+.adt-search-scope-face {
+  position: absolute;
+  inset: 0 1.65rem 0 0.65rem;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  pointer-events: none;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.adt-search-scope-kind {
+  flex: 0 0 auto;
+  color: var(--adt-ink, #141820);
+}
+
+.adt-search-scope-current {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--adt-ink-muted, #5a6270);
+  font-weight: 400;
+}
+
+.adt-search-scope-current:empty {
+  display: none;
+}
+
 /* Chevron lives on the slot (::after), not dual CSS-gradient triangles on the
    select — those two half-squares misaligned into a “tongue” at the tip. */
 .adt-search-scope-slot::after {
@@ -142,6 +286,7 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   position: absolute;
   right: 0.45rem;
   top: 50%;
+  z-index: 2;
   width: 0.55rem;
   height: 0.55rem;
   transform: translateY(-50%);
@@ -161,6 +306,7 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
 .adt-search-scope {
   position: absolute;
   inset: 0;
+  z-index: 1;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -169,7 +315,8 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   border-radius: 0;
   background-color: transparent;
   background-image: none;
-  color: var(--adt-ink, #141820);
+  /* Transparent closed text — face paints the dual-tone label. Options keep opaque ink. */
+  color: transparent;
   font: inherit;
   font-size: 0.75rem;
   font-weight: 500;
@@ -194,9 +341,17 @@ html.dark-theme .adt-search-scope option {
 }
 
 html.dark-theme .adt-search-scope {
-  color: var(--adt-ink, #e8eaed);
+  color: transparent;
   background-color: transparent;
   background-image: none;
+}
+
+html.dark-theme .adt-search-scope-kind {
+  color: var(--adt-ink, #e8eaed);
+}
+
+html.dark-theme .adt-search-scope-current {
+  color: var(--adt-ink-muted, #9aa3b2);
 }
 
 html.dark-theme .adt-search-scope-slot {
@@ -247,13 +402,31 @@ html.dark-theme .adt-search-scope:active {
   overflow: visible;
 }
 
-/* Beat theme .adt-nav-search #search-input !important rules. */
+/* Lunr positions the menu against this wrap (not the full compound). A plain
+   left:0 / width:100% (or lunr right:0 + min-width) leaves a large left inset
+   under the scope and a tight/flush right edge. Anchor right:0 and set width to
+   100cqi so the panel spans the whole pill — equal edges vs the search compound.
+   Keep overflow:visible on wrap/compound so the leftward span is not clipped. */
+.adt-search-compound .search-result-dropdown-menu,
+.adt-search-input-wrap > .search-result-dropdown-menu {
+  left: auto;
+  right: 0;
+  width: 100cqi;
+  min-width: 100cqi;
+  max-width: 100cqi;
+  box-sizing: border-box;
+  z-index: 40;
+}
+
+/* Beat theme .adt-nav-search #search-input !important rules.
+   Clip typed text on the input itself (not the wrap that hosts lunr results). */
 .adt-search-compound #search-input {
   position: relative;
   z-index: 1;
   flex: 1 1 auto;
   width: 100%;
   min-width: 0;
+  max-width: 100%;
   height: auto !important;
   margin: 0;
   padding: 0.35rem 1.75rem 0.35rem 0.65rem !important;
@@ -261,11 +434,15 @@ html.dark-theme .adt-search-scope:active {
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+  box-sizing: border-box !important;
   color: var(--adt-ink, #141820) !important;
   font: inherit;
   font-size: 0.875rem;
   -webkit-user-select: text;
   user-select: text;
+  overflow: hidden !important;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 .adt-search-compound #search-input:hover,
@@ -288,12 +465,16 @@ html.dark-theme .adt-search-scope:active {
 .adt-search-ph {
   position: absolute;
   inset-inline-start: 0.65rem;
+  inset-inline-end: 1.75rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 0;
   margin: 0;
   padding: 0;
   border: 0;
+  max-width: calc(100% - 2.4rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
   pointer-events: none;
   color: color-mix(in srgb, var(--adt-ink, currentColor) 48%, transparent);
   font: inherit;

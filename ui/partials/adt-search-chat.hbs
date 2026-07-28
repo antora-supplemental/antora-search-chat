@@ -1,108 +1,147 @@
-{{!-- Valentus search/chat slot — owns .adt-nav-search above the nav tree.
-     Keeps #search-input for @antora/lunr-extension.
+{{!-- Search/Ask omnibox — owns .adt-nav-search in the site navbar.
      Product target: one omnibox ("Search or Ask") + conjoined scope on the left edge
-     [ Scope ▾ | Search or Ask ]; / and ? set mode on the same field.
+     [ Component {name} ▾ | Search or Ask ]; / and ? set mode on the same field.
+     Dual-tone closed scope face (kind + muted current name); native <select> for the menu.
      Fake placeholder overlay (Ask off: "Search" + muted "(AI mode not configured)"; Ask on: "Search or Ask").
-     Rejected: multiple boxes contextualized only by placement.
-     Phase 1: compound markup/CSS stub (scope not wired to lunr yet); tabbed Ask is transitional.
+     Narrow/collision: collapses to a search icon; popover holds the full compound + results.
      See ARCHITECTURE.adoc. --}}
 {{!-- Lives in .adt-site-navbar center (see header-content.hbs). Width is independent of doc/nav measure. --}}
-<div class="search adt-nav-search adt-search-chat" data-adt-search-chat data-ask-enabled="false">
-  {{!-- Transitional tabs: visually hidden in navbar CSS; / and ? still switch modes. --}}
-  <div class="adt-search-chat__tabs" role="tablist" aria-label="Search">
-    <button
-      type="button"
-      class="adt-search-chat__tab is-active"
-      role="tab"
-      id="adt-search-tab-search"
-      aria-selected="true"
-      aria-controls="adt-search-panel-search"
-      data-adt-search-tab="search"
-    >
-      <span class="adt-search-chat__tab-label">Search</span>
-      <kbd class="adt-search-chat__hint" title="Focus search">/</kbd>
-    </button>
-    <button
-      type="button"
-      class="adt-search-chat__tab"
-      role="tab"
-      id="adt-search-tab-ask"
-      aria-selected="false"
-      aria-controls="adt-search-panel-ask"
-      data-adt-search-tab="ask"
-    >
-      <span class="adt-search-chat__tab-label">Ask</span>
-      <kbd class="adt-search-chat__hint" title="Focus ask">?</kbd>
-    </button>
-  </div>
-
-  <div
-    class="adt-search-chat__panel is-active"
-    role="tabpanel"
-    id="adt-search-panel-search"
-    aria-labelledby="adt-search-tab-search"
-    data-adt-search-panel="search"
-  >
-    <div id="search-field" class="adt-search-chat__field adt-search-compound">
-      <div class="adt-search-scope-slot">
-        <label class="visually-hidden" for="adt-search-scope">Search scope</label>
-        <select
-          id="adt-search-scope"
-          class="adt-search-scope"
-          data-adt-search-scope
-          aria-label="Search scope"
-        >
-          <option value="component" selected>This component</option>
-          <option value="all">All docs</option>
-          <option value="version">This version</option>
-        </select>
-      </div>
-      <div class="adt-search-input-wrap">
-        {{!-- Fake placeholder: Ask on → "Search or Ask"; Ask off → "Search" + muted "(AI mode not configured)". --}}
-        <span class="adt-search-ph" aria-hidden="true" data-adt-search-ph data-ask-off>
-          <span class="adt-search-ph-main">Search</span><span class="adt-search-ph-note"> (AI mode not configured)</span>
-        </span>
-        <input
-          id="search-input"
-          type="text"
-          placeholder=""
-          autocomplete="off"
-          aria-label="Search (AI mode not configured)"
-          data-adt-search-input
-        >
-      </div>
-      <kbd class="adt-search-chat__field-hint" aria-hidden="true">/</kbd>
-    </div>
-  </div>
-
-  <div
-    class="adt-search-chat__panel"
-    role="tabpanel"
-    id="adt-search-panel-ask"
-    aria-labelledby="adt-search-tab-ask"
-    data-adt-search-panel="ask"
+<div
+  class="search adt-nav-search adt-search-chat"
+  data-adt-search-chat
+  data-ask-enabled="false"
+  {{#with page.component}}
+  data-component-name="{{./name}}"
+  data-component-title="{{./title}}"
+  {{/with}}
+  {{#if page.version}}
+  data-version="{{page.version}}"
+  {{/if}}
+  {{#with page.componentVersion}}
+  data-version-display="{{#if ./displayVersion}}{{./displayVersion}}{{else}}{{@root.page.version}}{{/if}}"
+  {{/with}}
+>
+  <button
+    type="button"
+    class="adt-search-chat__toggle"
+    data-adt-search-toggle
+    aria-expanded="false"
+    aria-controls="adt-search-popover"
+    aria-label="Open search"
     hidden
   >
-    <form class="adt-search-chat__ask-form" data-adt-search-ask-form>
-      <label class="adt-search-chat__ask-label visually-hidden" for="adt-ask-input">Ask</label>
-      <div class="adt-search-chat__field adt-search-chat__field--ask">
-        <textarea
-          id="adt-ask-input"
-          class="adt-search-chat__ask-input"
-          rows="2"
-          placeholder="Ask about this site…"
-          data-adt-ask-input
-          aria-label="Ask a question about this site"
-        ></textarea>
-        <kbd class="adt-search-chat__field-hint" aria-hidden="true">?</kbd>
-      </div>
-      <button type="submit" class="adt-search-chat__ask-submit">Ask</button>
-    </form>
+    <svg class="adt-search-chat__toggle-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <div
+    class="adt-search-chat__popover"
+    id="adt-search-popover"
+    data-adt-search-popover
+  >
+    {{!-- Transitional tabs: visually hidden in navbar CSS; / and ? still switch modes. --}}
+    <div class="adt-search-chat__tabs" role="tablist" aria-label="Search">
+      <button
+        type="button"
+        class="adt-search-chat__tab is-active"
+        role="tab"
+        id="adt-search-tab-search"
+        aria-selected="true"
+        aria-controls="adt-search-panel-search"
+        data-adt-search-tab="search"
+      >
+        <span class="adt-search-chat__tab-label">Search</span>
+        <kbd class="adt-search-chat__hint" title="Focus search">/</kbd>
+      </button>
+      <button
+        type="button"
+        class="adt-search-chat__tab"
+        role="tab"
+        id="adt-search-tab-ask"
+        aria-selected="false"
+        aria-controls="adt-search-panel-ask"
+        data-adt-search-tab="ask"
+      >
+        <span class="adt-search-chat__tab-label">Ask</span>
+        <kbd class="adt-search-chat__hint" title="Focus ask">?</kbd>
+      </button>
+    </div>
+
     <div
-      class="adt-search-chat__ask-result"
-      data-adt-ask-result
+      class="adt-search-chat__panel is-active"
+      role="tabpanel"
+      id="adt-search-panel-search"
+      aria-labelledby="adt-search-tab-search"
+      data-adt-search-panel="search"
+    >
+      <div id="search-field" class="adt-search-chat__field adt-search-compound">
+        <div class="adt-search-scope-slot">
+          <label class="visually-hidden" for="adt-search-scope">Search scope</label>
+          {{!-- Dual-tone closed face (native <select> cannot style option text in two tones). --}}
+          <span class="adt-search-scope-face" aria-hidden="true" data-adt-search-scope-face>
+            <span class="adt-search-scope-kind" data-adt-search-scope-kind>Component</span>
+            <span class="adt-search-scope-current" data-adt-search-scope-current></span>
+          </span>
+          <select
+            id="adt-search-scope"
+            class="adt-search-scope"
+            data-adt-search-scope
+            aria-label="Search scope"
+          >
+            <option value="component" selected>This component</option>
+            <option value="all">All docs</option>
+            <option value="version">This version</option>
+          </select>
+        </div>
+        <div class="adt-search-input-wrap">
+          {{!-- Fake placeholder: Ask on → "Search or Ask"; Ask off → "Search" + muted "(AI mode not configured)". --}}
+          <span class="adt-search-ph" aria-hidden="true" data-adt-search-ph data-ask-off>
+            <span class="adt-search-ph-main">Search</span><span class="adt-search-ph-note"> (AI mode not configured)</span>
+          </span>
+          <input
+            id="search-input"
+            type="text"
+            placeholder=""
+            autocomplete="off"
+            aria-label="Search (AI mode not configured)"
+            data-adt-search-input
+          >
+        </div>
+        <kbd class="adt-search-chat__field-hint" aria-hidden="true">/</kbd>
+      </div>
+    </div>
+
+    <div
+      class="adt-search-chat__panel"
+      role="tabpanel"
+      id="adt-search-panel-ask"
+      aria-labelledby="adt-search-tab-ask"
+      data-adt-search-panel="ask"
       hidden
-      aria-live="polite"
-    ></div>
+    >
+      <form class="adt-search-chat__ask-form" data-adt-search-ask-form>
+        <label class="adt-search-chat__ask-label visually-hidden" for="adt-ask-input">Ask</label>
+        <div class="adt-search-chat__field adt-search-chat__field--ask">
+          <textarea
+            id="adt-ask-input"
+            class="adt-search-chat__ask-input"
+            rows="2"
+            placeholder="Ask about this site…"
+            data-adt-ask-input
+            aria-label="Ask a question about this site"
+          ></textarea>
+          <kbd class="adt-search-chat__field-hint" aria-hidden="true">?</kbd>
+        </div>
+        <button type="submit" class="adt-search-chat__ask-submit">Ask</button>
+      </form>
+      <div
+        class="adt-search-chat__ask-result"
+        data-adt-ask-result
+        hidden
+        aria-live="polite"
+      ></div>
+    </div>
   </div>
 </div>

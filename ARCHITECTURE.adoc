@@ -112,17 +112,18 @@ Target shape::
 
 ----
 ┌──────────────────────────────────────────────┐
-│ Scope ▾ │ Search or Ask                    / │
+│ Component  Valentus Theme ▾ │ Search or Ask / │
 └──────────────────────────────────────────────┘
-  ^left     ^subtle vertical rule    ^input+hint
-  rounding  (inner divider only)     right rounding
+  ^kind (ink) ^current (muted)  ^input+hint
 ----
+
+Closed control uses a dual-tone *face* (`.adt-search-scope-face`): primary kind label (*Component* / *Version* / *All docs*) plus muted current name/version from Antora page context (`data-component-title`, `data-version-display` on `[data-adt-search-chat]`). Native `<select>` text is transparent when closed (options stay opaque) so the menu can still say *This component — {title}*.
 
 [source,mermaid]
 ----
 flowchart LR
   subgraph compound["`.adt-search-compound` — one pill / shared border"]
-    scope["`.adt-search-scope-slot`\nScope ▾"]
+    scope["`.adt-search-scope-slot`\nface + select ▾"]
     rule["inner |"]
     input["`#search-input`\nSearch or Ask"]
   end
@@ -134,9 +135,9 @@ Rules:
 * Dropdown flush against the input (shared outer border, *no gap*).
 * Rounded left corners on the scope (outer left of the compound); input takes the right side with matching right rounding.
 * Divide with a subtle *inner* vertical rule — not separate floating controls or a gap between boxes.
-* Class hooks: `.adt-search-compound` wraps `.adt-search-scope-slot` (full-height fill + `.adt-search-scope`) + `.adt-search-input-wrap` (`#search-input` + `.adt-search-ph` overlay).
+* Class hooks: `.adt-search-compound` wraps `.adt-search-scope-slot` (face + full-height `.adt-search-scope`) + `.adt-search-input-wrap` (`#search-input` + `.adt-search-ph` overlay).
 
-Phase 1 may ship a CSS/markup stub only (select may be non-functional). Wire scope → lunr filters in a later pass.
+Scope → lunr filters is still a later pass; labels/default selection are wired from page context now.
 
 ==== Upstream lunr-extension (propose, do not fork)
 
@@ -146,7 +147,11 @@ Lunr's UI today is weak for multi-value facets (often a single checkbox-style fi
 
 The omnibox (compound scope + field + results) lives in `.adt-site-navbar` (`.adt-navbar-search`) as a site-wide command palette. Its width is independent of `--adt-doc-max` and the nav column. Page read-width stays in `.adt-tool-band` centered over the doc column. Prior “search over nav / resize over doc” in the tool band inverted that model for a command-palette search — corrected in 2.0.1. Search-chat owns the control; layout owns the unclipped navbar slot.
 
-*Do not* set `overflow: hidden` on `#search-field` / `.adt-search-compound` *or* `.adt-search-input-wrap`. Lunr's `search-ui.js` mounts `.search-result-dropdown-menu` on `#search-input.parentNode` (`position:absolute; top:100%`). With compound markup that parent is `.adt-search-input-wrap`, not `#search-field` — so clipping the wrap (a common "move overflow off the compound" mistake) still hides all results. Keep both compound and input-wrap `overflow: visible`; clip only `.adt-search-scope-slot` for the left segment chrome.
+*Collapse-to-icon*:: When leftover middle space is too narrow (high zoom / mobile), `site-search-chat.js` adds `.is-collapsed` and shows a search icon toggle. Opening it drops `.adt-search-chat__popover` under the icon with the full compound (scope + input + Ask) and lunr results. `/` and `?` open the popover. Themes should keep `.adt-navbar-search` in normal flow (not absolute-centered with a large `min-width`) so brand/title and search never paint on top of each other.
+
+*Do not* set `overflow: hidden` on `#search-field` / `.adt-search-compound` *or* `.adt-search-input-wrap`. Lunr's `search-ui.js` mounts `.search-result-dropdown-menu` on `#search-input.parentNode` (`position:absolute; top:100%`). With compound markup that parent is `.adt-search-input-wrap`, not `#search-field` — so clipping the wrap (a common "move overflow off the compound" mistake) still hides all results. Keep both compound and input-wrap `overflow: visible`; clip typed text on `#search-input` itself (`overflow: hidden`); clip only `.adt-search-scope-slot` for the left segment chrome.
+
+*Horizontal alignment*:: Do not force `left: 0` on the menu under the compound. That aligns only to the input cell (large empty band under the scope, tight right). This package sets `right: 0` + `width: 100cqi` against a `container-type: inline-size` compound so both edges match the full pill.
 
 === No speculative AI on keystrokes
 

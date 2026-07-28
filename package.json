@@ -1,6 +1,6 @@
 {
   "name": "@antora-supplemental/antora-search-chat",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Antora extension: wraps @antora/lunr-extension with a Search/Ask omnibox (lunr-first; optional local tier-0 + remote backend). Does not fork lunr.",
   "main": "lib/index.js",
   "license": "MIT",

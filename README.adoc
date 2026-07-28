@@ -58,9 +58,10 @@ Optional site key:: `site.keys.askEnabled` — theme mirror if you wire a plain 
 == Product shape (target)
 
 * *One omnibox* — `/` and `?` set Search vs Ask mode on the **same** field (not two widgets).
-* *Scope control* — dropdown *built into* the left edge of the field (*All docs* / *This component* / optional *This version*). Not multiple boxes by placement.
-* *Compound UI* — one pill: `[ Scope ▾ | Search or Ask ]` (`.adt-search-compound` + `.adt-search-scope-slot` / `.adt-search-scope`); shared border, inner vertical rule, full-height scope hit target.
-* *Default scope* — *Current component* on docs pages when detectable; *All* on home / when ambiguous (with a component list). See ARCHITECTURE.
+* *Scope control* — dropdown *built into* the left edge of the field (*All docs* / *This component* / optional *This version*). Closed face shows dual-tone *Component* + muted current title (from Antora page context); menu options say *This component — {name}*.
+* *Compound UI* — one pill: `[ Component {name} ▾ | Search or Ask ]` (`.adt-search-compound` + `.adt-search-scope-slot` / face + `.adt-search-scope`); shared border, inner vertical rule, full-height scope hit target.
+* *Default scope* — *Current component* on docs pages when detectable; *All* on home / when ambiguous. See ARCHITECTURE.
+* *Collapse* — on narrow / collision, omnibox collapses to a search icon; popover holds scope + input + Ask + lunr results.
 * *Lunr-first* — keyword results while typing in Search mode; Ask only on explicit mode / submit. Optional debounced question-detection may come later; it is not the default.
 * *Tier-0 local assist* (optional) — ultra-light on-device model for query rewrite / short answers over retrieved chunks; remote `backend_url` is an optional upgrade. Never put API keys in the playbook.
 * *Upstream* — propose multi-value facet / filter API on lunr-extension; this package wraps store metadata first.
