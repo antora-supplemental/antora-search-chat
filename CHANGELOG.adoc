@@ -1,0 +1,16 @@
+= Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on https://keepachangelog.com/en/1.1.0/[Keep a Changelog],
+and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
+
+== [Unreleased]
+
+== [0.1.3] - 2026-08-01
+
+* *Fix:* Theme toggle light↔dark — opaque omnibox chrome (`.adt-search-compound`, scope slot, collapse toggle / popover, Ask panel) now transitions `background-color` / `color` / `border-color` with the page instead of snapping. Adds `--adt-search-theme-transition` aligned with Valentus `--adt-transition`.
+
+== [0.1.2] - 2026-07-25
+
+* Search dropdown edges, scope dual-tone labels, collapse-to-icon, scope caret mask, and related omnibox polish (see Valentus theme changelog for integration notes).

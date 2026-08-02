@@ -1,4 +1,10 @@
 /* Search / Ask control — owns the centered navbar search slot (.adt-navbar-search). */
+:root {
+  /* Match Valentus --adt-transition so light↔dark does not snap the omnibox chrome. */
+  --adt-search-theme-transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.25s ease;
+}
+
 .adt-search-chat {
   display: flex;
   flex-direction: column;
@@ -40,6 +46,7 @@
   border-radius: 0.5rem;
   background: var(--adt-elevated, var(--color-background, #fff));
   box-shadow: 0 0.35rem 1rem color-mix(in srgb, currentColor 12%, transparent);
+  transition: var(--adt-search-theme-transition);
 }
 
 html.dark-theme .adt-site-navbar .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]),
@@ -63,6 +70,7 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
   color: var(--adt-ink, #141820);
   cursor: pointer;
   box-sizing: border-box;
+  transition: var(--adt-search-theme-transition);
 }
 
 .adt-search-chat__toggle:hover,
@@ -126,6 +134,7 @@ html.dark-theme .adt-search-chat__toggle:focus-visible {
   background: var(--adt-elevated, var(--color-background, #fff));
   box-shadow: 0 0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
   box-sizing: border-box;
+  transition: var(--adt-search-theme-transition);
 }
 
 .adt-search-chat.is-collapsed.is-open .adt-search-chat__popover {
@@ -213,6 +222,8 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   color: var(--adt-ink, #141820);
   container-type: inline-size;
   container-name: adt-search-compound;
+  /* Opaque pill sits on the navbar — must transition with theme or it snaps. */
+  transition: var(--adt-search-theme-transition);
 }
 
 /* Accent border whenever something inside is focused; glow only while typing. */
@@ -239,7 +250,7 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   background-color: var(--adt-elevated, #fff);
   overflow: hidden;
   cursor: default;
-  transition: background-color 0.15s ease;
+  transition: var(--adt-search-theme-transition);
 }
 
 /* Dual-tone closed face (primary kind + muted current name/version).
@@ -443,6 +454,7 @@ html.dark-theme .adt-search-scope:active {
   overflow: hidden !important;
   text-overflow: clip;
   white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .adt-search-compound #search-input:hover,

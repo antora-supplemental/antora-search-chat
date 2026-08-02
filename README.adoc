@@ -79,6 +79,7 @@ Phase 1 stub may still show separate Search/Ask panels; compound scope markup/CS
 == Docs
 
 * link:ARCHITECTURE.adoc[ARCHITECTURE.adoc] — wrap vs fork, omnibox + compound scope, fake placeholder / `ask_enabled`, tiers, data flow, shortcuts, config keys, privacy, phases, RAG notes
+* link:CHANGELOG.adoc[Changelog]
 
 == License
 
