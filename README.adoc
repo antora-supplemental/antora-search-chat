@@ -1,5 +1,33 @@
+ifndef::env-github[:icons: font]
+:toc: preamble
+:toclevels: 2
+:sectanchors:
+endif::[]
+
+ifndef::env-github[]
+image:https://img.shields.io/github/contributors/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Contributors,link=https://github.com/antora-supplemental/antora-search-chat/graphs/contributors]
+image:https://img.shields.io/github/forks/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Forks,link=https://github.com/antora-supplemental/antora-search-chat/network/members]
+image:https://img.shields.io/github/stars/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Stars,link=https://github.com/antora-supplemental/antora-search-chat/stargazers]
+image:https://img.shields.io/github/issues/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Issues,link=https://github.com/antora-supplemental/antora-search-chat/issues]
+image:https://img.shields.io/github/license/antora-supplemental/antora-search-chat.svg?style=for-the-badge[License,link=https://github.com/antora-supplemental/antora-search-chat/blob/main/LICENSE]
+endif::[]
+
+ifdef::env-github[]
+image:https://img.shields.io/github/contributors/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Contributors]
+image:https://img.shields.io/github/forks/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Forks]
+image:https://img.shields.io/github/stars/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Stars]
+image:https://img.shields.io/github/issues/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Issues]
+image:https://img.shields.io/github/license/antora-supplemental/antora-search-chat.svg?style=for-the-badge[License]
+endif::[]
+
 = antora-search-chat
-:toc:
+
+Antora extension: lunr-first Search/Ask omnibox (wraps @antora/lunr-extension; optional Ask backends).
+
+link:https://github.com/antora-supplemental/antora-search-chat/issues[Report Bug] ·
+link:https://github.com/antora-supplemental/antora-search-chat/issues[Request Feature]
+
+== About The Project
 
 Antora extension that **wraps** https://gitlab.com/antora/antora-lunr-extension[`@antora/lunr-extension`] with a Search / Ask omnibox — not a fork of lunr.
 
@@ -7,16 +35,16 @@ Status:: Phase 1 scaffold (stub UI + pluggable backend config). Product target i
 
 Package:: `@antora-supplemental/antora-search-chat` (not yet published to npm — install from git).
 
-== Quick start
-
-. Install (pnpm example):
+== Installation
 
 [source,shell]
 ----
 pnpm add -D github:antora-supplemental/antora-search-chat
 ----
 
-. Register **after** lunr in the playbook:
+== Usage
+
+Register **after** lunr in the playbook:
 
 [source,yaml]
 ----
@@ -34,7 +62,7 @@ antora:
       # local_assist: false
 ----
 
-== Theme integration contract
+=== Theme integration contract
 
 The extension injects CSS/JS/partials into the UI catalog and sets `SITE_SEARCH_CHAT` so a theme can prefer `{{> adt-search-chat}}` over a plain lunr field.
 
@@ -47,7 +75,7 @@ Reference integration: https://github.com/antora-supplemental/valentus-theme[Val
 
 Related (different product):: https://github.com/antora-supplemental/antora-ai-help-extension[antora-ai-help-extension] — in-page AI prompts, vector search, Q&A cache. This package is the lunr-first Search/Ask omnibox only.
 
-== Placeholder UX
+=== Placeholder UX
 
 * Ask **on** (`ask_enabled: true`, or `backend_url` / `local_assist` set) — *Search or Ask*.
 * Ask **off** — *Search* plus a deader *(AI mode not configured)*.
@@ -55,7 +83,7 @@ Related (different product):: https://github.com/antora-supplemental/antora-ai-h
 
 Optional site key:: `site.keys.askEnabled` — theme mirror if you wire a plain `#search-input` yourself. See ARCHITECTURE.
 
-== Product shape (target)
+=== Product shape (target)
 
 * *One omnibox* — `/` and `?` set Search vs Ask mode on the **same** field (not two widgets).
 * *Scope control* — dropdown *built into* the left edge of the field (*All docs* / *This component* / optional *This version*). Closed face shows dual-tone *Component* + muted current title (from Antora page context); menu options say *This component — {name}*.
@@ -76,11 +104,18 @@ Hint badges show `/` and `?`. See ARCHITECTURE for the `key === '?'` vs `key ===
 
 Phase 1 stub may still show separate Search/Ask panels; compound scope markup/CSS may be visual-only until filters wire up. Product target is omnibox + conjoined scope.
 
-== Docs
+=== Docs
 
 * link:ARCHITECTURE.adoc[ARCHITECTURE.adoc] — wrap vs fork, omnibox + compound scope, fake placeholder / `ask_enabled`, tiers, data flow, shortcuts, config keys, privacy, phases, RAG notes
 * link:CHANGELOG.adoc[Changelog]
 
 == License
 
-MIT — see link:LICENSE[LICENSE].
+MIT — see link:LICENSE[].
+
+== Contact
+
+Antora Supplemental — support@antora-supplemental.org
+
+* Project: https://github.com/antora-supplemental/antora-search-chat
+* Site: https://antora-supplemental.org
