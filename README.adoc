@@ -4,7 +4,53 @@ ifndef::env-github[:icons: font]
 :sectanchors:
 endif::[]
 
-[[readme-top]]
+ifdef::env-github[]
+++++
+<a id="readme-top"></a>
+<div align="center">
+<a href="https://github.com/antora-supplemental/antora-search-chat/graphs/contributors"><img src="https://img.shields.io/github/contributors/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Contributors"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/network/members"><img src="https://img.shields.io/github/forks/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Forks"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/stargazers"><img src="https://img.shields.io/github/stars/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Stars"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/issues"><img src="https://img.shields.io/github/issues/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Issues"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="License"></a>
+<br />
+<h3 align="center">antora-search-chat</h3>
+<p align="center">
+Antora extension: lunr-first Search/Ask omnibox (wraps @antora/lunr-extension; optional Ask backends).
+<br /><br />
+<a href="https://github.com/antora-supplemental/antora-search-chat/issues">Report Bug</a>
+&middot;
+<a href="https://github.com/antora-supplemental/antora-search-chat/issues">Request Feature</a>
+</p>
+</div>
+++++
+endif::[]
+
+ifndef::env-github[]
+
+ifdef::env-github[]
+++++
+<a id="readme-top"></a>
+<div align="center">
+<a href="https://github.com/antora-supplemental/antora-search-chat/graphs/contributors"><img src="https://img.shields.io/github/contributors/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Contributors"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/network/members"><img src="https://img.shields.io/github/forks/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Forks"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/stargazers"><img src="https://img.shields.io/github/stars/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Stars"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/issues"><img src="https://img.shields.io/github/issues/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="Issues"></a>
+<a href="https://github.com/antora-supplemental/antora-search-chat/blob/main/LICENSE"><img src="https://img.shields.io/github/license/antora-supplemental/antora-search-chat.svg?style=for-the-badge" alt="License"></a>
+<br />
+<h3 align="center">antora-search-chat</h3>
+<p align="center">
+Antora extension: lunr-first Search/Ask omnibox (wraps @antora/lunr-extension; optional Ask backends).
+<br /><br />
+<a href="https://github.com/antora-supplemental/antora-search-chat/issues">Report Bug</a>
+&middot;
+<a href="https://github.com/antora-supplemental/antora-search-chat/issues">Request Feature</a>
+</p>
+</div>
+++++
+endif::[]
+
+ifndef::env-github[]
 image:https://img.shields.io/github/contributors/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Contributors,link=https://github.com/antora-supplemental/antora-search-chat/graphs/contributors]
 image:https://img.shields.io/github/forks/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Forks,link=https://github.com/antora-supplemental/antora-search-chat/network/members]
 image:https://img.shields.io/github/stars/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Stars,link=https://github.com/antora-supplemental/antora-search-chat/stargazers]
@@ -17,6 +63,7 @@ Antora extension: lunr-first Search/Ask omnibox (wraps @antora/lunr-extension; o
 
 link:https://github.com/antora-supplemental/antora-search-chat/issues[Report Bug] ·
 link:https://github.com/antora-supplemental/antora-search-chat/issues[Request Feature]
+endif::[]
 
 == About The Project
 
@@ -26,8 +73,9 @@ Status:: Phase 1 scaffold (stub UI + pluggable backend config). Product target i
 
 Package:: `@antora-supplemental/antora-search-chat` (not yet published to npm — install from git).
 
-link:#readme-top[back to top]
-
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
 == Installation
 
 [source,shell]
@@ -35,8 +83,9 @@ link:#readme-top[back to top]
 pnpm add -D github:antora-supplemental/antora-search-chat
 ----
 
-link:#readme-top[back to top]
-
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
 == Usage
 
 Register **after** lunr in the playbook:
@@ -104,14 +153,16 @@ Phase 1 stub may still show separate Search/Ask panels; compound scope markup/CS
 * link:ARCHITECTURE.adoc[ARCHITECTURE.adoc] — wrap vs fork, omnibox + compound scope, fake placeholder / `ask_enabled`, tiers, data flow, shortcuts, config keys, privacy, phases, RAG notes
 * link:CHANGELOG.adoc[Changelog]
 
-link:#readme-top[back to top]
-
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
 == License
 
 MIT — see link:LICENSE[].
 
-link:#readme-top[back to top]
-
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
 == Contact
 
 Antora Supplemental — support@antora-supplemental.org
@@ -119,4 +170,6 @@ Antora Supplemental — support@antora-supplemental.org
 * Project: https://github.com/antora-supplemental/antora-search-chat
 * Site: https://antora-supplemental.org
 
-link:#readme-top[back to top]
+++++
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+++++
