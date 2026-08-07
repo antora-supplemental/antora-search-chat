@@ -4,21 +4,12 @@ ifndef::env-github[:icons: font]
 :sectanchors:
 endif::[]
 
-ifndef::env-github[]
+[[readme-top]]
 image:https://img.shields.io/github/contributors/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Contributors,link=https://github.com/antora-supplemental/antora-search-chat/graphs/contributors]
 image:https://img.shields.io/github/forks/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Forks,link=https://github.com/antora-supplemental/antora-search-chat/network/members]
 image:https://img.shields.io/github/stars/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Stars,link=https://github.com/antora-supplemental/antora-search-chat/stargazers]
 image:https://img.shields.io/github/issues/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Issues,link=https://github.com/antora-supplemental/antora-search-chat/issues]
 image:https://img.shields.io/github/license/antora-supplemental/antora-search-chat.svg?style=for-the-badge[License,link=https://github.com/antora-supplemental/antora-search-chat/blob/main/LICENSE]
-endif::[]
-
-ifdef::env-github[]
-image:https://img.shields.io/github/contributors/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Contributors]
-image:https://img.shields.io/github/forks/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Forks]
-image:https://img.shields.io/github/stars/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Stars]
-image:https://img.shields.io/github/issues/antora-supplemental/antora-search-chat.svg?style=for-the-badge[Issues]
-image:https://img.shields.io/github/license/antora-supplemental/antora-search-chat.svg?style=for-the-badge[License]
-endif::[]
 
 = antora-search-chat
 
@@ -35,12 +26,16 @@ Status:: Phase 1 scaffold (stub UI + pluggable backend config). Product target i
 
 Package:: `@antora-supplemental/antora-search-chat` (not yet published to npm — install from git).
 
+link:#readme-top[back to top]
+
 == Installation
 
 [source,shell]
 ----
 pnpm add -D github:antora-supplemental/antora-search-chat
 ----
+
+link:#readme-top[back to top]
 
 == Usage
 
@@ -109,9 +104,13 @@ Phase 1 stub may still show separate Search/Ask panels; compound scope markup/CS
 * link:ARCHITECTURE.adoc[ARCHITECTURE.adoc] — wrap vs fork, omnibox + compound scope, fake placeholder / `ask_enabled`, tiers, data flow, shortcuts, config keys, privacy, phases, RAG notes
 * link:CHANGELOG.adoc[Changelog]
 
+link:#readme-top[back to top]
+
 == License
 
 MIT — see link:LICENSE[].
+
+link:#readme-top[back to top]
 
 == Contact
 
@@ -119,3 +118,5 @@ Antora Supplemental — support@antora-supplemental.org
 
 * Project: https://github.com/antora-supplemental/antora-search-chat
 * Site: https://antora-supplemental.org
+
+link:#readme-top[back to top]
