@@ -119,15 +119,12 @@ Target shape::
 
 Closed control uses a dual-tone *face* (`.adt-search-scope-face`): primary kind label (*Component* / *Version* / *All docs*) plus muted current name/version from Antora page context (`data-component-title`, `data-version-display` on `[data-adt-search-chat]`). Native `<select>` text is transparent when closed (options stay opaque) so the menu can still say *This component — {title}*.
 
+[.themed-svg]
+image::diagrams/search-compound-layout.svg[Search compound control layout]
+
 [source,mermaid]
 ----
-flowchart LR
-  subgraph compound["`.adt-search-compound` — one pill / shared border"]
-    scope["`.adt-search-scope-slot`\nface + select ▾"]
-    rule["inner |"]
-    input["`#search-input`\nSearch or Ask"]
-  end
-  scope --- rule --- input
+include::diagrams/search-compound-layout.mmd[]
 ----
 
 Rules:

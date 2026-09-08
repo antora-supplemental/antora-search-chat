@@ -1,0 +1,10 @@
+{
+  "deterministicIds": true,
+  "deterministicIDSeed": "antora-search-chat-diagrams",
+  "htmlLabels": false,
+  "flowchart": {
+    "htmlLabels": false
+  },
+  "securityLevel": "strict",
+  "theme": "base"
+}
