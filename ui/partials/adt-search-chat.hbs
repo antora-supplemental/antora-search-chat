@@ -1,7 +1,9 @@
 {{!-- Search/Ask omnibox — owns .adt-nav-search in the site navbar.
      Product target: one omnibox ("Search or Ask") + conjoined scope on the left edge
-     [ Component {name} ▾ | Search or Ask ]; / and ? set mode on the same field.
-     Dual-tone closed scope face (kind + muted current name); native <select> for the menu.
+     [ {scope label} ▾ | Search or Ask ]; / and ? set mode on the same field.
+     Closed face shows the selected scope label (component name, version, or All docs) —
+     no Antora jargon kind prefix. Menu is a static hierarchy tree:
+     All docs → current component → its versions.
      Fake placeholder overlay (Ask off: "Search" + muted "(AI mode not configured)"; Ask on: "Search or Ask").
      Narrow/collision: collapses to a search icon; popover holds the full compound + results.
      See ARCHITECTURE.adoc. --}}
@@ -77,23 +79,72 @@
       data-adt-search-panel="search"
     >
       <div id="search-field" class="adt-search-chat__field adt-search-compound">
-        <div class="adt-search-scope-slot">
-          <label class="visually-hidden" for="adt-search-scope">Search scope</label>
-          {{!-- Dual-tone closed face (native <select> cannot style option text in two tones). --}}
-          <span class="adt-search-scope-face" aria-hidden="true" data-adt-search-scope-face>
-            <span class="adt-search-scope-kind" data-adt-search-scope-kind>Component</span>
-            <span class="adt-search-scope-current" data-adt-search-scope-current></span>
-          </span>
-          <select
+        <div class="adt-search-scope-slot" data-adt-search-scope-slot>
+          {{!-- Closed face + custom tree listbox (native <select> cannot nest). --}}
+          <button
+            type="button"
             id="adt-search-scope"
-            class="adt-search-scope"
-            data-adt-search-scope
+            class="adt-search-scope-trigger"
+            data-adt-search-scope-trigger
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-controls="adt-search-scope-menu"
             aria-label="Search scope"
           >
-            <option value="component" selected>This component</option>
-            <option value="all">All docs</option>
-            <option value="version">This version</option>
-          </select>
+            <span class="adt-search-scope-face" aria-hidden="true" data-adt-search-scope-face>
+              <span class="adt-search-scope-label" data-adt-search-scope-label></span>
+            </span>
+          </button>
+          <ul
+            id="adt-search-scope-menu"
+            class="adt-search-scope-menu"
+            role="listbox"
+            tabindex="-1"
+            hidden
+            data-adt-search-scope-menu
+            aria-labelledby="adt-search-scope"
+          >
+            <li
+              class="adt-search-scope-option adt-search-scope-option--depth-0"
+              role="option"
+              data-adt-search-scope-option
+              data-scope="all"
+              data-depth="0"
+              data-label="All docs"
+            >
+              <span class="adt-search-scope-option-text">All docs</span>
+            </li>
+            {{#with page.component}}
+            <li
+              class="adt-search-scope-option adt-search-scope-option--depth-1"
+              role="option"
+              data-adt-search-scope-option
+              data-scope="component"
+              data-depth="1"
+              data-component-name="{{./name}}"
+              data-label="{{#if ./title}}{{./title}}{{else}}{{./name}}{{/if}}"
+              aria-selected="true"
+            >
+              <span class="adt-search-scope-tree-mark" aria-hidden="true">&gt;</span>
+              <span class="adt-search-scope-option-text">{{#if ./title}}{{./title}}{{else}}{{./name}}{{/if}}</span>
+            </li>
+            {{#each ./versions}}
+            <li
+              class="adt-search-scope-option adt-search-scope-option--depth-2"
+              role="option"
+              data-adt-search-scope-option
+              data-scope="version"
+              data-depth="2"
+              data-version="{{./version}}"
+              data-version-display="{{#if ./displayVersion}}{{./displayVersion}}{{else}}{{./version}}{{/if}}"
+            >
+              <span class="adt-search-scope-tree-mark" aria-hidden="true">&gt;</span>
+              <span class="adt-search-scope-option-text" data-adt-search-scope-option-text></span>
+            </li>
+            {{/each}}
+            {{/with}}
+          </ul>
+          <input type="hidden" data-adt-search-scope value="component" />
         </div>
         <div class="adt-search-input-wrap">
           {{!-- Fake placeholder: Ask on → "Search or Ask"; Ask off → "Search" + muted "(AI mode not configured)". --}}

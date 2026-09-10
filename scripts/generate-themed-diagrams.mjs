@@ -9,7 +9,7 @@ const check = process.argv.includes('--check')
 const diagrams = [{
   name: 'search-compound-layout',
   title: 'Search compound control layout',
-  description: 'A component scope selector and search input share one bordered pill with an inner divider.',
+  description: 'A scope tree selector and search input share one bordered pill with an inner divider.',
 }]
 const tools = {
   mmdc: resolve('node_modules/@mermaid-js/mermaid-cli/src/cli.js'),

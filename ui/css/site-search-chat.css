@@ -235,7 +235,8 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--adt-accent, #0d9488) 35%, transparent);
 }
 
-/* Full-height left segment — owns the fill so hover/focus isn't a thin select slice. */
+/* Full-height left segment — owns the fill so hover/focus isn't a thin control slice.
+   overflow stays visible so the tree menu can drop below the slot. */
 .adt-search-scope-slot {
   position: relative;
   flex: 0 0 auto;
@@ -248,20 +249,15 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   border-start-start-radius: calc(0.5rem - 1px);
   border-end-start-radius: calc(0.5rem - 1px);
   background-color: var(--adt-elevated, #fff);
-  overflow: hidden;
+  overflow: visible;
   cursor: default;
   transition: var(--adt-search-theme-transition);
 }
 
-/* Dual-tone closed face (primary kind + muted current name/version).
-   Select sits on top with transparent text so the menu still works. */
+/* Closed face: selected scope label only (no Antora "Component"/"Version" kind prefix). */
 .adt-search-scope-face {
-  position: absolute;
-  inset: 0 1.65rem 0 0.65rem;
-  z-index: 0;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
   min-width: 0;
   pointer-events: none;
   font: inherit;
@@ -272,26 +268,15 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   overflow: hidden;
 }
 
-.adt-search-scope-kind {
-  flex: 0 0 auto;
-  color: var(--adt-ink, #141820);
-}
-
-.adt-search-scope-current {
+.adt-search-scope-label {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--adt-ink-muted, #5a6270);
-  font-weight: 400;
+  color: var(--adt-ink, #141820);
 }
 
-.adt-search-scope-current:empty {
-  display: none;
-}
-
-/* Chevron lives on the slot (::after), not dual CSS-gradient triangles on the
-   select — those two half-squares misaligned into a “tongue” at the tip. */
+/* Chevron lives on the slot (::after). */
 .adt-search-scope-slot::after {
   content: "";
   position: absolute;
@@ -314,89 +299,139 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   mask-position: center;
 }
 
-.adt-search-scope {
-  position: absolute;
-  inset: 0;
+.adt-search-scope-trigger {
+  position: relative;
   z-index: 1;
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 100%;
+  min-height: inherit;
   margin: 0;
   padding: 0 1.65rem 0 0.65rem;
   border: 0;
   border-radius: 0;
-  background-color: transparent;
-  background-image: none;
-  /* Transparent closed text — face paints the dual-tone label. Options keep opaque ink. */
-  color: transparent;
+  background: transparent;
+  color: inherit;
   font: inherit;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.2;
+  text-align: start;
   cursor: default;
-  appearance: none;
-  -webkit-appearance: none;
   outline: none;
   box-shadow: none;
 }
 
-.adt-search-scope option {
+.adt-search-scope-trigger:focus,
+.adt-search-scope-trigger:focus-visible,
+.adt-search-scope-trigger:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Static hierarchy tree (All docs → component → versions). Not expandable. */
+.adt-search-scope-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  z-index: 40;
+  min-width: max(100%, 14rem);
+  max-width: min(22rem, 80vw);
+  margin: 0;
+  padding: 0.35rem 0;
+  list-style: none;
+  border: 1px solid color-mix(in srgb, var(--adt-ink, #141820) 14%, var(--adt-border, #d9dee7));
+  border-radius: 0.45rem;
+  background: var(--adt-elevated, #fff);
+  box-shadow: 0 0.45rem 1.1rem color-mix(in srgb, var(--adt-ink, #141820) 12%, transparent);
   color: var(--adt-ink, #141820);
-  background-color: var(--adt-elevated, #fff);
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
+.adt-search-scope-option {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  cursor: default;
+  outline: none;
+  white-space: nowrap;
+}
+
+.adt-search-scope-option--depth-1 {
+  padding-inline-start: 1.15rem;
+}
+
+.adt-search-scope-option--depth-2 {
+  padding-inline-start: 2rem;
+}
+
+.adt-search-scope-tree-mark {
+  flex: 0 0 auto;
+  color: var(--adt-ink-muted, #5a6270);
+  font-weight: 500;
+}
+
+.adt-search-scope-option-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adt-search-scope-option:hover,
+.adt-search-scope-option:focus {
+  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #0d9488) 12%, var(--adt-elevated, #fff)));
+}
+
+.adt-search-scope-option.is-selected {
+  font-weight: 600;
+}
+
+.adt-search-scope-option[hidden] {
+  display: none !important;
 }
 
 html.dark-theme .adt-search-compound,
 html.dark-theme .adt-search-scope-slot,
-html.dark-theme .adt-search-scope option {
+html.dark-theme .adt-search-scope-menu {
   background-color: var(--adt-elevated, #1a1a1a);
   color: var(--adt-ink, #e8eaed);
 }
 
-html.dark-theme .adt-search-scope {
-  color: transparent;
-  background-color: transparent;
-  background-image: none;
-}
-
-html.dark-theme .adt-search-scope-kind {
+html.dark-theme .adt-search-scope-label {
   color: var(--adt-ink, #e8eaed);
-}
-
-html.dark-theme .adt-search-scope-current {
-  color: var(--adt-ink-muted, #9aa3b2);
 }
 
 html.dark-theme .adt-search-scope-slot {
   border-inline-end-color: color-mix(in srgb, var(--adt-ink, #e8eaed) 18%, transparent);
 }
 
-html.dark-theme .adt-search-scope-slot::after {
+html.dark-theme .adt-search-scope-slot::after,
+html.dark-theme .adt-search-scope-tree-mark {
   color: var(--adt-ink-muted, #9aa3b2);
 }
 
-/* Soft fill on the whole left segment (not the native select content box). */
+html.dark-theme .adt-search-scope-menu {
+  border-color: color-mix(in srgb, var(--adt-ink, #e8eaed) 18%, transparent);
+  box-shadow: 0 0.45rem 1.1rem rgba(0, 0, 0, 0.45);
+}
+
+/* Soft fill on the whole left segment. */
 .adt-search-scope-slot:hover,
-.adt-search-scope-slot:focus-within {
+.adt-search-scope-slot:focus-within,
+.adt-search-scope-slot.is-open {
   background-color: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #0d9488) 12%, var(--adt-elevated, #fff)));
 }
 
-.adt-search-scope:focus,
-.adt-search-scope:focus-visible,
-.adt-search-scope:active {
-  outline: none;
-  box-shadow: none;
-  background-color: transparent;
-}
-
 html.dark-theme .adt-search-scope-slot:hover,
-html.dark-theme .adt-search-scope-slot:focus-within {
+html.dark-theme .adt-search-scope-slot:focus-within,
+html.dark-theme .adt-search-scope-slot.is-open {
   background-color: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #2dd4bf) 16%, var(--adt-elevated, #1a1a1a)));
 }
 
-html.dark-theme .adt-search-scope:focus,
-html.dark-theme .adt-search-scope:focus-visible,
-html.dark-theme .adt-search-scope:active {
-  background-color: transparent;
-  background-image: none;
+html.dark-theme .adt-search-scope-option:hover,
+html.dark-theme .adt-search-scope-option:focus {
+  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #2dd4bf) 16%, var(--adt-elevated, #1a1a1a)));
 }
 
 /* Input + fake placeholder share one flex cell of the compound pill.

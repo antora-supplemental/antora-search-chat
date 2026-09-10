@@ -130,8 +130,8 @@ Optional site key:: `site.keys.askEnabled` — theme mirror if you wire a plain 
 === Product shape (target)
 
 * *One omnibox* — `/` and `?` set Search vs Ask mode on the **same** field (not two widgets).
-* *Scope control* — dropdown *built into* the left edge of the field (*All docs* / *This component* / optional *This version*). Closed face shows dual-tone *Component* + muted current title (from Antora page context); menu options say *This component — {name}*.
-* *Compound UI* — one pill: `[ Component {name} ▾ | Search or Ask ]` (`.adt-search-compound` + `.adt-search-scope-slot` / face + `.adt-search-scope`); shared border, inner vertical rule, full-height scope hit target.
+* *Scope control* — dropdown *built into* the left edge of the field. Closed face shows the selected label (component title, version, or *All docs*) with no *Component*/*Version* kind prefix. Open menu is a static tree: *All docs* → current component → that component's versions (`version X - current` on the page version).
+* *Compound UI* — one pill: `[ {scope} ▾ | Search or Ask ]` (`.adt-search-compound` + `.adt-search-scope-slot` / trigger + tree menu); shared border, inner vertical rule, full-height scope hit target.
 * *Default scope* — *Current component* on docs pages when detectable; *All* on home / when ambiguous. See ARCHITECTURE.
 * *Collapse* — on narrow / collision, omnibox collapses to a search icon; popover holds scope + input + Ask + lunr results.
 * *Lunr-first* — keyword results while typing in Search mode; Ask only on explicit mode / submit. Optional debounced question-detection may come later; it is not the default.

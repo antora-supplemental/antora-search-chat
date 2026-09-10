@@ -13,9 +13,14 @@
   var searchInput =
     root.querySelector('[data-adt-search-input]') || document.getElementById('search-input')
   var ph = root.querySelector('[data-adt-search-ph]')
-  var scopeSelect = root.querySelector('[data-adt-search-scope]')
-  var scopeKind = root.querySelector('[data-adt-search-scope-kind]')
-  var scopeCurrent = root.querySelector('[data-adt-search-scope-current]')
+  var scopeValueInput = root.querySelector('[data-adt-search-scope]')
+  var scopeSlot = root.querySelector('[data-adt-search-scope-slot]')
+  var scopeTrigger = root.querySelector('[data-adt-search-scope-trigger]')
+  var scopeMenu = root.querySelector('[data-adt-search-scope-menu]')
+  var scopeLabel = root.querySelector('[data-adt-search-scope-label]')
+  var scopeOptions = Array.prototype.slice.call(
+    root.querySelectorAll('[data-adt-search-scope-option]')
+  )
   var toggle = root.querySelector('[data-adt-search-toggle]')
   var popover = root.querySelector('[data-adt-search-popover]')
   var searchSlot = root.closest('.adt-navbar-search') || root.parentElement
@@ -50,71 +55,161 @@
     return ctx.componentTitle || ctx.componentName || ''
   }
 
-  function versionLabel (ctx) {
-    return ctx.versionDisplay || ctx.version || ''
+  function getScopeValue () {
+    return scopeValueInput ? scopeValueInput.value : 'all'
+  }
+
+  function getSelectedVersion () {
+    return scopeValueInput ? (scopeValueInput.getAttribute('data-version') || '') : ''
+  }
+
+  function findOption (scope, version) {
+    for (var i = 0; i < scopeOptions.length; i++) {
+      var opt = scopeOptions[i]
+      if ((opt.getAttribute('data-scope') || '') !== scope) continue
+      if (scope === 'version' && (opt.getAttribute('data-version') || '') !== (version || '')) continue
+      return opt
+    }
+    return null
+  }
+
+  function versionOptionLabel (opt, pageVer) {
+    var display =
+      (opt.getAttribute('data-version-display') || '').trim() ||
+      (opt.getAttribute('data-version') || '').trim() ||
+      'default'
+    var label = 'version ' + display
+    if (pageVer && (opt.getAttribute('data-version') || '') === pageVer) {
+      label += ' - current'
+    }
+    return label
   }
 
   function syncScopeLabels () {
-    if (!scopeSelect) return
+    if (!scopeOptions.length) return
     var ctx = pageContext()
     var comp = componentLabel(ctx)
-    var ver = versionLabel(ctx)
-    var optComponent = scopeSelect.querySelector('option[value="component"]')
-    var optVersion = scopeSelect.querySelector('option[value="version"]')
-    var optAll = scopeSelect.querySelector('option[value="all"]')
+    var pageVer = (ctx.version || '').trim()
+    var hasComp = false
+    var hasVersionOpts = false
 
-    if (optComponent) {
-      optComponent.textContent = comp
-        ? 'This component — ' + comp
-        : 'This component'
-      optComponent.disabled = !comp
-    }
-    if (optVersion) {
-      optVersion.textContent = ver
-        ? 'This version — ' + ver
-        : 'This version'
-      optVersion.disabled = !ver
-      // Hide version option when there is no page version context.
-      optVersion.hidden = !ver
-    }
-    if (optAll) {
-      optAll.textContent = 'All docs'
+    scopeOptions.forEach(function (opt) {
+      var scope = opt.getAttribute('data-scope') || ''
+      var textEl = opt.querySelector('[data-adt-search-scope-option-text]') ||
+        opt.querySelector('.adt-search-scope-option-text')
+      if (scope === 'all') {
+        opt.setAttribute('data-label', 'All docs')
+        if (textEl) textEl.textContent = 'All docs'
+        opt.hidden = false
+        return
+      }
+      if (scope === 'component') {
+        var compLabel =
+          (opt.getAttribute('data-label') || '').trim() ||
+          comp ||
+          (opt.getAttribute('data-component-name') || '').trim()
+        if (compLabel) opt.setAttribute('data-label', compLabel)
+        if (textEl) textEl.textContent = compLabel
+        opt.hidden = !compLabel
+        if (compLabel) hasComp = true
+        return
+      }
+      if (scope === 'version') {
+        var ver = (opt.getAttribute('data-version') || '').trim()
+        var label = versionOptionLabel(opt, pageVer)
+        opt.setAttribute('data-label', label)
+        if (textEl) textEl.textContent = label
+        // Hide empty / nameless single-default rows when page has no version context.
+        var hide = !ver && !pageVer
+        opt.hidden = hide
+        if (!hide) hasVersionOpts = true
+      }
+    })
+
+    if (!hasVersionOpts) {
+      // No usable version children — keep component / all only.
+      scopeOptions.forEach(function (opt) {
+        if ((opt.getAttribute('data-scope') || '') === 'version') opt.hidden = true
+      })
     }
 
-    // Prefer component when available; otherwise All. Drop invalid selection.
-    if (scopeSelect.value === 'version' && !ver) {
-      scopeSelect.value = comp ? 'component' : 'all'
-    } else if (scopeSelect.value === 'component' && !comp) {
-      scopeSelect.value = 'all'
-    } else if (!scopeSelect.value || (scopeSelect.selectedOptions[0] && scopeSelect.selectedOptions[0].disabled)) {
-      scopeSelect.value = comp ? 'component' : 'all'
+    var value = getScopeValue()
+    var selectedVer = getSelectedVersion()
+    if (value === 'version' && !findOption('version', selectedVer)) {
+      value = hasComp ? 'component' : 'all'
+      selectedVer = ''
+    } else if (value === 'component' && !hasComp) {
+      value = 'all'
+    } else if (!value) {
+      value = hasComp ? 'component' : 'all'
     }
+
+    setScopeSelection(value, selectedVer, { silent: true })
+  }
+
+  function setScopeSelection (scope, version, opts) {
+    opts = opts || {}
+    if (scopeValueInput) {
+      scopeValueInput.value = scope || 'all'
+      if (scope === 'version' && version) {
+        scopeValueInput.setAttribute('data-version', version)
+      } else {
+        scopeValueInput.removeAttribute('data-version')
+      }
+    }
+
+    var selected = findOption(scope, version)
+    scopeOptions.forEach(function (opt) {
+      var on = opt === selected
+      opt.classList.toggle('is-selected', on)
+      if (on) {
+        opt.setAttribute('aria-selected', 'true')
+      } else {
+        opt.removeAttribute('aria-selected')
+      }
+    })
 
     syncScopeFace()
+    if (!opts.silent && typeof opts.onChange === 'function') opts.onChange()
   }
 
   function syncScopeFace () {
-    if (!scopeKind) return
-    var ctx = pageContext()
-    var value = scopeSelect ? scopeSelect.value : 'component'
-    var kind = 'All docs'
-    var current = ''
-    if (value === 'component') {
-      kind = 'Component'
-      current = componentLabel(ctx)
-    } else if (value === 'version') {
-      kind = 'Version'
-      current = versionLabel(ctx)
+    var selected =
+      findOption(getScopeValue(), getSelectedVersion()) ||
+      findOption('all')
+    var label = selected
+      ? (selected.getAttribute('data-label') || '').trim()
+      : 'All docs'
+    if (scopeLabel) scopeLabel.textContent = label
+    if (scopeTrigger) {
+      scopeTrigger.setAttribute('aria-label', 'Search scope: ' + label)
     }
-    scopeKind.textContent = kind
-    if (scopeCurrent) {
-      scopeCurrent.textContent = current
+  }
+
+  function isScopeMenuOpen () {
+    return !!(scopeSlot && scopeSlot.classList.contains('is-open'))
+  }
+
+  function setScopeMenuOpen (open) {
+    if (!scopeSlot || !scopeTrigger || !scopeMenu) return
+    scopeSlot.classList.toggle('is-open', !!open)
+    scopeTrigger.setAttribute('aria-expanded', open ? 'true' : 'false')
+    if (open) {
+      scopeMenu.removeAttribute('hidden')
+    } else {
+      scopeMenu.setAttribute('hidden', '')
     }
-    if (scopeSelect) {
-      var aria =
-        current ? kind + ' ' + current : kind
-      scopeSelect.setAttribute('aria-label', 'Search scope: ' + aria)
-    }
+  }
+
+  function visibleScopeOptions () {
+    return scopeOptions.filter(function (opt) {
+      return !opt.hidden
+    })
+  }
+
+  function focusScopeOption (opt) {
+    if (!opt) return
+    opt.focus()
   }
 
   function syncPlaceholderCopy () {
@@ -154,8 +249,83 @@
   syncPlaceholderCopy()
   syncScopeLabels()
 
-  if (scopeSelect) {
-    scopeSelect.addEventListener('change', syncScopeFace)
+  if (scopeTrigger && scopeMenu) {
+    scopeTrigger.addEventListener('click', function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      setScopeMenuOpen(!isScopeMenuOpen())
+    })
+
+    scopeOptions.forEach(function (opt) {
+      opt.setAttribute('tabindex', '-1')
+      opt.addEventListener('click', function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        if (opt.hidden) return
+        setScopeSelection(
+          opt.getAttribute('data-scope') || 'all',
+          opt.getAttribute('data-version') || ''
+        )
+        setScopeMenuOpen(false)
+        scopeTrigger.focus()
+      })
+    })
+
+    scopeTrigger.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        setScopeMenuOpen(true)
+        var first = visibleScopeOptions()[0]
+        focusScopeOption(first)
+      } else if (e.key === 'Escape' && isScopeMenuOpen()) {
+        e.preventDefault()
+        setScopeMenuOpen(false)
+      }
+    })
+
+    scopeMenu.addEventListener('keydown', function (e) {
+      var visible = visibleScopeOptions()
+      var active = document.activeElement
+      var idx = visible.indexOf(active)
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setScopeMenuOpen(false)
+        scopeTrigger.focus()
+        return
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        focusScopeOption(visible[Math.min(visible.length - 1, Math.max(0, idx) + 1)] || visible[0])
+        return
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        focusScopeOption(visible[Math.max(0, (idx < 0 ? visible.length : idx) - 1)] || visible[0])
+        return
+      }
+      if (e.key === 'Home') {
+        e.preventDefault()
+        focusScopeOption(visible[0])
+        return
+      }
+      if (e.key === 'End') {
+        e.preventDefault()
+        focusScopeOption(visible[visible.length - 1])
+        return
+      }
+      if (e.key === 'Enter' || e.key === ' ') {
+        if (active && active.getAttribute && active.hasAttribute('data-adt-search-scope-option')) {
+          e.preventDefault()
+          active.click()
+        }
+      }
+    })
+
+    document.addEventListener('mousedown', function (e) {
+      if (!isScopeMenuOpen()) return
+      if (scopeSlot && scopeSlot.contains(e.target)) return
+      setScopeMenuOpen(false)
+    })
   }
 
   if (searchInput) {
@@ -185,6 +355,7 @@
 
   function setOpen (open) {
     root.classList.toggle('is-open', !!open)
+    if (!open) setScopeMenuOpen(false)
     if (toggle) {
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false')
       toggle.setAttribute('aria-label', open ? 'Close search' : 'Open search')
@@ -273,6 +444,12 @@
   })
 
   document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && isScopeMenuOpen()) {
+      e.preventDefault()
+      setScopeMenuOpen(false)
+      if (scopeTrigger) scopeTrigger.focus()
+      return
+    }
     if (e.key === 'Escape' && isCollapsed() && isOpen()) {
       e.preventDefault()
       setOpen(false)

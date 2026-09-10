@@ -79,7 +79,16 @@ Optional theme mirror:: `site.keys.askEnabled` (Antora camelCases `ask_enabled` 
 Context is controlled by an explicit *scope* control, not by where a second search box sits.
 
 *Chosen*:: One omnibox (*Search or Ask*) with a *conjoined* scope dropdown built into the *left edge* of the field (one compound pill: `[ Scope ▾ | Search or Ask ]`).
-Example options: *All docs* | *This component* | *This version* (optional when versioned).
+Menu is a *static tree* of the current page context:
+
+----
+All docs
+  > {component title}
+    > version 0.1 - current
+    > version 0.2
+----
+
+Selecting a row scopes search to that level (site → component → version). No expandable nodes.
 
 *Rejected*:: Multiple search boxes whose context is implied only by UI placement (header vs nav vs page). That breaks the one-stop command utility (`/` / `?` always land in the same control).
 
@@ -112,12 +121,12 @@ Target shape::
 
 ----
 ┌──────────────────────────────────────────────┐
-│ Component  Valentus Theme ▾ │ Search or Ask / │
+│ connectome-fs ▾ │ Search or Ask / │
 └──────────────────────────────────────────────┘
-  ^kind (ink) ^current (muted)  ^input+hint
+  ^selected scope label   ^input+hint
 ----
 
-Closed control uses a dual-tone *face* (`.adt-search-scope-face`): primary kind label (*Component* / *Version* / *All docs*) plus muted current name/version from Antora page context (`data-component-title`, `data-version-display` on `[data-adt-search-chat]`). Native `<select>` text is transparent when closed (options stay opaque) so the menu can still say *This component — {title}*.
+Closed control shows the *selected* label only (component title, `version X`, or *All docs*) — no Antora jargon prefix like *Component* / *Version*. The open menu is a custom static tree (`.adt-search-scope-menu`) under the trigger button (`.adt-search-scope-trigger`), not a native `<select>` (which cannot nest). Options come from Antora page context (`page.component`, `page.component.versions`, current `page.version` marked *current*).
 
 [.themed-svg]
 image::diagrams/search-compound-layout.svg[Search compound control layout]
@@ -132,7 +141,7 @@ Rules:
 * Dropdown flush against the input (shared outer border, *no gap*).
 * Rounded left corners on the scope (outer left of the compound); input takes the right side with matching right rounding.
 * Divide with a subtle *inner* vertical rule — not separate floating controls or a gap between boxes.
-* Class hooks: `.adt-search-compound` wraps `.adt-search-scope-slot` (face + full-height `.adt-search-scope`) + `.adt-search-input-wrap` (`#search-input` + `.adt-search-ph` overlay).
+* Class hooks: `.adt-search-compound` wraps `.adt-search-scope-slot` (trigger face + `.adt-search-scope-menu` tree) + `.adt-search-input-wrap` (`#search-input` + `.adt-search-ph` overlay).
 
 Scope → lunr filters is still a later pass; labels/default selection are wired from page context now.
 
@@ -146,7 +155,7 @@ The omnibox (compound scope + field + results) lives in `.adt-site-navbar` (`.ad
 
 *Collapse-to-icon*:: When leftover middle space is too narrow (high zoom / mobile), `site-search-chat.js` adds `.is-collapsed` and shows a search icon toggle. Opening it drops `.adt-search-chat__popover` under the icon with the full compound (scope + input + Ask) and lunr results. `/` and `?` open the popover. Themes should keep `.adt-navbar-search` in normal flow (not absolute-centered with a large `min-width`) so brand/title and search never paint on top of each other.
 
-*Do not* set `overflow: hidden` on `#search-field` / `.adt-search-compound` *or* `.adt-search-input-wrap`. Lunr's `search-ui.js` mounts `.search-result-dropdown-menu` on `#search-input.parentNode` (`position:absolute; top:100%`). With compound markup that parent is `.adt-search-input-wrap`, not `#search-field` — so clipping the wrap (a common "move overflow off the compound" mistake) still hides all results. Keep both compound and input-wrap `overflow: visible`; clip typed text on `#search-input` itself (`overflow: hidden`); clip only `.adt-search-scope-slot` for the left segment chrome.
+*Do not* set `overflow: hidden` on `#search-field` / `.adt-search-compound` *or* `.adt-search-input-wrap`. Lunr's `search-ui.js` mounts `.search-result-dropdown-menu` on `#search-input.parentNode` (`position:absolute; top:100%`). With compound markup that parent is `.adt-search-input-wrap`, not `#search-field` — so clipping the wrap (a common "move overflow off the compound" mistake) still hides all results. Keep compound, input-wrap, *and* `.adt-search-scope-slot` `overflow: visible` (the scope tree menu drops below the slot). Clip typed text on `#search-input` itself (`overflow: hidden`); truncate the closed scope label on `.adt-search-scope-face` / `.adt-search-scope-label`.
 
 *Horizontal alignment*:: Do not force `left: 0` on the menu under the compound. That aligns only to the input cell (large empty band under the scope, tight right). This package sets `right: 0` + `width: 100cqi` against a `container-type: inline-size` compound so both edges match the full pill.
 
@@ -202,7 +211,7 @@ Layout owns placement; search-chat owns the control:
 * Slot: left nav, above the tree (`.adt-nav-search`), in a tool band *outside* the 3-col shell.
 * Keep `#search-input` so lunr and any residual layout focus helpers keep working (omnibox may reuse this id for the shared field).
 * Modes: *Search* | *Ask* on the same field — Search is default unless `default_mode: ask`.
-* Scope: conjoined dropdown on the *left edge* of the field (`.adt-search-compound` / `.adt-search-scope-slot`) — *All* / *This component* / optional *This version*; defaults per <<_default_scope_recommendation>>.
+* Scope: conjoined dropdown on the *left edge* of the field (`.adt-search-compound` / `.adt-search-scope-slot`) — static tree *All docs* → *{component}* → *version …*; defaults per <<_default_scope_recommendation>>.
 * Hint badges: `/` for Search mode, `?` for Ask mode (same field).
 
 Phase 1 stub note:: The scaffold may still render tabbed Search/Ask panels; the compound scope+input markup/CSS may be present as a visual stub without live filtering. Treat transitional tabs as temporary; product target is the omnibox + conjoined scope above.
