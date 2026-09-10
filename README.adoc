@@ -80,8 +80,25 @@ Package:: `@antora-supplemental/antora-search-chat` (not yet published to npm �
 
 [source,shell]
 ----
-pnpm add -D github:antora-supplemental/antora-search-chat
+pnpm add -D github:antora-supplemental/antora-search-chat#v0.1.4
 ----
+
+Prefer an immutable SemVer tag (`#v0.1.4`) or a rolling line once published (`#v0.1`). Floating `github:…/antora-search-chat` without a ref locks whatever commit `pnpm` resolved last — bump the lockfile (or retarget the tag) after each release.
+
+=== Consumer discovery (GitHub topic)
+
+Every playbook repo that *requires* this extension must set the repository topic:
+
+`uses-antora-search-chat`
+
+Add it when wiring the extension (and keep it if you already depend on it). After a release, find consumers with:
+
+[source,shell]
+----
+gh search repos "topic:uses-antora-search-chat" --json fullName,url
+----
+
+Owned hubs may also appear via hive `package.json` search; the topic is the portable signal for agents and humans outside the local hive.
 
 ++++
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

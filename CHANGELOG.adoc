@@ -7,6 +7,8 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+* *Docs:* Document GitHub topic `uses-antora-search-chat` for consumer discovery after releases; prefer SemVer tag pins in install examples.
+
 == [0.1.4] - 2026-09-09
 
 * *Change:* Scope closed face drops the *Component*/*Version* kind prefix and shows the selected label only. Replace the native `<select>` with a static hierarchy tree menu (`All docs` → current component → versions, with *current* on the page version).
