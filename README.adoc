@@ -87,18 +87,16 @@ Prefer an immutable SemVer tag (`#v0.1.4`) or a rolling line once published (`#v
 
 === Consumer discovery (GitHub topic)
 
-Every playbook repo that *requires* this extension must set the repository topic:
+House convention (all Antora extensions/themes): consumer repos carry a topic equal to the **upstream repo name** — here `antora-search-chat` (not `uses-antora-search-chat`). Same topic may appear on this repo as identity. Skill: `antora-extension-consumers` (recursive fan-out after releases).
 
-`uses-antora-search-chat`
-
-Add it when wiring the extension (and keep it if you already depend on it). After a release, find consumers with:
+Add the topic when wiring the extension. After a release:
 
 [source,shell]
 ----
-gh search repos "topic:uses-antora-search-chat" --json fullName,url
+gh search repos "topic:antora-search-chat" --json fullName,url
 ----
 
-Owned hubs may also appear via hive `package.json` search; the topic is the portable signal for agents and humans outside the local hive.
+Skip this producer repo in the bump list. Hive `package.json` search is a fallback when topics are missing — then add the topic.
 
 ++++
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

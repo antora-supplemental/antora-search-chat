@@ -7,7 +7,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
-* *Docs:* Document GitHub topic `uses-antora-search-chat` for consumer discovery after releases; prefer SemVer tag pins in install examples.
+* *Docs:* Consumer discovery topic is the bare repo name `antora-search-chat` (not `uses-*`); SemVer tag pins; recursive fan-out documented via skill `antora-extension-consumers`.
 
 == [0.1.4] - 2026-09-09
 
