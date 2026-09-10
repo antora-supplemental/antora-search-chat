@@ -87,7 +87,7 @@ Prefer an immutable SemVer tag (`#v0.1.4`) or a rolling line once published (`#v
 
 === Consumer discovery (GitHub topic)
 
-House convention (all Antora extensions/themes): consumer repos carry a topic equal to the **upstream repo name** — here `antora-search-chat` (not `uses-antora-search-chat`). Same topic may appear on this repo as identity. Skill: `antora-extension-consumers` (recursive fan-out after releases).
+House convention (Antora extensions/themes): consumer repos carry a topic equal to the **upstream repo name** — here `antora-search-chat` (not `uses-antora-search-chat`). Same topic may appear on this repo as identity. Skills: `antora-extension-consumers` (topic/pins) + `update-consumers` (recursive fan-out).
 
 Add the topic when wiring the extension. After a release:
 
