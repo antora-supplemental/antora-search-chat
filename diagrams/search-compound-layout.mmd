@@ -1,7 +1,7 @@
-flowchart LR
-  subgraph compound[".adt-search-compound — one pill and shared border"]
-    scope[".adt-search-scope-slot<br/>label and tree menu"]
-    rule["inner divider"]
-    input["#search-input<br/>Search or Ask"]
+flowchart TB
+  subgraph compound[".adt-search-compound--stacked — one card, shared border"]
+    scope[".adt-search-scope-row<br/>context / scope ▾"]
+    rule["horizontal divider"]
+    input["#search-input<br/>Search or Semantic Search"]
   end
-  scope --- rule --- input
+  scope --> rule --> input

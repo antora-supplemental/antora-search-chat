@@ -203,14 +203,13 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   position: relative;
 }
 
-/* Compound scope + input: one pill, shared border, inner rule (visual stub).
-   Must stay overflow:visible — lunr's search-ui.js does
-   searchInput.parentNode.appendChild(.search-result-dropdown-menu), and with
-   compound markup that parent is .adt-search-input-wrap (not #search-field).
-   Absolute results (top:100%) must not be clipped by compound or the wrap.
-   container-type: inline-size → 100cqi = full pill width for results alignment. */
+/* Stacked scope + input: one rounded card, scope row on top, query field below.
+   Must stay overflow:visible — legacy lunr mounts results on .adt-search-input-wrap;
+   hybrid dock will mount dual zones above the whole compound.
+   container-type: inline-size → 100cqi = full dock width for results alignment. */
 .adt-search-compound {
   display: flex;
+  flex-direction: column;
   align-items: stretch;
   width: 100%;
   box-sizing: border-box;
@@ -222,7 +221,6 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   color: var(--adt-ink, #141820);
   container-type: inline-size;
   container-name: adt-search-compound;
-  /* Opaque pill sits on the navbar — must transition with theme or it snaps. */
   transition: var(--adt-search-theme-transition);
 }
 
@@ -235,19 +233,21 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--adt-accent, #0d9488) 35%, transparent);
 }
 
-/* Full-height left segment — owns the fill so hover/focus isn't a thin control slice.
-   overflow stays visible so the tree menu can drop below the slot. */
+/* Scope/context row — full width above the input (floating dock layout).
+   overflow stays visible so the tree menu can drop below the trigger. */
 .adt-search-scope-slot {
   position: relative;
   flex: 0 0 auto;
-  align-self: stretch;
-  min-width: 9.5rem;
-  max-width: 14rem;
-  min-height: 100%;
+  width: 100%;
+  max-width: none;
+  min-height: 2rem;
   box-sizing: border-box;
-  border-inline-end: 1px solid color-mix(in srgb, var(--adt-ink, #141820) 18%, transparent);
+  border-inline-end: 0;
+  border-block-end: 1px solid color-mix(in srgb, var(--adt-ink, #141820) 18%, transparent);
   border-start-start-radius: calc(0.5rem - 1px);
-  border-end-start-radius: calc(0.5rem - 1px);
+  border-start-end-radius: calc(0.5rem - 1px);
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
   background-color: var(--adt-elevated, #fff);
   overflow: visible;
   cursor: default;
@@ -434,25 +434,22 @@ html.dark-theme .adt-search-scope-option:focus {
   background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #2dd4bf) 16%, var(--adt-elevated, #1a1a1a)));
 }
 
-/* Input + fake placeholder share one flex cell of the compound pill.
-   overflow must stay visible: lunr mounts .search-result-dropdown-menu here
-   (#search-input's parentNode). Clip only the scope slot, not this wrap. */
+/* Input + fake placeholder — full width under the scope row. */
 .adt-search-input-wrap {
   position: relative;
   flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
   display: flex;
   align-items: stretch;
-  border-start-end-radius: calc(0.5rem - 1px);
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  border-end-start-radius: calc(0.5rem - 1px);
   border-end-end-radius: calc(0.5rem - 1px);
   overflow: visible;
 }
 
-/* Lunr positions the menu against this wrap (not the full compound). A plain
-   left:0 / width:100% (or lunr right:0 + min-width) leaves a large left inset
-   under the scope and a tight/flush right edge. Anchor right:0 and set width to
-   100cqi so the panel spans the whole pill — equal edges vs the search compound.
-   Keep overflow:visible on wrap/compound so the leftward span is not clipped. */
+/* Results menu spans the full stacked compound width (100cqi), not the input cell only. */
 .adt-search-compound .search-result-dropdown-menu,
 .adt-search-input-wrap > .search-result-dropdown-menu {
   left: auto;

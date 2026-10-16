@@ -1,6 +1,6 @@
-{{!-- Search/Ask omnibox — owns .adt-nav-search in the site navbar.
-     Product target: one omnibox ("Search or Ask") + conjoined scope on the left edge
-     [ {scope label} ▾ | Search or Ask ]; / and ? set mode on the same field.
+{{!-- Search/Ask omnibox — moving to a floating dock (see ARCHITECTURE.adoc).
+     Scope/context selector sits *above* the search input (stacked), not conjoined on the left.
+     Product target: capability row + [ scope ▾ ] + [ search input ] + chat chip; / and ? shortcuts.
      Closed face shows the selected scope label (component name, version, or All docs) —
      no Antora jargon kind prefix. Menu is a static hierarchy tree:
      All docs → current component → its versions.
@@ -78,8 +78,8 @@
       aria-labelledby="adt-search-tab-search"
       data-adt-search-panel="search"
     >
-      <div id="search-field" class="adt-search-chat__field adt-search-compound">
-        <div class="adt-search-scope-slot" data-adt-search-scope-slot>
+      <div id="search-field" class="adt-search-chat__field adt-search-compound adt-search-compound--stacked">
+        <div class="adt-search-scope-slot adt-search-scope-row" data-adt-search-scope-slot>
           {{!-- Closed face + custom tree listbox (native <select> cannot nest). --}}
           <button
             type="button"
