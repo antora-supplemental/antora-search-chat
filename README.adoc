@@ -89,7 +89,7 @@ Prefer an immutable SemVer tag (`#v0.1.4`) or a rolling line once published (`#v
 
 House convention (Antora extensions/themes): consumer repos carry a topic equal to the **upstream repo name** — here `antora-search-chat` (not `uses-antora-search-chat`). Same topic may appear on this repo as identity. Skills: `antora-extension-consumers` (topic/pins) + `update-consumers` (recursive fan-out).
 
-**Direct deps only:** add topic `antora-search-chat` when the playbook repo directly `require`s or pins this package — not when search-chat is registered only via `@antora-supplemental/facto-stack` (those hubs tag `facto-stack` instead). link:https://antora-supplemental.org/docs/home/hub-github-topics.html[Hub GitHub topics^].
+**Direct deps only:** add topic `antora-search-chat` when the playbook repo directly `require`s or pins this package — not when search-chat is registered only via `@antora-supplemental/facto-stack` (those hubs tag `facto-stack` instead). link:https://docs.antora-supplemental.org/docs/hub-github-topics/[Hub GitHub topics^].
 
 Add the topic when wiring the extension directly. After a release:
 
