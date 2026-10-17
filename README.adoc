@@ -174,7 +174,7 @@ Phase 1 stub may still show separate Search/Ask panels; compound scope markup/CS
 == Demo data
 
 * **Supplement lives in extension repo** — no fixture component here; the omnibox indexes whatever Lunr builds from your playbook `content.sources`.
-* For a rich search corpus on stack demos, add link:https://github.com/antora-supplemental/demo-data[`demo-data`^] `docs/theme-demo` alongside consumer `demo/docs` (see link:https://github.com/antora-supplemental/facto-stack[`facto-stack`^] `demo/playbook.yml`).
+* For a rich search corpus on stack demos, add link:https://github.com/antora-supplemental/demo-data[`demo-data`^] `docs/demo-pages` alongside consumer `demo/docs` (see link:https://github.com/antora-supplemental/facto-stack[`facto-stack`^] `demo/playbook.yml`).
 * Generic AsciiDoc syntax samples stay on the org hub via link:https://github.com/antora-supplemental/antora-demo[`antora-demo`^] — not merged into `demo-data` unless the org wants one clone URL.
 * Pattern: link:https://docs.antora-supplemental.org/docs/ROOT/proposals/demo-data-catalog.html[Demo data catalog^].
 
