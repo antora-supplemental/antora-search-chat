@@ -392,6 +392,9 @@
   }
 
   function activate (name) {
+    if (typeof window.adtRevealSiteChrome === 'function') {
+      window.adtRevealSiteChrome()
+    }
     openSearchUI()
     tabs.forEach(function (tab) {
       var on = tab.getAttribute('data-adt-search-tab') === name

@@ -9,6 +9,12 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 * Stacked search layout: context selector above the input (`.adt-search-compound--stacked`) for the floating dock; ARCHITECTURE and compound diagram updated.
 
+== [0.1.6] - 2026-10-17
+
+=== Fixed
+
+* **`/` and `?` shortcuts:** call Valentus `window.adtRevealSiteChrome()` before opening Search/Ask so scroll-away navbar + mast peek back into view for typing.
+
 == [0.1.5] - 2026-10-16
 
 * Read `searchChat` overrides from `@antora-supplemental/facto-stack` pack config when search-chat is not a separate playbook require.
