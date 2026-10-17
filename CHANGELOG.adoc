@@ -7,8 +7,23 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.7] - 2026-10-17
+
+=== Fixed
+
+* **Scope dropdown hidden behind the doc mast:** scope menu, collapsed popover, Lunr results, and Ask panel now use a top-layer z-index (`--adt-search-top-z: 200`); paired with Valentus lifting `.adt-site-navbar` above `.adt-doc-mast` inside the sticky header, so search menus paint on top of everything.
+
+=== Added
+
+* **Floating dock placement** (`placement: dock`): fixed bottom dock — rounded outer box with a Keyword / Semantic / Chat capability strip (disabled status checkboxes, no emojis), stacked scope-above-input card inside; scope menu, Lunr results, and Ask panel open *upward* above the dock. Navbar remains the default placement.
+* **Capability levels config:** `semantic_enabled` / `semanticEnabled` (or `semantic_backend_url`) exposes the semantic level in the runtime payload (`levels: { keyword, semantic, chat }`) and the capability strip. The hybrid semantic engine remains a separate track; this is its UI/config seam.
+* **Enter = chat query:** typing still searches on keystroke (Lunr); pressing Enter in the search field submits the query to Ask when chat is enabled.
+
+=== Changed
+
+* Placeholder copy: main label is *Semantic Search* when the semantic level is enabled, else *Search* (*… or Ask* appended when chat is on). The muted note now reads *(Chat unavailable)* instead of *(AI mode not configured)*.
+* Stacked search layout released: context selector above the input (`.adt-search-compound--stacked`); ARCHITECTURE and compound diagram updated.
 * README: canonical hub GitHub topics URL → `docs.antora-supplemental.org/docs/hub-github-topics/`.
-* Stacked search layout: context selector above the input (`.adt-search-compound--stacked`) for the floating dock; ARCHITECTURE and compound diagram updated.
 
 == [0.1.6] - 2026-10-17
 

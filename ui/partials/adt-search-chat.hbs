@@ -4,14 +4,19 @@
      Closed face shows the selected scope label (component name, version, or All docs) —
      no Antora jargon kind prefix. Menu is a static hierarchy tree:
      All docs → current component → its versions.
-     Fake placeholder overlay (Ask off: "Search" + muted "(AI mode not configured)"; Ask on: "Search or Ask").
-     Narrow/collision: collapses to a search icon; popover holds the full compound + results.
+     Fake placeholder overlay (Chat off: "Search" + muted "(Chat unavailable)"; on: "Search or Ask";
+     semantic level on: "Semantic Search" instead of "Search").
+     Narrow/collision (navbar placement): collapses to a search icon; popover holds the full compound + results.
+     Dock placement (data-placement="dock"): fixed bottom dock; capability strip on the outer box;
+     scope menu, Lunr results, and Ask panel open upward above the dock.
      See ARCHITECTURE.adoc. --}}
 {{!-- Lives in .adt-site-navbar center (see header-content.hbs). Width is independent of doc/nav measure. --}}
 <div
   class="search adt-nav-search adt-search-chat"
   data-adt-search-chat
   data-ask-enabled="false"
+  data-semantic-enabled="false"
+  data-placement="navbar"
   {{#with page.component}}
   data-component-name="{{./name}}"
   data-component-title="{{./title}}"
@@ -43,6 +48,23 @@
     id="adt-search-popover"
     data-adt-search-popover
   >
+    {{!-- Capability strip: which search levels this site offers. Checkboxes are
+         status indicators (disabled); JS syncs them from data-* / runtime config. --}}
+    <div class="adt-search-capabilities" data-adt-search-capabilities aria-label="Search capabilities">
+      <label class="adt-search-capability" data-capability="keyword">
+        <input type="checkbox" disabled checked data-adt-capability="keyword">
+        <span>Keyword</span>
+      </label>
+      <label class="adt-search-capability" data-capability="semantic">
+        <input type="checkbox" disabled data-adt-capability="semantic">
+        <span>Semantic</span>
+      </label>
+      <label class="adt-search-capability" data-capability="chat">
+        <input type="checkbox" disabled data-adt-capability="chat">
+        <span>Chat</span>
+      </label>
+    </div>
+
     {{!-- Transitional tabs: visually hidden in navbar CSS; / and ? still switch modes. --}}
     <div class="adt-search-chat__tabs" role="tablist" aria-label="Search">
       <button
@@ -147,16 +169,16 @@
           <input type="hidden" data-adt-search-scope value="component" />
         </div>
         <div class="adt-search-input-wrap">
-          {{!-- Fake placeholder: Ask on → "Search or Ask"; Ask off → "Search" + muted "(AI mode not configured)". --}}
+          {{!-- Fake placeholder: Chat on → "Search or Ask"; off → "Search" + muted "(Chat unavailable)". --}}
           <span class="adt-search-ph" aria-hidden="true" data-adt-search-ph data-ask-off>
-            <span class="adt-search-ph-main">Search</span><span class="adt-search-ph-note"> (AI mode not configured)</span>
+            <span class="adt-search-ph-main">Search</span><span class="adt-search-ph-note"> (Chat unavailable)</span>
           </span>
           <input
             id="search-input"
             type="text"
             placeholder=""
             autocomplete="off"
-            aria-label="Search (AI mode not configured)"
+            aria-label="Search (Chat unavailable)"
             data-adt-search-input
           >
         </div>

@@ -649,3 +649,111 @@ html.dark-theme .adt-search-scope-option:focus {
   white-space: nowrap;
   border: 0;
 }
+
+/* ——— Top layer: search menus/results above everything ———
+   The scope menu, collapsed popover, Ask panel, and Lunr results must paint
+   over the doc mast and page chrome. Valentus lifts .adt-site-navbar above
+   .adt-doc-mast inside the sticky header; these z-indexes win inside that
+   context and against body-level layers. */
+:root {
+  --adt-search-top-z: 200;
+}
+
+.adt-search-chat .adt-search-scope-menu:not([hidden]),
+.adt-search-chat.is-collapsed .adt-search-chat__popover {
+  z-index: var(--adt-search-top-z);
+}
+
+.adt-search-chat .search-result-dropdown-menu {
+  z-index: var(--adt-search-top-z);
+}
+
+/* ——— Capability strip (Keyword / Semantic / Chat status) ———
+   Visible in dock placement; hidden in the navbar where space is tight. */
+.adt-search-capabilities {
+  display: none;
+}
+
+.adt-search-chat[data-placement='dock'] .adt-search-capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  align-items: center;
+  padding: 0.15rem 0.1rem 0.45rem;
+  font-size: 0.72rem;
+  color: var(--adt-muted, #5b6472);
+}
+
+.adt-search-capability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: default;
+}
+
+.adt-search-capability input {
+  margin: 0;
+  accent-color: var(--adt-accent, #0d9488);
+}
+
+.adt-search-capability.is-off {
+  opacity: 0.55;
+}
+
+/* ——— Floating dock placement ———
+   Fixed near the bottom of the viewport, decoupled from page flow: rounded
+   outer box (capability strip + stacked card), inner card holds
+   scope-above-input. Scope menu, Lunr results, and Ask panel open UPWARD. */
+.adt-search-chat[data-placement='dock'] {
+  position: fixed;
+  inset-inline: 0;
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  z-index: var(--adt-search-top-z);
+  width: min(42rem, calc(100vw - 2rem));
+  margin-inline: auto;
+  padding: 0.55rem 0.65rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, var(--adt-border, #d9dee7));
+  border-radius: 1rem;
+  background: var(--adt-elevated, var(--color-background, #fff));
+  box-shadow: 0 0.75rem 2rem color-mix(in srgb, currentColor 18%, transparent);
+  color: var(--adt-ink, #141820);
+  transition: var(--adt-search-theme-transition);
+}
+
+html.dark-theme .adt-search-chat[data-placement='dock'] {
+  background: var(--adt-elevated, var(--color-background, #1a1a1a));
+  border-color: color-mix(in srgb, var(--adt-accent, #2dd4bf) 28%, var(--adt-border, #3a4454));
+}
+
+/* Dock: scope menu opens upward above the scope row. */
+.adt-search-chat[data-placement='dock'] .adt-search-scope-menu {
+  top: auto;
+  bottom: calc(100% + 0.35rem);
+  /* (top:auto above cancels the navbar drop-down anchor) */
+  box-shadow: 0 -0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
+}
+
+/* Dock: Lunr results pop above the input wrap instead of below it. */
+.adt-search-chat[data-placement='dock'] .search-result-dropdown-menu {
+  top: auto !important;
+  bottom: calc(100% + 0.35rem);
+  box-shadow: 0 -0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
+}
+
+/* Dock: Ask panel floats above the dock card. */
+.adt-search-chat[data-placement='dock'] .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
+  position: absolute;
+  z-index: var(--adt-search-top-z);
+  inset-inline: 0;
+  bottom: calc(100% + 0.5rem);
+  top: auto;
+  padding: 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, transparent);
+  border-radius: 0.75rem;
+  background: var(--adt-elevated, var(--color-background, #fff));
+  box-shadow: 0 -0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
+}
+
+html.dark-theme .adt-search-chat[data-placement='dock'] .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
+  background: var(--adt-elevated, var(--color-background, #1a1a1a));
+}

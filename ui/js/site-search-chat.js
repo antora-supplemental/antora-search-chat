@@ -24,8 +24,17 @@
   var toggle = root.querySelector('[data-adt-search-toggle]')
   var popover = root.querySelector('[data-adt-search-popover]')
   var searchSlot = root.closest('.adt-navbar-search') || root.parentElement
-  var PH_ASK_ON = 'Search or Ask'
-  var PH_ASK_OFF_LABEL = 'Search (AI mode not configured)'
+  var semanticEnabled =
+    typeof cfg.semanticEnabled === 'boolean'
+      ? cfg.semanticEnabled
+      : root.getAttribute('data-semantic-enabled') === 'true'
+  var placement =
+    cfg.placement || root.getAttribute('data-placement') || 'navbar'
+  root.setAttribute('data-semantic-enabled', semanticEnabled ? 'true' : 'false')
+  root.setAttribute('data-placement', placement === 'dock' ? 'dock' : 'navbar')
+  var PH_MAIN = semanticEnabled ? 'Semantic Search' : 'Search'
+  var PH_ASK_ON = PH_MAIN + ' or Ask'
+  var PH_ASK_OFF_LABEL = PH_MAIN + ' (Chat unavailable)'
   var MIN_EXPANDED_SEARCH_PX = 280
   var COLLAPSE_HYSTERESIS_PX = 24
 
@@ -41,6 +50,21 @@
 
   var askEnabled = resolveAskEnabled()
   root.setAttribute('data-ask-enabled', askEnabled ? 'true' : 'false')
+
+  // Capability strip: Keyword always on (Lunr); Semantic / Chat reflect config.
+  var levels = cfg.levels || {}
+  root.querySelectorAll('[data-adt-capability]').forEach(function (box) {
+    var level = box.getAttribute('data-adt-capability')
+    var on =
+      level === 'keyword'
+        ? levels.keyword !== false
+        : level === 'semantic'
+          ? !!levels.semantic || semanticEnabled
+          : !!levels.chat || askEnabled
+    box.checked = !!on
+    var label = box.closest('.adt-search-capability')
+    if (label) label.classList.toggle('is-off', !on)
+  })
 
   function pageContext () {
     return {
@@ -216,12 +240,12 @@
     if (ph) {
       if (askEnabled) {
         ph.removeAttribute('data-ask-off')
-        ph.innerHTML = '<span class="adt-search-ph-main">Search or Ask</span>'
+        ph.innerHTML = '<span class="adt-search-ph-main">' + PH_ASK_ON + '</span>'
       } else {
         ph.setAttribute('data-ask-off', '')
         ph.innerHTML =
-          '<span class="adt-search-ph-main">Search</span>' +
-          '<span class="adt-search-ph-note"> (AI mode not configured)</span>'
+          '<span class="adt-search-ph-main">' + PH_MAIN + '</span>' +
+          '<span class="adt-search-ph-note"> (Chat unavailable)</span>'
       }
     }
     if (searchInput) {
@@ -332,6 +356,19 @@
     searchInput.addEventListener('focus', syncSearchPlaceholder)
     searchInput.addEventListener('blur', syncSearchPlaceholder)
     searchInput.addEventListener('input', syncSearchPlaceholder)
+    // Typing drives keyword/semantic search (Lunr on keystroke); Enter is the
+    // explicit chat query when Chat is enabled.
+    searchInput.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return
+      if (!askEnabled || !form || !input) return
+      var q = String(searchInput.value || '').trim()
+      if (!q) return
+      e.preventDefault()
+      input.value = q
+      activate('ask')
+      if (typeof form.requestSubmit === 'function') form.requestSubmit()
+      else form.dispatchEvent(new Event('submit', { cancelable: true }))
+    })
     syncSearchPlaceholder()
   }
 
@@ -507,6 +544,8 @@
   }
 
   function updateCollapseMode () {
+    // Dock placement is viewport-fixed and always expanded; never icon-collapse.
+    if (placement === 'dock') return
     var available = measureAvailableSearchWidth()
     var collapsed = isCollapsed()
     if (!collapsed && available < MIN_EXPANDED_SEARCH_PX) {
