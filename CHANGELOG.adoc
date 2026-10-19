@@ -7,6 +7,12 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.11] - 2026-10-19
+
+=== Fixed
+
+* **Dock placement was hidden by its own navbar slot:** the vacated `.adt-navbar-search` host now collapses to a zero-size, overflow-visible box instead of `display: none`, which had hidden the fixed dock descendant as well.
+
 == [0.1.10] - 2026-10-17
 
 === Fixed

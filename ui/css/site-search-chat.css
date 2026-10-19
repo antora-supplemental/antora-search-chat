@@ -700,11 +700,17 @@ html.dark-theme .adt-search-scope-option:focus {
   opacity: 0.55;
 }
 
-/* Dock placement vacates the navbar slot — collapse the now-empty host so
-   the top bar is brand + actions only. */
+/* Dock placement vacates the navbar slot — collapse the host's box without
+   display:none (that would also hide the fixed dock descendant). */
 .adt-navbar-search:has(> .adt-search-chat[data-placement='dock']),
 .adt-site-navbar .adt-nav-search:has(> .adt-search-chat[data-placement='dock']) {
-  display: none;
+  flex: 0 0 0;
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
 }
 
 /* ——— Floating dock placement ———
