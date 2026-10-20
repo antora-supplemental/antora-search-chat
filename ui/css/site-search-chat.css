@@ -771,6 +771,10 @@ html.dark-theme .adt-search-chat[data-placement='dock'] {
   bottom: calc(100% + 0.5rem);
   inset-inline: 0;
   width: auto !important;
+  /* Anchored to the viewport bottom: cap height so the first results stay
+     on screen; the list scrolls internally. */
+  max-height: min(65vh, calc(100vh - 12rem));
+  overflow-y: auto;
 }
 
 /* Dock: Ask panel floats above the dock card. */

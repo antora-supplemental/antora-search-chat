@@ -7,6 +7,12 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.13] - 2026-10-19
+
+=== Fixed
+
+* **Dock results ran off the top of the viewport:** the portaled Lunr results menu now caps at `min(65vh, 100vh - 12rem)` with internal scrolling, so the first results stay visible above the dock.
+
 == [0.1.12] - 2026-10-19
 
 === Fixed
