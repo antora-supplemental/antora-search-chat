@@ -764,8 +764,8 @@ html.dark-theme .adt-search-scope-option:focus {
   background-color: var(--adt-search-chip);
 }
 
-/* Dock placement vacates the navbar slot — collapse the host's box without
-   display:none (that would also hide the fixed dock descendant). */
+/* Dock placement vacates the navbar slot. The dock node is moved into the
+   page column, so this only collapses the empty host (no leftover gap). */
 .adt-navbar-search:has(> .adt-search-chat[data-placement='dock']),
 .adt-navbar-search.adt-search-slot-vacated,
 .adt-site-navbar .adt-nav-search:has(> .adt-search-chat[data-placement='dock']) {
@@ -778,17 +778,24 @@ html.dark-theme .adt-search-scope-option:focus {
   overflow: visible;
 }
 
-/* ——— Floating dock placement ———
-   Fixed near the bottom of the viewport, decoupled from page flow: rounded
-   outer box (capability strip + stacked card), inner card holds
-   scope-above-input. Scope menu, Lunr results, and Ask panel open UPWARD. */
+/* ——— In-flow sticky dock ———
+   JS appends the dock to .adt-shell (class adt-search-dock-column), the
+   page column that ends immediately before footer.footer. Sticky keeps the
+   bar on screen while that column fills the viewport; the dock's own flow
+   box stays between the article and the footer, so footer links, the edit
+   link, and the extension lister are not under a fixed overlay.
+   Scope menu, Lunr results, and Ask panel still open UPWARD. */
 .adt-search-chat[data-placement='dock'] {
-  position: fixed;
-  inset-inline: 0;
-  bottom: max(0.75rem, env(safe-area-inset-bottom));
+  position: relative;
   z-index: var(--adt-search-top-z);
-  width: min(42rem, calc(100vw - 2rem));
+  align-self: center;
+  flex: 0 0 auto;
+  width: min(42rem, calc(100% - 2rem));
+  max-width: calc(100vw - 2rem);
+  margin-top: 0.75rem;
+  margin-bottom: max(0.75rem, env(safe-area-inset-bottom));
   margin-inline: auto;
+  overflow-anchor: none;
   padding: 0.65rem 0.65rem 0.55rem;
   border: 1px solid var(--adt-search-rim);
   border-radius: 1rem;
@@ -799,6 +806,13 @@ html.dark-theme .adt-search-scope-option:focus {
     0 0.75rem 2rem color-mix(in srgb, var(--adt-ink, #141820) 16%, transparent);
   color: var(--adt-ink, #141820);
   transition: var(--adt-search-theme-transition);
+}
+
+/* Sticky only when the column ends before the footer (adt-search-dock-column).
+   Otherwise the dock stays in normal flow directly above the footer. */
+.adt-search-dock-column > .adt-search-chat[data-placement='dock'] {
+  position: sticky;
+  bottom: 0;
 }
 
 /* Dock: scope menu opens upward above the scope row. */

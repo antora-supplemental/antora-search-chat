@@ -7,6 +7,12 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.17] - 2026-10-20
+
+=== Fixed
+
+* **Search dock covered the footer.** The dock is no longer a fixed overlay on the body. It mounts at the end of the page column (`.adt-shell`, marked `adt-search-dock-column`) and uses sticky positioning, so it stays on screen while scrolling and its layout box sits between the article and the footer. Footer links, the edit link, and the extension lister receive clicks.
+
 == [0.1.16] - 2026-10-19
 
 === Fixed

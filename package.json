@@ -1,6 +1,6 @@
 {
   "name": "@antora-supplemental/antora-search-chat",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Antora extension: wraps @antora/lunr-extension with a Search/Ask omnibox (lunr-first; optional local tier-0 + remote backend). Does not fork lunr.",
   "main": "lib/index.js",
   "license": "MIT",
@@ -22,7 +22,8 @@
   },
   "scripts": {
     "diagrams:generate": "node scripts/generate-themed-diagrams.mjs",
-    "diagrams:check": "node scripts/generate-themed-diagrams.mjs --check"
+    "diagrams:check": "node scripts/generate-themed-diagrams.mjs --check",
+    "test": "node --test test/*.test.js"
   },
   "devDependencies": {
     "@dev-centr/mermaid-svg-css-vars": "0.1.2",

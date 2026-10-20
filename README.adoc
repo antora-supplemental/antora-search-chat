@@ -122,7 +122,7 @@ antora:
       # default_mode: search
       # local_assist: false
       # semantic_enabled: false           # semantic level (placeholder "Semantic Search"); engine is a separate track
-      # placement: navbar                 # navbar (default) | dock (floating bottom dock, results open upward)
+      # placement: navbar                 # navbar (default) | dock (sticky bar above the footer, results open upward)
 ----
 
 === Theme integration contract
@@ -151,7 +151,7 @@ Optional site key:: `site.keys.askEnabled` — theme mirror if you wire a plain 
 * *One omnibox* — `/` and `?` set Search vs Ask mode on the **same** field (not two widgets).
 * *Scope control* — selector in a full-width row *above* the input (stacked, not conjoined on the left). Closed face shows the selected label (component title, version, or *All docs*) with no *Component*/*Version* kind prefix. Open menu is a static tree: *All docs* → current component → that component's versions (`version X - current` on the page version).
 * *Compound UI* — one stacked card: `[ {scope} ▾ ]` over `[ Search… ]` (`.adt-search-compound--stacked` + `.adt-search-scope-row` + `.adt-search-input-wrap`); shared outer border, horizontal rule between rows.
-* *Placement* — `navbar` (default) or `dock`: floating bottom dock with a Keyword / Semantic / Chat capability strip; menus and results open upward above the dock. Typing searches on keystroke; Enter submits a chat query when chat is enabled.
+* *Placement* — `navbar` (default) or `dock`: sticky bar in the page column, above the footer, with a Keyword / Semantic / Chat capability strip; menus and results open upward above the dock. Typing searches on keystroke; Enter submits a chat query when chat is enabled.
 * *Default scope* — *Current component* on docs pages when detectable; *All* on home / when ambiguous. See ARCHITECTURE.
 * *Collapse* — on narrow / collision, omnibox collapses to a search icon; popover holds scope + input + Ask + lunr results.
 * *Lunr-first* — keyword results while typing in Search mode; Ask only on explicit mode / submit. Optional debounced question-detection may come later; it is not the default.

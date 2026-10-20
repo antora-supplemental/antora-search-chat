@@ -1,3 +1,43 @@
+/**
+ * Mount the dock in the page column so it occupies layout space above the
+ * footer. Valentus ends `.adt-shell` immediately before `footer.footer`;
+ * appending there makes that column the sticky containing block. A
+ * `position: fixed` overlay on `<body>` covers footer links.
+ *
+ * Returns the column the dock was attached to.
+ */
+function placeSearchDock (doc, root) {
+  var slot = typeof root.closest === 'function' ? root.closest('.adt-navbar-search') : null
+  if (!slot) slot = root.parentElement
+  if (slot && slot !== root && slot.classList) slot.classList.add('adt-search-slot-vacated')
+  if (doc.body && doc.body.classList) doc.body.classList.add('adt-search-dock-active')
+
+  var shell = doc.querySelector('.adt-shell')
+  var footer = doc.querySelector('footer.footer') || doc.querySelector('footer')
+  var column = shell
+  if (!column) {
+    var main = doc.querySelector('main')
+    var mainParent = main && main.parentElement
+    if (mainParent && (!footer || !mainParent.contains(footer))) column = mainParent
+  }
+
+  if (column && footer && column.contains(footer)) {
+    column.insertBefore(root, footer)
+  } else if (column) {
+    column.appendChild(root)
+  } else if (footer && footer.parentElement) {
+    footer.parentElement.insertBefore(root, footer)
+  } else if (doc.body) {
+    doc.body.appendChild(root)
+  }
+
+  if (column && column.classList && (!footer || !column.contains(footer))) {
+    column.classList.add('adt-search-dock-column')
+  }
+  return column || root.parentElement
+}
+
+if (typeof document !== 'undefined') {
 ;(function () {
   'use strict'
 
@@ -34,14 +74,12 @@
   root.setAttribute('data-semantic-enabled', semanticEnabled ? 'true' : 'false')
   root.setAttribute('data-placement', placement === 'dock' ? 'dock' : 'navbar')
 
-  // Dock placement: portal the root to <body>. The theme header uses
-  // will-change/transform, which makes it the containing block for fixed
-  // descendants — a dock left inside the header anchors to the header box
-  // instead of the viewport. Moving the node keeps all child refs/listeners.
+  // Dock placement: move the root to the end of the page column (before the
+  // footer). The header's transform would trap a fixed descendant, and a
+  // fixed overlay on <body> covers the footer. Sticky on the column keeps
+  // the dock on screen and leaves its flow box between the article and footer.
   if (placement === 'dock') {
-    if (searchSlot && searchSlot !== root) searchSlot.classList.add('adt-search-slot-vacated')
-    document.body.classList.add('adt-search-dock-active')
-    if (root.parentElement !== document.body) document.body.appendChild(root)
+    placeSearchDock(document, root)
     // Scope menu becomes a direct child so it can anchor above the whole dock.
     if (scopeMenu && scopeMenu.parentElement !== root) root.appendChild(scopeMenu)
   }
@@ -588,7 +626,7 @@
   }
 
   function updateCollapseMode () {
-    // Dock placement is viewport-fixed and always expanded; never icon-collapse.
+    // Dock placement stays expanded in the page column; never icon-collapse.
     if (placement === 'dock') return
     var available = measureAvailableSearchWidth()
     var collapsed = isCollapsed()
@@ -682,3 +720,8 @@
     })
   }
 })()
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { placeSearchDock }
+}

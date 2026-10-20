@@ -1,6 +1,7 @@
-{{!-- Search/Ask omnibox — floating dock or navbar slot (see ARCHITECTURE.adoc).
+{{!-- Search/Ask omnibox — sticky in-flow dock or navbar slot (see ARCHITECTURE.adoc).
      One stable shell: scope row + query field + mode tabs + optional Ask result;
-     capability indicators sit at the bottom of the overlay. / and ? switch modes. --}}
+     capability indicators sit at the bottom of the dock. / and ? switch modes.
+     Dock placement is moved to the end of .adt-shell so it occupies space above the footer. --}}
 <div
   class="search adt-nav-search adt-search-chat"
   data-adt-search-chat

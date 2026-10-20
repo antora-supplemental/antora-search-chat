@@ -152,7 +152,7 @@ Lunr's UI today is weak for multi-value facets (often a single checkbox-style fi
 
 ==== Layout coordination
 
-*Placement:* default mount is `.adt-site-navbar` (`.adt-navbar-search`). With `placement: dock` the same partial renders as a *floating dock fixed near the bottom* of the viewport (decoupled from article/nav flow): capability strip on the outer rounded box, stacked scope-above-input card inside, and the scope menu, Lunr results, and Ask panel all open *upward* above the dock (shipped in 0.1.7; navbar remains the default until consumers opt in). Dock width is independent of `--adt-doc-max`. Search-chat owns the control and result zones; layout must not clip overflow on the dock or upward results stack. Search menus/results use `--adt-search-top-z` so they paint above the doc mast and all page chrome.
+*Placement:* default mount is `.adt-site-navbar` (`.adt-navbar-search`). With `placement: dock` the same partial is moved to the end of `.adt-shell` (the page column that ends immediately before `footer.footer`) and sticks to the bottom of the viewport while that column is on screen. Its in-flow box sits between the article and the footer, so the footer, edit link, and extension lister stay clickable. Capability strip on the outer rounded box, stacked scope-above-input card inside, and the scope menu, Lunr results, and Ask panel all open *upward* above the dock (shipped in 0.1.7; navbar remains the default until consumers opt in). Dock width is independent of `--adt-doc-max`. Search-chat owns the control and result zones; layout must not clip overflow on the dock or upward results stack. Search menus/results use `--adt-search-top-z` so they paint above the doc mast and all page chrome. The column receives `adt-search-dock-column`; `body` receives `adt-search-dock-active`.
 
 *Collapse-to-icon*:: When leftover middle space is too narrow (high zoom / mobile), `site-search-chat.js` adds `.is-collapsed` and shows a search icon toggle. Opening it drops `.adt-search-chat__popover` under the icon with the full compound (scope + input + Ask) and lunr results. `/` and `?` open the popover. Themes should keep `.adt-navbar-search` in normal flow (not absolute-centered with a large `min-width`) so brand/title and search never paint on top of each other.
 
@@ -272,7 +272,7 @@ Playbook extension object (alongside `require`):
 
 | `placement`
 | `navbar` \| `dock`
-| `navbar` (default) mounts in the top bar. `dock` renders a floating dock fixed near the bottom of the viewport: rounded outer box with the capability strip, stacked scope-above-input card inside, and scope menu / Lunr results / Ask panel opening *upward* above the dock. Typing searches on keystroke; Enter submits a chat query when chat is enabled.
+| `navbar` (default) mounts in the top bar. `dock` mounts a sticky bar at the end of the page column, above the footer: rounded outer box with the capability strip, stacked scope-above-input card inside, and scope menu / Lunr results / Ask panel opening *upward* above the dock. The bar stays on screen while scrolling and yields its space to the footer at the bottom of the page. Typing searches on keystroke; Enter submits a chat query when chat is enabled.
 
 | `enabled`
 | boolean
