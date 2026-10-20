@@ -37,7 +37,7 @@ html.dark-theme {
   box-sizing: border-box;
 }
 
-/* Navbar: compound + mode tabs share one column (no mode swap layout). */
+/* Navbar: one column for the scope row and the query field. */
 .adt-site-navbar .adt-search-chat,
 .adt-navbar-search .adt-search-chat {
   gap: 0;
@@ -259,6 +259,18 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   transition: var(--adt-search-theme-transition);
 }
 
+/* Closed scope control only. overflow:hidden here clips the square button to
+   the rounded field. The open menu is a sibling, so it is not trapped. */
+.adt-search-scope-clip {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  margin: 1px 1px 0;
+  border-start-start-radius: calc(0.5rem - 2px);
+  border-start-end-radius: calc(0.5rem - 2px);
+  background-color: var(--adt-search-surface);
+}
+
 /* Closed face: selected scope label only (no Antora "Component"/"Version" kind prefix). */
 .adt-search-scope-face {
   display: flex;
@@ -315,7 +327,10 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   margin: 0;
   padding: 0 1.65rem 0 0.65rem;
   border: 0;
-  border-radius: 0;
+  border-start-start-radius: calc(0.5rem - 2px);
+  border-start-end-radius: calc(0.5rem - 2px);
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
   background: inherit;
   background-color: inherit;
   color: inherit;
@@ -525,7 +540,7 @@ html.dark-theme .adt-search-scope-option:focus {
   max-width: 100%;
   height: auto !important;
   margin: 0;
-  padding: 0.35rem 1.75rem 0.35rem 0.65rem !important;
+  padding: 0.35rem 0.65rem !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: var(--adt-search-surface) !important;
@@ -541,6 +556,11 @@ html.dark-theme .adt-search-scope-option:focus {
   text-overflow: clip;
   white-space: nowrap;
   transition: color 0.2s ease;
+}
+
+.adt-search-compound #search-input::placeholder {
+  color: var(--adt-search-muted);
+  opacity: 1;
 }
 
 .adt-search-compound #search-input:hover,
@@ -691,6 +711,10 @@ html.dark-theme .adt-search-scope-option:focus {
   border: 1px solid var(--adt-search-rim);
   border-radius: 0.55rem;
   padding: 0;
+  /* One scrollport for keyword results. Empty menus are hidden below. */
+  max-height: min(65vh, calc(100vh - 12rem));
+  overflow-x: hidden;
+  overflow-y: auto;
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--adt-ink, #141820) 5%, transparent),
     0 0.45rem 1.25rem color-mix(in srgb, var(--adt-ink, #141820) 14%, transparent);
@@ -701,6 +725,27 @@ html.dark-theme .adt-search-scope-option:focus {
   border: none;
   border-radius: calc(0.55rem - 1px);
   color: var(--adt-ink, #141820);
+  /* Lunr sets overflow:auto and a max-height taller than the menu, which
+     nested a second scrollbar. The menu (or a result zone) is the scrollport. */
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Lunr inserts an empty .search-result-dropdown-menu before any query.
+   Its border paints a stray line until the first search. */
+.adt-search-chat .search-result-dropdown-menu:empty,
+.adt-search-chat .search-result-dropdown-menu:not(:has(.search-result-dataset)),
+.adt-search-chat .search-result-dropdown-menu.is-idle {
+  display: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 .adt-search-chat .search-result-component-header,
@@ -853,7 +898,61 @@ html.dark-theme .adt-search-scope-option:focus {
   overflow-y: auto;
 }
 
-/* Dock: Ask answers stay in-flow under mode tabs (same shell as Search). */
+/* Semantic on: two stacked zones, each its own scrollport. The menu does not scroll. */
+.adt-search-chat .search-result-dropdown-menu.adt-search-results--split {
+  display: flex;
+  flex-direction: column;
+  height: min(65vh, calc(100vh - 12rem));
+  max-height: min(65vh, calc(100vh - 12rem));
+  overflow: hidden !important;
+}
+
+.adt-search-chat[data-placement='dock'] > .search-result-dropdown-menu.adt-search-results--split {
+  overflow: hidden !important;
+}
+
+.adt-search-zone {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--adt-search-surface);
+}
+
+.adt-search-zone + .adt-search-zone {
+  border-top: 1px solid var(--adt-search-rim);
+}
+
+.adt-search-zone__title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--adt-search-muted);
+  background-color: var(--adt-search-surface);
+  border-bottom: 1px solid var(--adt-search-rim);
+}
+
+.adt-search-zone__empty {
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  color: var(--adt-search-muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.adt-search-chat:not([data-semantic-enabled='true']) .adt-search-zone--semantic {
+  display: none !important;
+}
+
+/* Dock: Ask answers stay in-flow under the query field (same shell as search). */
 .adt-search-chat[data-placement='dock'] .adt-search-chat__ask-result:not([hidden]) {
   max-height: min(40vh, 14rem);
   overflow-y: auto;
@@ -883,6 +982,7 @@ html.dark-theme .adt-search-scope-option:focus {
 .adt-search-chat .adt-search-chat__popover,
 .adt-search-chat .adt-search-compound,
 .adt-search-chat .adt-search-scope-slot,
+.adt-search-chat .adt-search-scope-clip,
 .adt-search-chat .adt-search-scope-menu,
 .adt-search-chat .adt-search-scope-option,
 .adt-search-chat .adt-search-chat__query-slot,
@@ -895,6 +995,8 @@ html.dark-theme .adt-search-scope-option:focus {
 .adt-search-chat .adt-search-chat__toggle,
 .adt-search-chat .search-result-dropdown-menu,
 .adt-search-chat .search-result-dataset,
+.adt-search-chat .adt-search-zone,
+.adt-search-chat .adt-search-zone__title,
 .adt-search-chat .search-result-component-header,
 .adt-search-chat .search-result-document-title,
 .adt-search-chat .search-result-document-hit,
@@ -924,6 +1026,9 @@ html.dark-theme .adt-search-scope-option:focus {
 .adt-search-chat .adt-search-scope-slot:hover,
 .adt-search-chat .adt-search-scope-slot:focus-within,
 .adt-search-chat .adt-search-scope-slot.is-open,
+.adt-search-chat .adt-search-scope-slot:hover .adt-search-scope-clip,
+.adt-search-chat .adt-search-scope-slot:focus-within .adt-search-scope-clip,
+.adt-search-chat .adt-search-scope-slot.is-open .adt-search-scope-clip,
 .adt-search-chat .adt-search-scope-option:hover,
 .adt-search-chat .adt-search-scope-option:focus,
 .adt-search-chat .search-result-document-hit:hover,
@@ -941,6 +1046,9 @@ html.dark-theme .adt-search-scope-option:focus {
 .adt-search-chat .adt-search-scope-slot.is-disabled,
 .adt-search-chat .adt-search-scope-slot.is-disabled:hover,
 .adt-search-chat .adt-search-scope-slot.is-disabled:focus-within,
+.adt-search-chat .adt-search-scope-slot.is-disabled .adt-search-scope-clip,
+.adt-search-chat .adt-search-scope-slot.is-disabled:hover .adt-search-scope-clip,
+.adt-search-chat .adt-search-scope-slot.is-disabled:focus-within .adt-search-scope-clip,
 .adt-search-chat .adt-search-capability,
 .adt-search-chat .adt-search-capability.is-off,
 html.dark-theme .adt-search-chat kbd.adt-search-chat__hint,

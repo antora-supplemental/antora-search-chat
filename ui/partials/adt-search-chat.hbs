@@ -1,6 +1,6 @@
 {{!-- Search/Ask omnibox — sticky in-flow dock or navbar slot (see ARCHITECTURE.adoc).
-     One stable shell: scope row + query field + mode tabs + optional Ask result;
-     capability indicators sit at the bottom of the dock. / and ? switch modes.
+     One shell: scope row + one query field + optional Ask result.
+     Capability indicators sit at the bottom of the dock. / focuses the field.
      Dock placement is moved to the end of .adt-shell so it occupies space above the footer. --}}
 <div
   class="search adt-nav-search adt-search-chat"
@@ -44,20 +44,22 @@
       <form class="adt-search-chat__omnibox" data-adt-search-ask-form>
         <div id="search-field" class="adt-search-chat__field adt-search-compound adt-search-compound--stacked">
           <div class="adt-search-scope-slot adt-search-scope-row" data-adt-search-scope-slot>
-            <button
-              type="button"
-              id="adt-search-scope"
-              class="adt-search-scope-trigger"
-              data-adt-search-scope-trigger
-              aria-haspopup="listbox"
-              aria-expanded="false"
-              aria-controls="adt-search-scope-menu"
-              aria-label="Search scope"
-            >
-              <span class="adt-search-scope-face" aria-hidden="true" data-adt-search-scope-face>
-                <span class="adt-search-scope-label" data-adt-search-scope-label></span>
-              </span>
-            </button>
+            <div class="adt-search-scope-clip">
+              <button
+                type="button"
+                id="adt-search-scope"
+                class="adt-search-scope-trigger"
+                data-adt-search-scope-trigger
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-controls="adt-search-scope-menu"
+                aria-label="Search scope"
+              >
+                <span class="adt-search-scope-face" aria-hidden="true" data-adt-search-scope-face>
+                  <span class="adt-search-scope-label" data-adt-search-scope-label></span>
+                </span>
+              </button>
+            </div>
             <ul
               id="adt-search-scope-menu"
               class="adt-search-scope-menu"
@@ -112,18 +114,14 @@
 
           <div class="adt-search-chat__query-slot" data-adt-search-query-slot>
             <div class="adt-search-input-wrap" data-adt-search-input-wrap>
-              <span class="adt-search-ph" aria-hidden="true" data-adt-search-ph data-ask-off>
-                <span class="adt-search-ph-main">Search</span><span class="adt-search-ph-note"> (Chat unavailable)</span>
-              </span>
               <input
                 id="search-input"
                 type="text"
-                placeholder=""
+                placeholder="Search or ask... /"
                 autocomplete="off"
-                aria-label="Search (Chat unavailable)"
+                aria-label="Search or ask... /"
                 data-adt-search-input
               >
-              <kbd class="adt-search-chat__field-hint" aria-hidden="true">/</kbd>
             </div>
             <div class="adt-search-ask-wrap" data-adt-ask-wrap hidden>
               <label class="adt-search-chat__ask-label visually-hidden" for="adt-ask-input">Ask</label>
@@ -138,33 +136,6 @@
               <kbd class="adt-search-chat__field-hint" aria-hidden="true">?</kbd>
             </div>
           </div>
-        </div>
-
-        <div class="adt-search-chat__tabs" role="tablist" aria-label="Search mode">
-          <button
-            type="button"
-            class="adt-search-chat__tab is-active"
-            role="tab"
-            id="adt-search-tab-search"
-            aria-selected="true"
-            aria-controls="adt-search-query-slot"
-            data-adt-search-tab="search"
-          >
-            <span class="adt-search-chat__tab-label">Search</span>
-            <kbd class="adt-search-chat__hint" title="Focus search">/</kbd>
-          </button>
-          <button
-            type="button"
-            class="adt-search-chat__tab"
-            role="tab"
-            id="adt-search-tab-ask"
-            aria-selected="false"
-            aria-controls="adt-ask-input"
-            data-adt-search-tab="ask"
-          >
-            <span class="adt-search-chat__tab-label">Ask</span>
-            <kbd class="adt-search-chat__hint" title="Focus ask">?</kbd>
-          </button>
         </div>
 
         <div

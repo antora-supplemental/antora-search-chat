@@ -53,7 +53,6 @@ if (typeof document !== 'undefined') {
   var result = root.querySelector('[data-adt-ask-result]')
   var searchInput =
     root.querySelector('[data-adt-search-input]') || document.getElementById('search-input')
-  var ph = root.querySelector('[data-adt-search-ph]')
   var scopeValueInput = root.querySelector('[data-adt-search-scope]')
   var scopeSlot = root.querySelector('[data-adt-search-scope-slot]')
   var scopeTrigger = root.querySelector('[data-adt-search-scope-trigger]')
@@ -83,9 +82,7 @@ if (typeof document !== 'undefined') {
     // Scope menu becomes a direct child so it can anchor above the whole dock.
     if (scopeMenu && scopeMenu.parentElement !== root) root.appendChild(scopeMenu)
   }
-  var PH_MAIN = semanticEnabled ? 'Semantic Search' : 'Search'
-  var PH_ASK_ON = PH_MAIN + ' or Ask'
-  var PH_ASK_OFF_LABEL = PH_MAIN + ' (Chat unavailable)'
+  var QUERY_PLACEHOLDER = 'Search or ask... /'
   var MIN_EXPANDED_SEARCH_PX = 280
   var COLLAPSE_HYSTERESIS_PX = 24
 
@@ -288,37 +285,13 @@ if (typeof document !== 'undefined') {
   }
 
   function syncPlaceholderCopy () {
-    if (ph) {
-      if (askEnabled) {
-        ph.removeAttribute('data-ask-off')
-        ph.innerHTML = '<span class="adt-search-ph-main">' + PH_ASK_ON + '</span>'
-      } else {
-        ph.setAttribute('data-ask-off', '')
-        ph.innerHTML =
-          '<span class="adt-search-ph-main">' + PH_MAIN + '</span>' +
-          '<span class="adt-search-ph-note"> (Chat unavailable)</span>'
-      }
-    }
-    if (searchInput) {
-      searchInput.setAttribute('aria-label', askEnabled ? PH_ASK_ON : PH_ASK_OFF_LABEL)
-    }
+    if (!searchInput) return
+    searchInput.setAttribute('placeholder', QUERY_PLACEHOLDER)
+    searchInput.setAttribute('aria-label', QUERY_PLACEHOLDER)
   }
 
   if (cfg.askPlaceholder && input) {
     input.setAttribute('placeholder', cfg.askPlaceholder)
-  }
-
-  // Fake placeholder: hide when focused or non-empty (native placeholder cannot
-  // switch Ask-off vs Ask-on copy cleanly with partial styling).
-  function syncSearchPlaceholder () {
-    if (!ph || !searchInput) return
-    // Keep native placeholder empty so it never fights the overlay.
-    if (searchInput.getAttribute('placeholder')) {
-      searchInput.setAttribute('placeholder', '')
-    }
-    var hide =
-      document.activeElement === searchInput || String(searchInput.value || '').length > 0
-    ph.classList.toggle('is-hidden', hide)
   }
 
   syncPlaceholderCopy()
@@ -405,48 +378,122 @@ if (typeof document !== 'undefined') {
     })
   }
 
+  function submitAskForm () {
+    if (!form) return
+    if (typeof form.requestSubmit === 'function') form.requestSubmit()
+    else form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))
+  }
+
   if (input) {
+    // Shift+Enter keeps the browser newline. Enter asks.
     input.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' || e.shiftKey) return
-      if (root.getAttribute('data-active-tab') !== 'ask') return
-      if (!form) return
       e.preventDefault()
-      if (typeof form.requestSubmit === 'function') form.requestSubmit()
-      else form.dispatchEvent(new Event('submit', { cancelable: true }))
+      submitAskForm()
     })
   }
 
   if (searchInput) {
-    searchInput.addEventListener('focus', syncSearchPlaceholder)
-    searchInput.addEventListener('blur', syncSearchPlaceholder)
-    searchInput.addEventListener('input', syncSearchPlaceholder)
-    // Typing drives keyword/semantic search (Lunr on keystroke); Enter is the
-    // explicit chat query when Chat is enabled.
+    // Typing drives keyword search (Lunr on keystroke). Enter asks.
+    // A single-line input has no newline, so Enter only asks.
     searchInput.addEventListener('keydown', function (e) {
-      if (e.key !== 'Enter') return
-      if (!askEnabled || !form || !input) return
-      var q = String(searchInput.value || '').trim()
-      if (!q) return
+      if (e.key !== 'Enter' || e.shiftKey) return
       e.preventDefault()
-      input.value = q
-      activate('ask')
-      if (typeof form.requestSubmit === 'function') form.requestSubmit()
-      else form.dispatchEvent(new Event('submit', { cancelable: true }))
+      submitAskForm()
     })
-    syncSearchPlaceholder()
   }
 
-  // Dock placement: Lunr mounts .search-result-dropdown-menu inside the input
-  // wrap; portal it to the dock root so results anchor above the whole dock.
-  if (placement === 'dock' && searchInput && inputWrap) {
-    var moveResultsToDock = function () {
-      var dd = inputWrap.querySelector('.search-result-dropdown-menu')
-      if (dd && dd.parentElement !== root) root.appendChild(dd)
+  // Lunr mounts .search-result-dropdown-menu on the input wrap as soon as its
+  // script runs, before a query. Hide that empty box, and when semantic search
+  // is on, split hits into keyword (top) and semantic (bottom) zones.
+  var organizingResults = false
+
+  function makeZone (name, label) {
+    var zone = document.createElement('div')
+    zone.className = 'adt-search-zone adt-search-zone--' + name
+    zone.setAttribute('data-adt-search-zone', name)
+    var title = document.createElement('div')
+    title.className = 'adt-search-zone__title'
+    title.textContent = label
+    zone.appendChild(title)
+    if (name === 'semantic') {
+      var empty = document.createElement('p')
+      empty.className = 'adt-search-zone__empty'
+      empty.textContent = 'No semantic results.'
+      zone.appendChild(empty)
     }
-    moveResultsToDock()
+    return zone
+  }
+
+  function ensureZone (dd, name, label) {
+    var zone = dd.querySelector('[data-adt-search-zone="' + name + '"]')
+    if (zone) return zone
+    zone = makeZone(name, label)
+    dd.appendChild(zone)
+    return zone
+  }
+
+  function organizeSearchResults (dd) {
+    if (organizingResults || !dd) return
+    organizingResults = true
+    try {
+      var dataset = dd.querySelector('.search-result-dataset')
+      if (!dataset) {
+        dd.classList.add('is-idle')
+        dd.classList.remove('adt-search-results--split')
+        return
+      }
+      dd.classList.remove('is-idle')
+      if (!semanticEnabled) {
+        dd.classList.remove('adt-search-results--split')
+        if (dataset.parentElement !== dd) dd.appendChild(dataset)
+        Array.prototype.slice.call(dd.querySelectorAll('[data-adt-search-zone]')).forEach(function (zone) {
+          zone.remove()
+        })
+        return
+      }
+      dd.classList.add('adt-search-results--split')
+      var keyword = ensureZone(dd, 'keyword', 'Keyword')
+      if (dataset.parentElement !== keyword) keyword.appendChild(dataset)
+      var semantic = ensureZone(dd, 'semantic', 'Semantic')
+      if (keyword.nextElementSibling !== semantic) {
+        dd.appendChild(keyword)
+        dd.appendChild(semantic)
+      }
+    } finally {
+      organizingResults = false
+    }
+  }
+
+  function watchResultsMenu (dd) {
+    if (!dd) return
+    if (dd.getAttribute('data-adt-results-watch') === '1') {
+      organizeSearchResults(dd)
+      return
+    }
+    dd.setAttribute('data-adt-results-watch', '1')
+    organizeSearchResults(dd)
     if (typeof MutationObserver === 'function') {
-      new MutationObserver(moveResultsToDock).observe(inputWrap, { childList: true })
+      new MutationObserver(function () {
+        organizeSearchResults(dd)
+      }).observe(dd, { childList: true })
     }
+  }
+
+  function bindResultsMenu () {
+    var dd = inputWrap && inputWrap.querySelector('.search-result-dropdown-menu')
+    if (!dd) {
+      var menus = root.querySelectorAll('.search-result-dropdown-menu')
+      dd = menus.length ? menus[0] : null
+    }
+    if (!dd) return
+    if (placement === 'dock' && dd.parentElement !== root) root.appendChild(dd)
+    watchResultsMenu(dd)
+  }
+
+  bindResultsMenu()
+  if (inputWrap && typeof MutationObserver === 'function') {
+    new MutationObserver(bindResultsMenu).observe(inputWrap, { childList: true })
   }
 
   // Antora UI default site.js: nav-panel-menu mousedown with detail > 1 → preventDefault
@@ -514,28 +561,22 @@ if (typeof document !== 'undefined') {
     if (askMode) setScopeMenuOpen(false)
   }
 
-  function activate (name) {
-    if (name !== 'search' && name !== 'ask') name = 'search'
+  function focusQuery () {
     if (typeof window.adtRevealSiteChrome === 'function') {
       window.adtRevealSiteChrome()
     }
     openSearchUI()
-    root.setAttribute('data-active-tab', name)
-    tabs.forEach(function (tab) {
-      var on = tab.getAttribute('data-adt-search-tab') === name
-      tab.classList.toggle('is-active', on)
-      tab.setAttribute('aria-selected', on ? 'true' : 'false')
-    })
-    if (inputWrap) inputWrap.hidden = name !== 'search'
-    if (askWrap) askWrap.hidden = name !== 'ask'
-    syncScopeInteractive(name === 'ask')
-    if (name === 'ask' && input) {
-      input.focus()
-    } else if (name === 'search' && searchInput) {
+    root.setAttribute('data-active-tab', 'search')
+    if (inputWrap) inputWrap.hidden = false
+    if (askWrap) askWrap.hidden = true
+    if (searchInput) {
       searchInput.focus()
       if (typeof searchInput.select === 'function') searchInput.select()
-      syncSearchPlaceholder()
     }
+  }
+
+  function activate () {
+    focusQuery()
   }
 
   tabs.forEach(function (tab) {
@@ -589,7 +630,7 @@ if (typeof document !== 'undefined') {
     )
   }
 
-  // / → Search (lexical); ? (Shift+/) → Ask
+  // / focuses the query field. ? does the same now that mode buttons are gone.
   // Layout caveat: some keyboards report key === '?', others key === '/' + shiftKey.
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return
@@ -598,14 +639,9 @@ if (typeof document !== 'undefined') {
     var isAsk = e.key === '?' || (e.key === '/' && e.shiftKey)
     var isSearch = e.key === '/' && !e.shiftKey
 
-    if (isAsk) {
+    if (isAsk || isSearch) {
       e.preventDefault()
-      activate('ask')
-      return
-    }
-    if (isSearch) {
-      e.preventDefault()
-      activate('search')
+      focusQuery()
     }
   })
 
@@ -671,7 +707,9 @@ if (typeof document !== 'undefined') {
   if (form) {
     form.addEventListener('submit', function (event) {
       event.preventDefault()
-      var question = (input && input.value ? input.value : '').trim()
+      var fromSearch = searchInput && searchInput.value ? String(searchInput.value) : ''
+      var fromAsk = input && input.value ? String(input.value) : ''
+      var question = (fromSearch || fromAsk).trim()
       if (!question) {
         showResult('Enter a question to ask.', true)
         return
@@ -691,13 +729,14 @@ if (typeof document !== 'undefined') {
         showResult(
           'Ask is enabled but no backend is connected yet (phase 1 stub). ' +
             'Set backend_url on the antora-search-chat extension when a Q&A API is available. ' +
-            'Use the Search tab for keyword results from the lunr index.',
+            'Keyword results still appear as you type.',
           false
         )
         return
       }
 
       showResult('Thinking…', false)
+      syncScopeInteractive(true)
       fetch(backendUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -716,6 +755,9 @@ if (typeof document !== 'undefined') {
             'Ask request failed: ' + (err && err.message ? err.message : String(err)),
             true
           )
+        })
+        .finally(function () {
+          syncScopeInteractive(false)
         })
     })
   }

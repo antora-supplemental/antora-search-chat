@@ -7,6 +7,18 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.18] - 2026-10-20
+
+=== Changed
+
+* **One query field.** The placeholder is `Search or ask... /`. Search and Ask mode buttons are gone. Typing still runs keyword search; Enter asks. Shift+Enter inserts a newline only when the field is a textarea. `/` still focuses the field. The scope selector stays visible and is disabled only while an Ask request is in flight.
+
+=== Fixed
+
+* **Scope control painted square corners** over the rounded search field. The closed control is clipped inside the curve; the open menu is not.
+* **Two scrollbars on results.** Lunr’s inner dataset no longer scrolls inside the results box. Keyword hits use one scrollport. When semantic search is on, keyword and semantic hits stack in two zones that scroll on their own, with no third bar around both.
+* **Empty results border.** The results box stays hidden until a query has hits, an empty-state message, or an Ask reply is in progress.
+
 == [0.1.17] - 2026-10-20
 
 === Fixed

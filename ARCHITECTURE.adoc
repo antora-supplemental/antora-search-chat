@@ -43,27 +43,14 @@ The control is a single input (omnibox). Modes are orthogonal state on that fiel
 | User opted in via shortcut, mode control, or explicit submit. Then run retrieval + optional generation (tier-0 local and/or remote).
 |===
 
-Placeholder copy:: Main label is *Semantic Search* when the semantic level is enabled (`semantic_enabled`), else *Search*; *… or Ask* is appended when chat is on; when chat is off a muted *(Chat unavailable)* note follows (see <<_fake_placeholder_overlay>>). Capability levels are `keyword` (Lunr, always), `semantic` (hybrid engine, opt-in flag until the engine ships), and `chat` (Ask).
+Placeholder copy:: The query field reads *Search or ask... /*. `/` focuses it. Typing runs keyword search; Enter asks. Capability levels are `keyword` (Lunr, always), `semantic` (hybrid engine, opt-in flag until the engine ships), and `chat` (Ask). When semantic search is on, results split into a keyword zone and a semantic zone.
 
 Do not put a second search box in the tool band or nav column while this navbar slot is active.
 
-==== Fake placeholder overlay
+==== Query placeholder
 
-Native `<input placeholder>` is a single unstyled string, so the compound control uses an absolutely positioned overlay (`.adt-search-ph`):
+The field uses a native placeholder, exactly *Search or ask... /*. There is no Search/Ask mode row. The closed scope control is clipped to the rounded field; the open scope menu is outside that clip.
 
-----
-<span class="adt-search-ph" data-adt-search-ph data-ask-off>
-  <span class="adt-search-ph-main">Search</span><span class="adt-search-ph-note"> (Chat unavailable)</span>
-</span>
-----
-
-Behavior:
-
-* *Ask enabled* — copy is *Search or Ask* (`.adt-search-ph-main` only).
-* *Ask missing / disabled* — *Search* in the normal placeholder color + *(Chat unavailable)* in a deader tint (`.adt-search-ph-note`).
-* Overlay hides when `#search-input` is focused or non-empty (`is-hidden` on `.adt-search-ph`).
-* Overlay *must* use `pointer-events: none` (and sit under the input via `z-index`) so clicks and double-click selection reach `#search-input`.
-* Native `placeholder` stays empty so it never fights the overlay; `aria-label` matches the visible meaning.
 * Double-click select: Antora UI default `site.js` calls `preventDefault` on multi-click `mousedown` inside `[data-panel=menu]`. This package stops that event at `#search-field` / Ask form so query text remains selectable.
 
 Ask-enabled resolution (build + runtime)::
@@ -123,7 +110,7 @@ Target shape::
 ┌──────────────────────────────────────────────┐
 │ connectome-fs ▾                              │  ← scope row
 ├──────────────────────────────────────────────┤
-│ Semantic Search                        /     │  ← input + hint
+│ Search or ask... /                           │  ← query field
 └──────────────────────────────────────────────┘
 ----
 
@@ -211,9 +198,8 @@ Layout owns placement; search-chat owns the control:
 
 * Slot: left nav, above the tree (`.adt-nav-search`), in a tool band *outside* the 3-col shell.
 * Keep `#search-input` so lunr and any residual layout focus helpers keep working (omnibox may reuse this id for the shared field).
-* Modes: *Search* | *Ask* on the same field — Search is default unless `default_mode: ask`.
-* Scope: dropdown on the *row above* the field (`.adt-search-scope-row`) — static tree *All docs* → *{component}* → *version …*; defaults per <<_default_scope_recommendation>>.
-* Hint badges: `/` for Search mode, `?` for Ask mode (same field).
+* One query field. Typing searches; Enter asks. `/` focuses the field.
+* Scope: dropdown on the *row above* the field (`.adt-search-scope-row`) — static tree *All docs* → *{component}* → *version …*; defaults per <<_default_scope_recommendation>>. It stays visible.
 
 Phase 1 stub note:: The scaffold may still render tabbed Search/Ask panels and navbar placement; stacked scope+input markup is in place for the floating dock. Treat transitional tabs/navbar slot as temporary; product target is bottom dock + scope above input + dual result zones above.
 
@@ -226,12 +212,12 @@ When focus is *not* in an `input` / `textarea` / `select` / `contenteditable`:
 | Key | Mode | Notes
 
 | `/`
-| Search (lexical / lunr)
-| Same meaning as the layout-wide search focus already shipped. Focuses the omnibox and sets Search mode.
+| Focus the query field
+| Keyword search runs as you type. Enter asks.
 
 | `?` (Shift+/ )
-| Ask (Q&A)
-| Symbolic “answer a question”. Focuses the *same* omnibox and sets Ask mode.
+| Focus the same field
+| Mode buttons are gone, so this focuses the same omnibox. Enter still asks.
 |===
 
 *Keyboard caveat:* Listen for `key === '?'` *or* (`key === '/'` && `shiftKey`). Some layouts emit `?` directly; others keep `/` with Shift. Ignore when `metaKey` / `ctrlKey` / `altKey` are held.
@@ -252,7 +238,7 @@ Playbook extension object (alongside `require`):
 
 | `ask_enabled`
 | boolean
-| Explicit Ask / AI omnibox affordance. When `true`, placeholder is *Search or Ask*; when `false` or unset without backend/local assist, *Search* + muted *(Chat unavailable)*. Aliases: `askEnabled`.
+| Explicit Ask / AI affordance. Enter submits Ask when this is on (or when a backend / local assist is set). The placeholder stays *Search or ask... /*. Aliases: `askEnabled`.
 
 | `default_mode`
 | `search` \| `ask`
@@ -260,7 +246,7 @@ Playbook extension object (alongside `require`):
 
 | `placeholder`
 | string
-| Omnibox placeholder phrase (docs / future). Default visual: *Search or Ask* via fake overlay (not native placeholder). Stub may still accept `ask_placeholder` for the Ask textarea.
+| Optional override note. The shipped query placeholder is *Search or ask... /*. `ask_placeholder` still sets the hidden Ask textarea, which is not the visible field.
 
 | `local_assist`
 | boolean
@@ -268,11 +254,11 @@ Playbook extension object (alongside `require`):
 
 | `semantic_enabled`
 | boolean
-| Enable the semantic search level (placeholder reads *Semantic Search*; capability strip checks Semantic). Default: off — the hybrid engine is a separate track; this flag is the UI/config seam. Aliases: `semanticEnabled`, or set `semantic_backend_url`.
+| Enable the semantic search level (capability strip checks Semantic; results split into keyword and semantic zones). Default: off — the hybrid engine is a separate track; this flag is the UI/config seam. Aliases: `semanticEnabled`, or set `semantic_backend_url`.
 
 | `placement`
 | `navbar` \| `dock`
-| `navbar` (default) mounts in the top bar. `dock` mounts a sticky bar at the end of the page column, above the footer: rounded outer box with the capability strip, stacked scope-above-input card inside, and scope menu / Lunr results / Ask panel opening *upward* above the dock. The bar stays on screen while scrolling and yields its space to the footer at the bottom of the page. Typing searches on keystroke; Enter submits a chat query when chat is enabled.
+| `navbar` (default) mounts in the top bar. `dock` mounts a sticky bar at the end of the page column, above the footer: rounded outer box with the capability strip, stacked scope-above-input card inside, and scope menu / results / Ask panel opening *upward* above the dock. The bar stays on screen while scrolling and yields its space to the footer at the bottom of the page. Typing searches on keystroke; Enter asks. The results box is hidden until there is something to show.
 
 | `enabled`
 | boolean
@@ -292,10 +278,7 @@ Runtime payload (`window.__ADT_SEARCH_CHAT__`) includes `askEnabled`, `backendUr
 
 === Theme integration (plain `#search-input`)
 
-Themes may still fall back to a plain lunr field (`placeholder="Search"`) when `SITE_SEARCH_CHAT` is unset. The fake placeholder overlay ships in this package (`adt-search-chat` partial + `site-search-chat.css` / `.js`). Themes that keep only `#search-input` should either:
-
-* Prefer `{{> adt-search-chat}}` when the extension is registered, or
-* Copy the `.adt-search-ph` overlay and drive Ask-on/off copy from `site.keys.askEnabled` / extension config.
+Themes may still fall back to a plain lunr field (`placeholder="Search"`) when `SITE_SEARCH_CHAT` is unset. This package’s partial sets the query placeholder to *Search or ask... /*. Themes that keep only `#search-input` should prefer `{{> adt-search-chat}}` when the extension is registered.
 
 == Privacy and API keys
 
