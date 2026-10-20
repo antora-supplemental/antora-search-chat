@@ -7,6 +7,12 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.16] - 2026-10-19
+
+=== Fixed
+
+* **Search overlay shell was still see-through.** Valentus paints `.adt-nav-search` (including hover and focus-within) with `background: transparent !important`. The dock root carries that class, so the outer shell, mode tabs, and padding showed the page even when the inner card was filled. Search chrome now uses literal hex fills and higher-specificity `!important` rules so the dock, compound, scope menu, Lunr hits, Ask panel, capability chips, keyboard hints, and inputs stay opaque. Disabled scope and off capabilities no longer fade with `opacity`.
+
 == [0.1.15] - 2026-10-19
 
 === Changed
