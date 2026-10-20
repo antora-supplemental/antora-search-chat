@@ -3,6 +3,14 @@
   /* Match Valentus --adt-transition so light↔dark does not snap the omnibox chrome. */
   --adt-search-theme-transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
     box-shadow 0.25s ease;
+  /* Opaque fills (never see page content through the shell). Rim = accent on border token. */
+  --adt-search-surface: var(--adt-elevated, #fff);
+  --adt-search-rim: color-mix(in srgb, var(--adt-accent, #0d9488) 22%, var(--adt-border, #d9dee7));
+}
+
+html.dark-theme {
+  --adt-search-surface: var(--adt-elevated, #1a1a1a);
+  --adt-search-rim: color-mix(in srgb, var(--adt-accent, #2dd4bf) 26%, var(--adt-border, #3a4454));
 }
 
 .adt-search-chat {
@@ -129,10 +137,12 @@ html.dark-theme .adt-search-chat__toggle:focus-visible {
   width: min(36rem, calc(100vw - 1.5rem));
   min-width: min(18rem, calc(100vw - 1.5rem));
   padding: 0.55rem;
-  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, var(--adt-border, #d9dee7));
+  border: 1px solid var(--adt-search-rim);
   border-radius: 0.65rem;
-  background: var(--adt-elevated, var(--color-background, #fff));
-  box-shadow: 0 0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
+  background-color: var(--adt-search-surface);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--adt-ink, #141820) 5%, transparent),
+    0 0.45rem 1.25rem color-mix(in srgb, var(--adt-ink, #141820) 14%, transparent);
   box-sizing: border-box;
   transition: var(--adt-search-theme-transition);
 }
@@ -214,9 +224,9 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   width: 100%;
   box-sizing: border-box;
   min-height: 2.15rem;
-  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, var(--adt-border, #d9dee7));
+  border: 1px solid var(--adt-search-rim);
   border-radius: 0.5rem;
-  background: var(--adt-elevated, #fff);
+  background-color: var(--adt-search-surface);
   overflow: visible;
   color: var(--adt-ink, #141820);
   container-type: inline-size;
@@ -248,7 +258,7 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   border-start-end-radius: calc(0.5rem - 1px);
   border-end-start-radius: 0;
   border-end-end-radius: 0;
-  background-color: var(--adt-elevated, #fff);
+  background-color: var(--adt-search-surface);
   overflow: visible;
   cursor: default;
   transition: var(--adt-search-theme-transition);
@@ -340,8 +350,11 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   list-style: none;
   border: 1px solid color-mix(in srgb, var(--adt-ink, #141820) 14%, var(--adt-border, #d9dee7));
   border-radius: 0.45rem;
-  background: var(--adt-elevated, #fff);
-  box-shadow: 0 0.45rem 1.1rem color-mix(in srgb, var(--adt-ink, #141820) 12%, transparent);
+  background-color: var(--adt-search-surface);
+  border: 1px solid var(--adt-search-rim);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--adt-ink, #141820) 5%, transparent),
+    0 0.45rem 1.1rem color-mix(in srgb, var(--adt-ink, #141820) 12%, transparent);
   color: var(--adt-ink, #141820);
   font-size: 0.78rem;
   line-height: 1.25;
@@ -666,6 +679,29 @@ html.dark-theme .adt-search-scope-option:focus {
 
 .adt-search-chat .search-result-dropdown-menu {
   z-index: var(--adt-search-top-z);
+  /* Lunr default: background transparent — only .search-result-dataset is filled. */
+  background-color: var(--adt-search-surface);
+  border: 1px solid var(--adt-search-rim);
+  border-radius: 0.55rem;
+  padding: 0;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--adt-ink, #141820) 5%, transparent),
+    0 0.45rem 1.25rem color-mix(in srgb, var(--adt-ink, #141820) 14%, transparent);
+}
+
+.adt-search-chat .search-result-dataset {
+  background-color: var(--adt-search-surface);
+  border: none;
+  border-radius: calc(0.55rem - 1px);
+  color: var(--adt-ink, #141820);
+}
+
+.adt-search-chat .search-result-component-header {
+  border-bottom-color: color-mix(in srgb, var(--adt-ink, #141820) 12%, var(--adt-border, #d9dee7));
+}
+
+.adt-search-chat .search-result-document-title {
+  border-right-color: color-mix(in srgb, var(--adt-ink, #141820) 12%, var(--adt-border, #d9dee7));
 }
 
 /* ——— Capability strip (Keyword / Semantic / Chat status) ———
@@ -726,17 +762,15 @@ html.dark-theme .adt-search-scope-option:focus {
   width: min(42rem, calc(100vw - 2rem));
   margin-inline: auto;
   padding: 0.55rem 0.65rem 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, var(--adt-border, #d9dee7));
+  border: 1px solid var(--adt-search-rim);
   border-radius: 1rem;
-  background: var(--adt-elevated, var(--color-background, #fff));
-  box-shadow: 0 0.75rem 2rem color-mix(in srgb, currentColor 18%, transparent);
+  background-color: var(--adt-search-surface);
+  isolation: isolate;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--adt-accent, #0d9488) 12%, transparent),
+    0 0.75rem 2rem color-mix(in srgb, var(--adt-ink, #141820) 16%, transparent);
   color: var(--adt-ink, #141820);
   transition: var(--adt-search-theme-transition);
-}
-
-html.dark-theme .adt-search-chat[data-placement='dock'] {
-  background: var(--adt-elevated, var(--color-background, #1a1a1a));
-  border-color: color-mix(in srgb, var(--adt-accent, #2dd4bf) 28%, var(--adt-border, #3a4454));
 }
 
 /* Dock: scope menu opens upward above the scope row. */
@@ -785,12 +819,10 @@ html.dark-theme .adt-search-chat[data-placement='dock'] {
   bottom: calc(100% + 0.5rem);
   top: auto;
   padding: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, transparent);
+  border: 1px solid var(--adt-search-rim);
   border-radius: 0.75rem;
-  background: var(--adt-elevated, var(--color-background, #fff));
-  box-shadow: 0 -0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
-}
-
-html.dark-theme .adt-search-chat[data-placement='dock'] .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
-  background: var(--adt-elevated, var(--color-background, #1a1a1a));
+  background-color: var(--adt-search-surface);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--adt-accent, #0d9488) 10%, transparent),
+    0 -0.45rem 1.25rem color-mix(in srgb, var(--adt-ink, #141820) 14%, transparent);
 }

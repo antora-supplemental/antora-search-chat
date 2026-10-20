@@ -7,6 +7,12 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.14] - 2026-10-19
+
+=== Fixed
+
+* **Transparent search chrome:** dock, compound, scope menu, collapsed popover, and Lunr results now use opaque `--adt-search-surface` fills. Lunr’s `.search-result-dropdown-menu` default (`background: transparent`) no longer lets page content show through; rims use accent-on-border `color-mix` with optional soft outer rings in the shadow only.
+
 == [0.1.13] - 2026-10-19
 
 === Fixed
