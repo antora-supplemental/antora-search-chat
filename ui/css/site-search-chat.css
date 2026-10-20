@@ -6,11 +6,14 @@
   /* Opaque fills (never see page content through the shell). Rim = accent on border token. */
   --adt-search-surface: var(--adt-elevated, #fff);
   --adt-search-rim: color-mix(in srgb, var(--adt-accent, #0d9488) 22%, var(--adt-border, #d9dee7));
+  /* Hover fills mix accent into the surface — not semi-transparent theme soft tokens. */
+  --adt-search-surface-hover: color-mix(in srgb, var(--adt-accent, #0d9488) 14%, var(--adt-search-surface));
 }
 
 html.dark-theme {
   --adt-search-surface: var(--adt-elevated, #1a1a1a);
   --adt-search-rim: color-mix(in srgb, var(--adt-accent, #2dd4bf) 26%, var(--adt-border, #3a4454));
+  --adt-search-surface-hover: color-mix(in srgb, var(--adt-accent, #2dd4bf) 18%, var(--adt-search-surface));
 }
 
 .adt-search-chat {
@@ -23,43 +26,35 @@ html.dark-theme {
   box-sizing: border-box;
 }
 
-/* Navbar: one-row omnibox. Tabs are transitional; / and ? still switch modes. */
+/* Navbar: compound + mode tabs share one column (no mode swap layout). */
 .adt-site-navbar .adt-search-chat,
 .adt-navbar-search .adt-search-chat {
   gap: 0;
   min-height: 2.15rem;
 }
 
-.adt-site-navbar .adt-search-chat__tabs,
-.adt-navbar-search .adt-search-chat__tabs {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+.adt-search-chat__popover {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-.adt-site-navbar .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]),
-.adt-navbar-search .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + 0.35rem);
-  inset-inline: 0;
-  padding: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, transparent);
-  border-radius: 0.5rem;
-  background: var(--adt-elevated, var(--color-background, #fff));
-  box-shadow: 0 0.35rem 1rem color-mix(in srgb, currentColor 12%, transparent);
-  transition: var(--adt-search-theme-transition);
+.adt-search-chat__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-html.dark-theme .adt-site-navbar .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]),
-html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
-  background: var(--adt-elevated, var(--color-background, #1a1a1a));
+.adt-search-chat__omnibox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  min-width: 0;
 }
 
 /* ——— Collapse-to-icon (narrow / collision) ——— */
@@ -84,7 +79,7 @@ html.dark-theme .adt-navbar-search .adt-search-chat__panel[data-adt-search-panel
 .adt-search-chat__toggle:hover,
 .adt-search-chat__toggle:focus-visible {
   border-color: var(--adt-accent, #0d9488);
-  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #0d9488) 12%, var(--adt-elevated, #fff)));
+  background-color: var(--adt-search-surface-hover);
   outline: none;
 }
 
@@ -104,15 +99,7 @@ html.dark-theme .adt-search-chat__toggle {
 
 html.dark-theme .adt-search-chat__toggle:hover,
 html.dark-theme .adt-search-chat__toggle:focus-visible {
-  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #2dd4bf) 16%, var(--adt-elevated, #1a1a1a)));
-}
-
-/* Expanded (default): popover is the in-flow omnibox; toggle stays hidden. */
-.adt-search-chat__popover {
-  position: relative;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
+  background-color: var(--adt-search-surface-hover);
 }
 
 /* Collapsed to icon: only the toggle shows until opened. */
@@ -161,18 +148,10 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   border-color: color-mix(in srgb, var(--adt-accent, #2dd4bf) 28%, var(--adt-border, #3a4454));
 }
 
-/* In collapsed open mode, Ask panel is in-flow inside the popover (not a second absolute layer). */
-.adt-search-chat.is-collapsed .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
-  position: static;
-  inset: auto;
-  top: auto;
-  margin-top: 0.5rem;
-  box-shadow: none;
-}
-
 .adt-search-chat__tabs {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  order: 0;
 }
 
 .adt-search-chat__tab {
@@ -393,7 +372,7 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
 
 .adt-search-scope-option:hover,
 .adt-search-scope-option:focus {
-  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #0d9488) 12%, var(--adt-elevated, #fff)));
+  background-color: var(--adt-search-surface-hover);
 }
 
 .adt-search-scope-option.is-selected {
@@ -433,18 +412,65 @@ html.dark-theme .adt-search-scope-menu {
 .adt-search-scope-slot:hover,
 .adt-search-scope-slot:focus-within,
 .adt-search-scope-slot.is-open {
-  background-color: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #0d9488) 12%, var(--adt-elevated, #fff)));
+  background-color: var(--adt-search-surface-hover);
+}
+
+.adt-search-scope-slot.is-disabled,
+.adt-search-scope-slot.is-disabled:hover,
+.adt-search-scope-slot.is-disabled:focus-within {
+  background-color: var(--adt-search-surface);
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.adt-search-scope-slot.is-disabled .adt-search-scope-trigger {
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 html.dark-theme .adt-search-scope-slot:hover,
 html.dark-theme .adt-search-scope-slot:focus-within,
 html.dark-theme .adt-search-scope-slot.is-open {
-  background-color: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #2dd4bf) 16%, var(--adt-elevated, #1a1a1a)));
+  background-color: var(--adt-search-surface-hover);
 }
 
 html.dark-theme .adt-search-scope-option:hover,
 html.dark-theme .adt-search-scope-option:focus {
-  background: var(--adt-accent-soft, color-mix(in srgb, var(--adt-accent, #2dd4bf) 16%, var(--adt-elevated, #1a1a1a)));
+  background-color: var(--adt-search-surface-hover);
+}
+
+/* Query slot: stable height when swapping Search input vs Ask textarea. */
+.adt-search-chat__query-slot {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 2.65rem;
+  border-start-start-radius: 0;
+  border-start-end-radius: 0;
+  border-end-start-radius: calc(0.5rem - 1px);
+  border-end-end-radius: calc(0.5rem - 1px);
+  overflow: visible;
+  background-color: var(--adt-search-surface);
+}
+
+.adt-search-ask-wrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: inherit;
+  border-end-start-radius: calc(0.5rem - 1px);
+  border-end-end-radius: calc(0.5rem - 1px);
+  background-color: var(--adt-search-surface);
+}
+
+.adt-search-ask-wrap[hidden] {
+  display: none !important;
+}
+
+.adt-search-input-wrap[hidden] {
+  display: none !important;
 }
 
 /* Input + fake placeholder — full width under the scope row. */
@@ -455,11 +481,8 @@ html.dark-theme .adt-search-scope-option:focus {
   min-width: 0;
   display: flex;
   align-items: stretch;
-  border-start-start-radius: 0;
-  border-start-end-radius: 0;
-  border-end-start-radius: calc(0.5rem - 1px);
-  border-end-end-radius: calc(0.5rem - 1px);
   overflow: visible;
+  background-color: var(--adt-search-surface);
 }
 
 /* Results menu spans the full stacked compound width (100cqi), not the input cell only. */
@@ -570,12 +593,8 @@ html.dark-theme .adt-search-scope-option:focus {
   pointer-events: none;
 }
 
-.adt-search-chat__field--ask .adt-search-chat__field-hint {
+.adt-search-ask-wrap .adt-search-chat__field-hint {
   top: 0.5rem;
-}
-
-.adt-search-chat__field--ask .adt-search-chat__ask-input {
-  padding-inline-end: 1.75rem;
 }
 
 .adt-search-chat__tab.is-active {
@@ -588,54 +607,21 @@ html.dark-theme .adt-search-scope-option:focus {
   outline-offset: 2px;
 }
 
-.adt-search-chat__panel[hidden] {
-  display: none;
-}
-
-.adt-search-chat__ask-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
 .adt-search-chat__ask-input {
   width: 100%;
   box-sizing: border-box;
   margin: 0;
-  padding: 0.45rem 0.6rem;
-  border: 1px solid color-mix(in srgb, var(--adt-accent, #0d9488) 28%, transparent);
-  border-radius: 0.35rem;
-  background: var(--adt-elevated, transparent);
+  padding: 0.35rem 1.75rem 0.35rem 0.65rem;
+  border: 0;
+  border-radius: 0;
+  background-color: var(--adt-search-surface);
   color: var(--adt-ink, inherit);
   font: inherit;
   font-size: 0.875rem;
   resize: vertical;
-  min-height: 2.5rem;
-}
-
-.adt-search-chat__ask-input:focus {
+  min-height: 2.65rem;
   outline: none;
-  border-color: var(--adt-accent, #0d9488);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--adt-accent, #0d9488) 35%, transparent);
-}
-
-.adt-search-chat__ask-submit {
-  align-self: flex-end;
-  margin: 0;
-  padding: 0.35rem 0.75rem;
-  border: 1px solid var(--adt-accent, #0d9488);
-  border-radius: 0.35rem;
-  background: transparent;
-  color: var(--adt-accent, #0d9488);
-  font: inherit;
-  font-size: 0.8rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.adt-search-chat__ask-submit:focus-visible {
-  outline: 2px solid var(--adt-accent, #0d9488);
-  outline-offset: 2px;
+  box-shadow: none;
 }
 
 .adt-search-chat__ask-result {
@@ -644,11 +630,13 @@ html.dark-theme .adt-search-scope-option:focus {
   border-radius: 0.35rem;
   font-size: 0.8rem;
   line-height: 1.4;
-  background: color-mix(in srgb, var(--adt-accent, #0d9488) 8%, transparent);
+  background-color: color-mix(in srgb, var(--adt-accent, #0d9488) 10%, var(--adt-search-surface));
+  border: 1px solid var(--adt-search-rim);
 }
 
 .adt-search-chat__ask-result.is-error {
-  background: color-mix(in srgb, #b91c1c 10%, transparent);
+  background-color: color-mix(in srgb, #b91c1c 12%, var(--adt-search-surface));
+  border-color: color-mix(in srgb, #b91c1c 35%, var(--adt-search-rim));
 }
 
 .visually-hidden {
@@ -696,6 +684,13 @@ html.dark-theme .adt-search-scope-option:focus {
   color: var(--adt-ink, #141820);
 }
 
+.adt-search-chat .search-result-component-header,
+.adt-search-chat .search-result-document-title,
+.adt-search-chat .search-result-document-hit,
+.adt-search-chat .search-result-document {
+  background-color: var(--adt-search-surface);
+}
+
 .adt-search-chat .search-result-component-header {
   border-bottom-color: color-mix(in srgb, var(--adt-ink, #141820) 12%, var(--adt-border, #d9dee7));
 }
@@ -704,20 +699,29 @@ html.dark-theme .adt-search-scope-option:focus {
   border-right-color: color-mix(in srgb, var(--adt-ink, #141820) 12%, var(--adt-border, #d9dee7));
 }
 
+.adt-search-chat .search-result-document-hit:hover,
+.adt-search-chat .search-result-document-hit:focus-within {
+  background-color: var(--adt-search-surface-hover);
+}
+
 /* ——— Capability strip (Keyword / Semantic / Chat status) ———
-   Visible in dock placement; hidden in the navbar where space is tight. */
+   Bottom of the overlay (dock); hidden in navbar where space is tight. */
 .adt-search-capabilities {
   display: none;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  align-items: center;
+  order: 2;
+  margin-top: auto;
+  padding: 0.45rem 0.1rem 0.1rem;
+  border-top: 1px solid color-mix(in srgb, var(--adt-ink, #141820) 10%, var(--adt-border, #d9dee7));
+  font-size: 0.72rem;
+  color: var(--adt-muted, #5b6472);
+  background-color: var(--adt-search-surface);
 }
 
 .adt-search-chat[data-placement='dock'] .adt-search-capabilities {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.9rem;
-  align-items: center;
-  padding: 0.15rem 0.1rem 0.45rem;
-  font-size: 0.72rem;
-  color: var(--adt-muted, #5b6472);
 }
 
 .adt-search-capability {
@@ -761,7 +765,7 @@ html.dark-theme .adt-search-scope-option:focus {
   z-index: var(--adt-search-top-z);
   width: min(42rem, calc(100vw - 2rem));
   margin-inline: auto;
-  padding: 0.55rem 0.65rem 0.65rem;
+  padding: 0.65rem 0.65rem 0.55rem;
   border: 1px solid var(--adt-search-rim);
   border-radius: 1rem;
   background-color: var(--adt-search-surface);
@@ -811,18 +815,8 @@ html.dark-theme .adt-search-scope-option:focus {
   overflow-y: auto;
 }
 
-/* Dock: Ask panel floats above the dock card. */
-.adt-search-chat[data-placement='dock'] .adt-search-chat__panel[data-adt-search-panel='ask']:not([hidden]) {
-  position: absolute;
-  z-index: var(--adt-search-top-z);
-  inset-inline: 0;
-  bottom: calc(100% + 0.5rem);
-  top: auto;
-  padding: 0.65rem;
-  border: 1px solid var(--adt-search-rim);
-  border-radius: 0.75rem;
-  background-color: var(--adt-search-surface);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--adt-accent, #0d9488) 10%, transparent),
-    0 -0.45rem 1.25rem color-mix(in srgb, var(--adt-ink, #141820) 14%, transparent);
+/* Dock: Ask answers stay in-flow under mode tabs (same shell as Search). */
+.adt-search-chat[data-placement='dock'] .adt-search-chat__ask-result:not([hidden]) {
+  max-height: min(40vh, 14rem);
+  overflow-y: auto;
 }

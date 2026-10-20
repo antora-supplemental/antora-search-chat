@@ -6,8 +6,9 @@
   if (!root) return
 
   var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-adt-search-tab]'))
-  var panels = Array.prototype.slice.call(root.querySelectorAll('[data-adt-search-panel]'))
   var form = root.querySelector('[data-adt-search-ask-form]')
+  var inputWrap = root.querySelector('[data-adt-search-input-wrap]')
+  var askWrap = root.querySelector('[data-adt-ask-wrap]')
   var input = root.querySelector('[data-adt-ask-input]')
   var result = root.querySelector('[data-adt-ask-result]')
   var searchInput =
@@ -366,6 +367,17 @@
     })
   }
 
+  if (input) {
+    input.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' || e.shiftKey) return
+      if (root.getAttribute('data-active-tab') !== 'ask') return
+      if (!form) return
+      e.preventDefault()
+      if (typeof form.requestSubmit === 'function') form.requestSubmit()
+      else form.dispatchEvent(new Event('submit', { cancelable: true }))
+    })
+  }
+
   if (searchInput) {
     searchInput.addEventListener('focus', syncSearchPlaceholder)
     searchInput.addEventListener('blur', syncSearchPlaceholder)
@@ -388,8 +400,7 @@
 
   // Dock placement: Lunr mounts .search-result-dropdown-menu inside the input
   // wrap; portal it to the dock root so results anchor above the whole dock.
-  if (placement === 'dock' && searchInput && searchInput.parentElement) {
-    var inputWrap = searchInput.parentElement
+  if (placement === 'dock' && searchInput && inputWrap) {
     var moveResultsToDock = function () {
       var dd = inputWrap.querySelector('.search-result-dropdown-menu')
       if (dd && dd.parentElement !== root) root.appendChild(dd)
@@ -456,25 +467,30 @@
     if (isCollapsed()) setOpen(false)
   }
 
+  function syncScopeInteractive (askMode) {
+    if (scopeSlot) scopeSlot.classList.toggle('is-disabled', !!askMode)
+    if (scopeTrigger) {
+      scopeTrigger.disabled = !!askMode
+      scopeTrigger.setAttribute('aria-disabled', askMode ? 'true' : 'false')
+    }
+    if (askMode) setScopeMenuOpen(false)
+  }
+
   function activate (name) {
+    if (name !== 'search' && name !== 'ask') name = 'search'
     if (typeof window.adtRevealSiteChrome === 'function') {
       window.adtRevealSiteChrome()
     }
     openSearchUI()
+    root.setAttribute('data-active-tab', name)
     tabs.forEach(function (tab) {
       var on = tab.getAttribute('data-adt-search-tab') === name
       tab.classList.toggle('is-active', on)
       tab.setAttribute('aria-selected', on ? 'true' : 'false')
     })
-    panels.forEach(function (panel) {
-      var on = panel.getAttribute('data-adt-search-panel') === name
-      panel.classList.toggle('is-active', on)
-      if (on) {
-        panel.removeAttribute('hidden')
-      } else {
-        panel.setAttribute('hidden', '')
-      }
-    })
+    if (inputWrap) inputWrap.hidden = name !== 'search'
+    if (askWrap) askWrap.hidden = name !== 'ask'
+    syncScopeInteractive(name === 'ask')
     if (name === 'ask' && input) {
       input.focus()
     } else if (name === 'search' && searchInput) {

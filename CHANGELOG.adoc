@@ -7,6 +7,18 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.15] - 2026-10-19
+
+=== Changed
+
+* **Stable omnibox shell:** Search and Ask share one layout — scope row, query field, mode tabs below the input, optional Ask result in-flow. No floating Ask panel or layout swap when switching modes.
+* **Scope in Ask mode:** context selector stays visible but is disabled/inactive while Ask is active.
+* **Capability strip:** Keyword / Semantic / Chat indicators move to the bottom of the dock overlay.
+
+=== Fixed
+
+* **Opaque search chrome (follow-up):** scope/menu/result hovers and Lunr hit rows use `--adt-search-surface-hover` and solid `--adt-search-surface` fills instead of transparent theme soft tokens or Lunr defaults.
+
 == [0.1.14] - 2026-10-19
 
 === Fixed
