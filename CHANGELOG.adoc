@@ -7,6 +7,12 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.12] - 2026-10-19
+
+=== Fixed
+
+* **Dock anchored to the header, not the viewport:** the theme header's `will-change: transform` makes it the containing block for fixed descendants, so the dock rendered at the header instead of the bottom of the screen. The dock root is now portaled to `<body>` on init (capability/scope/result refs preserved), the vacated navbar slot collapses via an `adt-search-slot-vacated` class, and the scope menu + Lunr results are portaled to direct dock children so they open above the whole dock box.
+
 == [0.1.11] - 2026-10-19
 
 === Fixed

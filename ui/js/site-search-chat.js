@@ -32,6 +32,18 @@
     cfg.placement || root.getAttribute('data-placement') || 'navbar'
   root.setAttribute('data-semantic-enabled', semanticEnabled ? 'true' : 'false')
   root.setAttribute('data-placement', placement === 'dock' ? 'dock' : 'navbar')
+
+  // Dock placement: portal the root to <body>. The theme header uses
+  // will-change/transform, which makes it the containing block for fixed
+  // descendants — a dock left inside the header anchors to the header box
+  // instead of the viewport. Moving the node keeps all child refs/listeners.
+  if (placement === 'dock') {
+    if (searchSlot && searchSlot !== root) searchSlot.classList.add('adt-search-slot-vacated')
+    document.body.classList.add('adt-search-dock-active')
+    if (root.parentElement !== document.body) document.body.appendChild(root)
+    // Scope menu becomes a direct child so it can anchor above the whole dock.
+    if (scopeMenu && scopeMenu.parentElement !== root) root.appendChild(scopeMenu)
+  }
   var PH_MAIN = semanticEnabled ? 'Semantic Search' : 'Search'
   var PH_ASK_ON = PH_MAIN + ' or Ask'
   var PH_ASK_OFF_LABEL = PH_MAIN + ' (Chat unavailable)'
@@ -348,6 +360,8 @@
     document.addEventListener('mousedown', function (e) {
       if (!isScopeMenuOpen()) return
       if (scopeSlot && scopeSlot.contains(e.target)) return
+      // Dock placement portals the menu to the root (outside the slot).
+      if (scopeMenu && scopeMenu.contains(e.target)) return
       setScopeMenuOpen(false)
     })
   }
@@ -370,6 +384,20 @@
       else form.dispatchEvent(new Event('submit', { cancelable: true }))
     })
     syncSearchPlaceholder()
+  }
+
+  // Dock placement: Lunr mounts .search-result-dropdown-menu inside the input
+  // wrap; portal it to the dock root so results anchor above the whole dock.
+  if (placement === 'dock' && searchInput && searchInput.parentElement) {
+    var inputWrap = searchInput.parentElement
+    var moveResultsToDock = function () {
+      var dd = inputWrap.querySelector('.search-result-dropdown-menu')
+      if (dd && dd.parentElement !== root) root.appendChild(dd)
+    }
+    moveResultsToDock()
+    if (typeof MutationObserver === 'function') {
+      new MutationObserver(moveResultsToDock).observe(inputWrap, { childList: true })
+    }
   }
 
   // Antora UI default site.js: nav-panel-menu mousedown with detail > 1 → preventDefault

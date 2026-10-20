@@ -703,6 +703,7 @@ html.dark-theme .adt-search-scope-option:focus {
 /* Dock placement vacates the navbar slot — collapse the host's box without
    display:none (that would also hide the fixed dock descendant). */
 .adt-navbar-search:has(> .adt-search-chat[data-placement='dock']),
+.adt-navbar-search.adt-search-slot-vacated,
 .adt-site-navbar .adt-nav-search:has(> .adt-search-chat[data-placement='dock']) {
   flex: 0 0 0;
   width: 0;
@@ -751,6 +752,25 @@ html.dark-theme .adt-search-chat[data-placement='dock'] {
   top: auto !important;
   bottom: calc(100% + 0.35rem);
   box-shadow: 0 -0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
+}
+
+/* Dock: JS portals the scope menu and Lunr results to direct children of the
+   dock root, so they anchor above the whole outer box (capability strip
+   included), not just above the input row. */
+.adt-search-chat[data-placement='dock'] > .adt-search-scope-menu {
+  top: auto;
+  bottom: calc(100% + 0.5rem);
+  inset-inline: 0;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+}
+
+.adt-search-chat[data-placement='dock'] > .search-result-dropdown-menu {
+  top: auto !important;
+  bottom: calc(100% + 0.5rem);
+  inset-inline: 0;
+  width: auto !important;
 }
 
 /* Dock: Ask panel floats above the dock card. */
