@@ -14,22 +14,30 @@ function read (rel) {
 test('query field placeholder is Search or ask... / and mode buttons are gone', () => {
   const hbs = read('ui/partials/adt-search-chat.hbs')
   const js = read('ui/js/site-search-chat.js')
-  assert.match(hbs, /placeholder="Search or ask\.\.\. \/"/)
+  const css = read('ui/css/site-search-chat.css').replace(/\/\*[\s\S]*?\*\//g, '')
+  assert.match(hbs, /adt-search-ph-main">Search or ask\.\.\./)
+  assert.match(hbs, /<code class="adt-search-ph-code">\/<\/code>/)
+  assert.match(hbs, /aria-label="Search or ask\.\.\. \/"/)
   assert.match(js, /Search or ask\.\.\. \//)
+  assert.match(css, /\.adt-search-ph\s*\{[^}]*pointer-events:\s*none/)
+  assert.match(css, /\.adt-search-ph-code\s*\{[^}]*--adt-font-mono/)
   assert.doesNotMatch(hbs, /data-adt-search-tab/)
   assert.match(hbs, /data-adt-search-scope-slot/)
   assert.match(hbs, /data-adt-search-capabilities/)
 })
 
-test('closed scope control is clipped without trapping the open menu', () => {
+test('scope bar is one full-height hit target and the menu stays outside it', () => {
   const hbs = read('ui/partials/adt-search-chat.hbs')
   const css = read('ui/css/site-search-chat.css').replace(/\/\*[\s\S]*?\*\//g, '')
-  const clipStart = hbs.indexOf('<div class="adt-search-scope-clip">')
-  const clip = hbs.slice(clipStart, hbs.indexOf('</div>', clipStart))
-  assert.match(clip, /adt-search-scope-trigger/)
-  assert.doesNotMatch(clip, /<ul/)
-  assert.match(css, /\.adt-search-scope-clip\s*\{[^}]*overflow:\s*hidden/)
+  assert.doesNotMatch(hbs, /adt-search-scope-clip/)
+  const slotStart = hbs.indexOf('data-adt-search-scope-slot')
+  const menuStart = hbs.indexOf('<ul')
+  const head = hbs.slice(slotStart, menuStart)
+  assert.match(head, /adt-search-scope-trigger/)
+  assert.match(head, /<\/button>/)
+  assert.match(css, /\.adt-search-scope-trigger\s*\{[^}]*inset:\s*0/)
   assert.match(css, /\.adt-search-scope-slot\s*\{[^}]*overflow:\s*visible/)
+  assert.doesNotMatch(css, /\.adt-search-scope-clip\s*\{/)
 })
 
 test('results use one scrollport, split when semantic, and hide when empty', () => {

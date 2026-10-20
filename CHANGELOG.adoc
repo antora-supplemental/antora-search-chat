@@ -7,6 +7,13 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.19] - 2026-10-20
+
+=== Fixed
+
+* **Scope bar was two hit targets.** The closed context control is one button covering the whole row. Hover lights the full bar at once, and a click on the lower half opens the menu. The top corners still follow the rounded search field.
+* **Placeholder slash.** When the field is empty, *Search or ask...* is the normal hint and `/` is an inline code chip. The hint hides as soon as there is text and does not block clicks.
+
 == [0.1.18] - 2026-10-20
 
 === Changed

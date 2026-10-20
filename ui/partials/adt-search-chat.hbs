@@ -44,22 +44,20 @@
       <form class="adt-search-chat__omnibox" data-adt-search-ask-form>
         <div id="search-field" class="adt-search-chat__field adt-search-compound adt-search-compound--stacked">
           <div class="adt-search-scope-slot adt-search-scope-row" data-adt-search-scope-slot>
-            <div class="adt-search-scope-clip">
-              <button
-                type="button"
-                id="adt-search-scope"
-                class="adt-search-scope-trigger"
-                data-adt-search-scope-trigger
-                aria-haspopup="listbox"
-                aria-expanded="false"
-                aria-controls="adt-search-scope-menu"
-                aria-label="Search scope"
-              >
-                <span class="adt-search-scope-face" aria-hidden="true" data-adt-search-scope-face>
-                  <span class="adt-search-scope-label" data-adt-search-scope-label></span>
-                </span>
-              </button>
-            </div>
+            <button
+              type="button"
+              id="adt-search-scope"
+              class="adt-search-scope-trigger"
+              data-adt-search-scope-trigger
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="adt-search-scope-menu"
+              aria-label="Search scope"
+            >
+              <span class="adt-search-scope-face" aria-hidden="true" data-adt-search-scope-face>
+                <span class="adt-search-scope-label" data-adt-search-scope-label></span>
+              </span>
+            </button>
             <ul
               id="adt-search-scope-menu"
               class="adt-search-scope-menu"
@@ -114,10 +112,13 @@
 
           <div class="adt-search-chat__query-slot" data-adt-search-query-slot>
             <div class="adt-search-input-wrap" data-adt-search-input-wrap>
+              <span class="adt-search-ph" aria-hidden="true" data-adt-search-ph>
+                <span class="adt-search-ph-main">Search or ask...</span><code class="adt-search-ph-code">/</code>
+              </span>
               <input
                 id="search-input"
                 type="text"
-                placeholder="Search or ask... /"
+                placeholder=""
                 autocomplete="off"
                 aria-label="Search or ask... /"
                 data-adt-search-input

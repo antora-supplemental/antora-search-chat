@@ -53,6 +53,7 @@ if (typeof document !== 'undefined') {
   var result = root.querySelector('[data-adt-ask-result]')
   var searchInput =
     root.querySelector('[data-adt-search-input]') || document.getElementById('search-input')
+  var ph = root.querySelector('[data-adt-search-ph]')
   var scopeValueInput = root.querySelector('[data-adt-search-scope]')
   var scopeSlot = root.querySelector('[data-adt-search-scope-slot]')
   var scopeTrigger = root.querySelector('[data-adt-search-scope-trigger]')
@@ -286,8 +287,17 @@ if (typeof document !== 'undefined') {
 
   function syncPlaceholderCopy () {
     if (!searchInput) return
-    searchInput.setAttribute('placeholder', QUERY_PLACEHOLDER)
+    // Native placeholder cannot style the slash. The overlay draws it; keep
+    // the attribute empty so the two hints do not stack.
+    searchInput.setAttribute('placeholder', '')
     searchInput.setAttribute('aria-label', QUERY_PLACEHOLDER)
+    syncSearchPlaceholder()
+  }
+
+  function syncSearchPlaceholder () {
+    if (!ph || !searchInput) return
+    var hide = String(searchInput.value || '').length > 0
+    ph.classList.toggle('is-hidden', hide)
   }
 
   if (cfg.askPlaceholder && input) {
@@ -394,6 +404,7 @@ if (typeof document !== 'undefined') {
   }
 
   if (searchInput) {
+    searchInput.addEventListener('input', syncSearchPlaceholder)
     // Typing drives keyword search (Lunr on keystroke). Enter asks.
     // A single-line input has no newline, so Enter only asks.
     searchInput.addEventListener('keydown', function (e) {
@@ -401,6 +412,7 @@ if (typeof document !== 'undefined') {
       e.preventDefault()
       submitAskForm()
     })
+    syncSearchPlaceholder()
   }
 
   // Lunr mounts .search-result-dropdown-menu on the input wrap as soon as its
