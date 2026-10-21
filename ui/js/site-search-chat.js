@@ -139,6 +139,21 @@ if (typeof document !== 'undefined') {
    * SoftNav swaps mast/nav/article only — the navbar omnibox stays in the DOM.
    * Rebuild scope tree + data-* from the fetched page so labels do not go stale/blank.
    */
+  function applyChromePageContext (ctx) {
+    if (!ctx) return
+    var comp = ctx.component || {}
+    var ver = ctx.version || {}
+    if (comp.name) root.setAttribute('data-component-name', comp.name)
+    else root.removeAttribute('data-component-name')
+    if (comp.title) root.setAttribute('data-component-title', comp.title)
+    else root.removeAttribute('data-component-title')
+    if (ver.name) root.setAttribute('data-version', ver.name)
+    else root.removeAttribute('data-version')
+    if (ver.display) root.setAttribute('data-version-display', ver.display)
+    else root.removeAttribute('data-version-display')
+    syncScopeLabels()
+  }
+
   function refreshSearchContextFromDocument (doc) {
     if (!doc) return
     var freshRoot = doc.querySelector('[data-adt-search-chat]')
@@ -769,9 +784,23 @@ if (typeof document !== 'undefined') {
     result.classList.toggle('is-error', !!isError)
   }
 
-  onSoftNavLoaded(function (detail) {
-    refreshSearchContextFromDocument(detail && detail.doc)
-  })
+  function bindNavigationRefresh () {
+    if (typeof adtChromeBind === 'function') {
+      adtChromeBind({
+        onContext: function (ctx) {
+          applyChromePageContext(ctx)
+        },
+        onLoaded: function (detail) {
+          refreshSearchContextFromDocument(detail && detail.doc)
+        },
+      })
+      return
+    }
+    onSoftNavLoaded(function (detail) {
+      refreshSearchContextFromDocument(detail && detail.doc)
+    })
+  }
+  bindNavigationRefresh()
 
   if (form) {
     form.addEventListener('submit', function (event) {
