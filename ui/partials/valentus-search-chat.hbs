@@ -1,14 +1,14 @@
 {{!-- Search/Ask omnibox — sticky in-flow dock or navbar slot (see ARCHITECTURE.adoc).
      One shell: scope row + one query field + optional Ask result.
-     Capability indicators sit at the bottom of the dock. / focuses the field.
-     Dock placement is moved to the end of .valentus-shell so it occupies space above the footer. --}}
+     / focuses the field. Dock placement is moved to the end of .valentus-shell
+     so it occupies space above the footer. --}}
 <div
   class="search valentus-nav-search valentus-search-chat"
   data-valentus-search-chat
   data-active-tab="search"
   data-ask-enabled="false"
   data-semantic-enabled="false"
-  data-placement="navbar"
+  data-placement="dock"
   {{#with page.component}}
   data-component-name="{{./name}}"
   data-component-title="{{./title}}"
@@ -113,14 +113,14 @@
           <div class="valentus-search-chat__query-slot" data-valentus-search-query-slot>
             <div class="valentus-search-input-wrap" data-valentus-search-input-wrap>
               <span class="valentus-search-ph" aria-hidden="true" data-valentus-search-ph>
-                <span class="valentus-search-ph-main">Search or ask...</span><code class="valentus-search-ph-code">/</code>
+                <span class="valentus-search-ph-main" data-valentus-search-ph-main>Search by keyword...</span><code class="valentus-search-ph-code">/</code>
               </span>
               <input
                 id="search-input"
                 type="text"
                 placeholder=""
                 autocomplete="off"
-                aria-label="Search or ask... /"
+                aria-label="Search by keyword... /"
                 data-valentus-search-input
               >
             </div>
@@ -148,19 +148,5 @@
       </form>
     </div>
 
-    <div class="valentus-search-capabilities" data-valentus-search-capabilities aria-label="Search capabilities">
-      <label class="valentus-search-capability" data-capability="keyword">
-        <input type="checkbox" disabled checked data-valentus-capability="keyword">
-        <span>Keyword</span>
-      </label>
-      <label class="valentus-search-capability" data-capability="semantic">
-        <input type="checkbox" disabled data-valentus-capability="semantic">
-        <span>Semantic</span>
-      </label>
-      <label class="valentus-search-capability" data-capability="chat">
-        <input type="checkbox" disabled data-valentus-capability="chat">
-        <span>Chat</span>
-      </label>
-    </div>
   </div>
 </div>

@@ -67,7 +67,7 @@ if (typeof document !== 'undefined') {
       ? cfg.semanticEnabled
       : root.getAttribute('data-semantic-enabled') === 'true'
   var placement =
-    cfg.placement || root.getAttribute('data-placement') || 'navbar'
+    cfg.placement || root.getAttribute('data-placement') || 'dock'
   root.setAttribute('data-semantic-enabled', semanticEnabled ? 'true' : 'false')
   root.setAttribute('data-placement', placement === 'dock' ? 'dock' : 'navbar')
 
@@ -80,7 +80,7 @@ if (typeof document !== 'undefined') {
     // Scope menu becomes a direct child so it can anchor above the whole dock.
     if (scopeMenu && scopeMenu.parentElement !== root) root.appendChild(scopeMenu)
   }
-  var QUERY_PLACEHOLDER = 'Search or ask... /'
+
   var MIN_EXPANDED_SEARCH_PX = 280
   var COLLAPSE_HYSTERESIS_PX = 24
 
@@ -97,20 +97,11 @@ if (typeof document !== 'undefined') {
   var askEnabled = resolveAskEnabled()
   root.setAttribute('data-ask-enabled', askEnabled ? 'true' : 'false')
 
-  // Capability strip: Keyword always on (Lunr); Semantic / Chat reflect config.
-  var levels = cfg.levels || {}
-  root.querySelectorAll('[data-valentus-capability]').forEach(function (box) {
-    var level = box.getAttribute('data-valentus-capability')
-    var on =
-      level === 'keyword'
-        ? levels.keyword !== false
-        : level === 'semantic'
-          ? !!levels.semantic || semanticEnabled
-          : !!levels.chat || askEnabled
-    box.checked = !!on
-    var label = box.closest('.valentus-search-capability')
-    if (label) label.classList.toggle('is-off', !on)
-  })
+  function buildQueryPlaceholderText () {
+    var main = semanticEnabled ? 'Search by meaning' : 'Search by keyword'
+    if (askEnabled) return main + ', or ask...'
+    return main + '...'
+  }
 
   function getScopeOptions () {
     return Array.prototype.slice.call(root.querySelectorAll('[data-valentus-search-scope-option]'))
@@ -357,8 +348,11 @@ if (typeof document !== 'undefined') {
     if (!searchInput) return
     // Native placeholder cannot style the slash. The overlay draws it; keep
     // the attribute empty so the two hints do not stack.
+    var hint = buildQueryPlaceholderText()
     searchInput.setAttribute('placeholder', '')
-    searchInput.setAttribute('aria-label', QUERY_PLACEHOLDER)
+    searchInput.setAttribute('aria-label', hint + ' /')
+    var phMain = root.querySelector('[data-valentus-search-ph-main]')
+    if (phMain) phMain.textContent = hint
     syncSearchPlaceholder()
   }
 
@@ -484,33 +478,36 @@ if (typeof document !== 'undefined') {
   }
 
   // Lunr mounts .search-result-dropdown-menu on the input wrap as soon as its
-  // script runs, before a query. Hide that empty box, and when semantic search
-  // is on, split hits into keyword (top) and semantic (bottom) zones.
+  // script runs, before a query. Hide that empty box; note disabled levels in
+  // the results footer instead of a always-visible capability strip.
   var organizingResults = false
 
-  function makeZone (name, label) {
-    var zone = document.createElement('div')
-    zone.className = 'valentus-search-zone valentus-search-zone--' + name
-    zone.setAttribute('data-valentus-search-zone', name)
-    var title = document.createElement('div')
-    title.className = 'valentus-search-zone__title'
-    title.textContent = label
-    zone.appendChild(title)
-    if (name === 'semantic') {
-      var empty = document.createElement('p')
-      empty.className = 'valentus-search-zone__empty'
-      empty.textContent = 'No semantic results.'
-      zone.appendChild(empty)
+  function syncFeatureHints (dd) {
+    if (!dd) return
+    var dataset = dd.querySelector('.search-result-dataset')
+    var hints = dd.querySelector('[data-valentus-search-feature-hints]')
+    if (!dataset || dd.classList.contains('is-idle')) {
+      if (hints) hints.remove()
+      return
     }
-    return zone
-  }
-
-  function ensureZone (dd, name, label) {
-    var zone = dd.querySelector('[data-valentus-search-zone="' + name + '"]')
-    if (zone) return zone
-    zone = makeZone(name, label)
-    dd.appendChild(zone)
-    return zone
+    if (semanticEnabled && askEnabled) {
+      if (hints) hints.remove()
+      return
+    }
+    if (!hints) {
+      hints = document.createElement('p')
+      hints.className = 'valentus-search-feature-hints'
+      hints.setAttribute('data-valentus-search-feature-hints', '')
+      dd.appendChild(hints)
+    }
+    var parts = []
+    if (!semanticEnabled) {
+      parts.push('Semantic search is not enabled on this site.')
+    }
+    if (!askEnabled) {
+      parts.push('Chat is not enabled on this site.')
+    }
+    hints.textContent = parts.join(' ')
   }
 
   function organizeSearchResults (dd) {
@@ -521,25 +518,16 @@ if (typeof document !== 'undefined') {
       if (!dataset) {
         dd.classList.add('is-idle')
         dd.classList.remove('valentus-search-results--split')
+        syncFeatureHints(dd)
         return
       }
       dd.classList.remove('is-idle')
-      if (!semanticEnabled) {
-        dd.classList.remove('valentus-search-results--split')
-        if (dataset.parentElement !== dd) dd.appendChild(dataset)
-        Array.prototype.slice.call(dd.querySelectorAll('[data-valentus-search-zone]')).forEach(function (zone) {
-          zone.remove()
-        })
-        return
-      }
-      dd.classList.add('valentus-search-results--split')
-      var keyword = ensureZone(dd, 'keyword', 'Keyword')
-      if (dataset.parentElement !== keyword) keyword.appendChild(dataset)
-      var semantic = ensureZone(dd, 'semantic', 'Semantic')
-      if (keyword.nextElementSibling !== semantic) {
-        dd.appendChild(keyword)
-        dd.appendChild(semantic)
-      }
+      dd.classList.remove('valentus-search-results--split')
+      if (dataset.parentElement !== dd) dd.appendChild(dataset)
+      Array.prototype.slice.call(dd.querySelectorAll('[data-valentus-search-zone]')).forEach(function (zone) {
+        zone.remove()
+      })
+      syncFeatureHints(dd)
     } finally {
       organizingResults = false
     }
@@ -851,8 +839,8 @@ if (typeof document !== 'undefined') {
 
       if (!askEnabled) {
         showResult(
-          'Ask is not enabled on this site. Set ask_enabled: true and/or backend_url ' +
-            '(or local_assist) on the antora-search-chat extension. Use Search for keyword results.',
+          'Chat is not enabled on this site. Set ask_enabled: true and/or backend_url ' +
+            '(or local_assist) on the antora-search-chat extension. Keyword results still appear as you type.',
           false
         )
         return

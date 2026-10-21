@@ -782,45 +782,15 @@ html.dark-theme .valentus-search-scope-option:focus {
   background-color: var(--valentus-search-surface-hover);
 }
 
-/* ——— Capability strip (Keyword / Semantic / Chat status) ———
-   Bottom of the overlay (dock); hidden in navbar where space is tight. */
-.valentus-search-capabilities {
-  display: none;
-  flex-wrap: wrap;
-  gap: 0.25rem 0.9rem;
-  align-items: center;
-  order: 2;
-  margin-top: auto;
-  padding: 0.45rem 0.1rem 0.1rem;
+/* Disabled semantic / chat levels — footer inside the results menu only. */
+.valentus-search-feature-hints {
+  margin: 0;
+  padding: 0.45rem 0.7rem 0.55rem;
   border-top: 1px solid var(--valentus-search-rim);
   font-size: 0.72rem;
-  color: var(--valentus-muted, #5b6472);
-  background-color: var(--valentus-search-surface);
-}
-
-.valentus-search-chat[data-placement='dock'] .valentus-search-capabilities {
-  display: flex;
-}
-
-.valentus-search-capability {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.12rem 0.45rem;
-  border-radius: 999px;
-  background-color: var(--valentus-search-chip);
-  cursor: default;
-}
-
-.valentus-search-capability input {
-  margin: 0;
-  accent-color: var(--valentus-accent, #0d9488);
-}
-
-.valentus-search-capability.is-off {
-  opacity: 1;
+  line-height: 1.35;
   color: var(--valentus-search-muted);
-  background-color: var(--valentus-search-chip);
+  background-color: var(--valentus-search-surface);
 }
 
 /* Dock placement vacates the navbar slot. The dock node is moved into the
@@ -890,8 +860,7 @@ html.dark-theme .valentus-search-scope-option:focus {
 }
 
 /* Dock: JS portals the scope menu and Lunr results to direct children of the
-   dock root, so they anchor above the whole outer box (capability strip
-   included), not just above the input row. */
+   dock root, so they anchor above the whole outer box, not just above the input row. */
 .valentus-search-chat[data-placement='dock'] > .valentus-search-scope-menu {
   top: auto;
   bottom: calc(100% + 0.5rem);
@@ -1004,7 +973,6 @@ html.dark-theme .valentus-search-scope-option:focus {
 .valentus-search-chat .valentus-search-chat__ask-input,
 .valentus-search-chat .valentus-search-chat__tabs,
 .valentus-search-chat .valentus-search-chat__tab,
-.valentus-search-chat .valentus-search-capabilities,
 .valentus-search-chat .valentus-search-chat__toggle,
 .valentus-search-chat .search-result-dropdown-menu,
 .valentus-search-chat .search-result-dataset,
@@ -1062,8 +1030,7 @@ html.dark-theme .valentus-search-scope-option:focus {
 .valentus-search-chat .valentus-search-scope-slot.is-disabled,
 .valentus-search-chat .valentus-search-scope-slot.is-disabled:hover,
 .valentus-search-chat .valentus-search-scope-slot.is-disabled:focus-within,
-.valentus-search-chat .valentus-search-capability,
-.valentus-search-chat .valentus-search-capability.is-off,
+.valentus-search-chat .valentus-search-feature-hints,
 html.dark-theme .valentus-search-chat kbd.valentus-search-chat__hint,
 html.dark-theme .valentus-search-chat kbd.valentus-search-chat__field-hint,
 .valentus-search-chat kbd.valentus-search-chat__hint,

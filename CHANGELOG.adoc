@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on https://keepachangelog.com/en/1.1.0/[Keep a Changelog],
 and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
+== [0.1.22] - 2026-10-21
+
+=== Changed
+
+* **Default placement is `dock`.** The omnibox mounts as a sticky bar above the footer (navbar vacates). Set `placement: navbar` to restore the top-bar slot.
+* **Placeholder copy** reflects enabled levels: *Search by keyword…*, *Search by meaning…*, and *… or ask…* when chat is on. Semantic mode does not split keyword vs semantic result zones (semantic search subsumes keyword Lunr hits).
+* **Capability strip removed.** Disabled semantic search and chat are noted in the results menu footer instead of always-visible Keyword / Semantic / Chat checkboxes.
+
 == [0.1.21] - 2026-10-21
 
 === Changed
