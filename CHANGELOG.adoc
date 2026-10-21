@@ -7,6 +7,8 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.20] - 2026-10-21
+
 === Changed
 
 * **Breaking:** search partial and hooks use the `valentus-*` namespace (`valentus-search-chat` partial, `data-valentus-search-chat`, `--valentus-search-*` tokens) instead of legacy `adt-*`.
