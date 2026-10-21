@@ -825,14 +825,13 @@ html.dark-theme .valentus-search-scope-option:focus {
   margin-bottom: max(0.75rem, env(safe-area-inset-bottom));
   margin-inline: auto;
   overflow-anchor: none;
-  padding: 0.65rem 0.65rem 0.55rem;
-  border: 1px solid var(--valentus-search-rim);
-  border-radius: 1rem;
-  background-color: var(--valentus-search-surface);
+  /* Layout shell only — chrome lives on .valentus-search-compound. */
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
   isolation: isolate;
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--valentus-accent, #0d9488) 12%, transparent),
-    0 0.75rem 2rem color-mix(in srgb, var(--valentus-ink, #141820) 16%, transparent);
+  box-shadow: none;
   color: var(--valentus-ink, #141820);
   transition: var(--valentus-search-theme-transition);
 }
@@ -873,8 +872,13 @@ html.dark-theme .valentus-search-scope-option:focus {
 .valentus-search-chat[data-placement='dock'] > .search-result-dropdown-menu {
   top: auto !important;
   bottom: calc(100% + 0.5rem);
+  left: 0 !important;
+  right: 0 !important;
   inset-inline: 0;
-  width: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  box-sizing: border-box;
   /* Anchored to the viewport bottom: cap height so the first results stay
      on screen; the list scrolls internally. */
   max-height: min(65vh, calc(100vh - 12rem));
@@ -958,8 +962,9 @@ html.dark-theme .valentus-search-scope-option:focus {
 .valentus-search-chat[data-placement='dock']:hover,
 .valentus-search-chat[data-placement='dock']:focus,
 .valentus-search-chat[data-placement='dock']:focus-within {
-  background: var(--valentus-search-surface) !important;
-  border-color: var(--valentus-search-rim) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .valentus-search-chat .valentus-search-chat__popover,

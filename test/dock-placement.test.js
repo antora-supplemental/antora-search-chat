@@ -155,3 +155,23 @@ test('dock CSS sticks inside the page column and is not a fixed overlay', () => 
   )
   assert.doesNotMatch(code, /position:\s*fixed/)
 })
+
+test('dock shell is layout-only; portaled results match compound width', () => {
+  const css = fs.readFileSync(
+    path.join(__dirname, '../ui/css/site-search-chat.css'),
+    'utf8'
+  )
+  const code = css.replace(/\/\*[\s\S]*?\*\//g, '')
+  assert.match(
+    code,
+    /\.valentus-search-chat\[data-placement='dock'\]\s*\{[^}]*border:\s*none/
+  )
+  assert.match(
+    code,
+    /\.valentus-search-chat\[data-placement='dock'\]\s*>\s*\.search-result-dropdown-menu\s*\{[^}]*width:\s*100%\s*!important/
+  )
+  assert.match(
+    code,
+    /\.valentus-search-chat\[data-placement='dock'\]\s*>\s*\.search-result-dropdown-menu\s*\{[^}]*left:\s*0\s*!important/
+  )
+})

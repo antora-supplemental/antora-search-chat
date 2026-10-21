@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on https://keepachangelog.com/en/1.1.0/[Keep a Changelog],
 and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
+== [0.1.23] - 2026-10-21
+
+=== Fixed
+
+* **Dock chrome:** the sticky dock root is a layout shell only (no outer border, padding, or shadow). The stacked scope + input compound keeps the visible card.
+* **Dock results width:** portaled Lunr menus use full width of the dock (`left`/`right` 0) so they align with the compound instead of theme navbar `left: 0` sizing.
+
 == [0.1.22] - 2026-10-21
 
 === Changed
