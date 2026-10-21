@@ -9,7 +9,7 @@ Status:: Phase 1 scaffold (docs + stub UI). Omnibox product target is documented
 * Keep lunr as the default, offline keyword engine; **Ask** only on explicit mode or submit (no speculative AI on every keystroke by default).
 * Optional **tier-0** on-device ultra-light model for query rewrite / short answers over retrieved chunks; remote API as an optional upgrade. Never put API keys in the playbook.
 * Wrap `@antora/lunr-extension` — do not fork it.
-* Own the centered navbar search slot (`.adt-navbar-search` / `.adt-nav-search`). Page read-width stays in `.adt-tool-band` over the doc column. Search width is independent of `--adt-doc-max` / nav column measure.
+* Own the centered navbar search slot (`.valentus-navbar-search` / `.valentus-nav-search`). Page read-width stays in `.valentus-tool-band` over the doc column. Search width is independent of `--valentus-doc-max` / nav column measure.
 
 == Wrap vs fork
 
@@ -102,7 +102,7 @@ Alternatives considered and deferred:: Default *All* everywhere (max discoverabi
 
 ==== Compound control (visual)
 
-Scope is a *full-width row above* the search input inside one rounded card (`.adt-search-compound--stacked`), not a left segment of a horizontal pill.
+Scope is a *full-width row above* the search input inside one rounded card (`.valentus-search-compound--stacked`), not a left segment of a horizontal pill.
 
 Target shape::
 
@@ -114,7 +114,7 @@ Target shape::
 └──────────────────────────────────────────────┘
 ----
 
-Closed control shows the *selected* label only (component title, `version X`, or *All docs*) — no Antora jargon prefix like *Component* / *Version*. The open menu is a custom static tree (`.adt-search-scope-menu`) under the trigger button (`.adt-search-scope-trigger`), not a native `<select>` (which cannot nest). Options come from Antora page context (`page.component`, `page.component.versions`, current `page.version` marked *current*).
+Closed control shows the *selected* label only (component title, `version X`, or *All docs*) — no Antora jargon prefix like *Component* / *Version*. The open menu is a custom static tree (`.valentus-search-scope-menu`) under the trigger button (`.valentus-search-scope-trigger`), not a native `<select>` (which cannot nest). Options come from Antora page context (`page.component`, `page.component.versions`, current `page.version` marked *current*).
 
 [.themed-svg]
 image::diagrams/search-compound-layout.svg[Search compound control layout]
@@ -129,13 +129,13 @@ Rules:
 * Dropdown flush against the input (shared outer border, *no gap*).
 * Rounded top corners on the scope row; input row takes the bottom rounding of the card.
 * Divide with a subtle *horizontal* rule between scope and input — not a vertical split pill.
-* Class hooks: `.adt-search-compound.adt-search-compound--stacked` → `.adt-search-scope-slot.adt-search-scope-row` + `.adt-search-input-wrap` (`#search-input` + `.adt-search-ph` overlay).
+* Class hooks: `.valentus-search-compound.valentus-search-compound--stacked` → `.valentus-search-scope-slot.valentus-search-scope-row` + `.valentus-search-input-wrap` (`#search-input` + `.valentus-search-ph` overlay).
 
 Scope → lunr filters is still a later pass; labels/default selection are wired from page context now.
 
 ==== Soft navigation (SoftNav)
 
-The omnibox lives in the site navbar, which SoftNav does *not* swap on in-component navigation. Without a refresh hook, `data-component-*` / `data-version-*` on `[data-adt-search-chat]` and the static scope tree (`{{#with page.component}}` in the partial) stay frozen from the first full page load — the scope menu can look empty or stale after soft-nav (e.g. site home → component doc).
+The omnibox lives in the site navbar, which SoftNav does *not* swap on in-component navigation. Without a refresh hook, `data-component-*` / `data-version-*` on `[data-valentus-search-chat]` and the static scope tree (`{{#with page.component}}` in the partial) stay frozen from the first full page load — the scope menu can look empty or stale after soft-nav (e.g. site home → component doc).
 
 `site-search-chat.js` listens for `SoftNav.on('loaded')` or `soft-nav:loaded`, then copies context attributes and scope-menu markup from `detail.doc` and re-runs label/selection sync. Requires SoftNav to pass `ctx.doc` on the loaded event (chassis `soft-nav.js` does).
 
@@ -145,13 +145,13 @@ Lunr's UI today is weak for multi-value facets (often a single checkbox-style fi
 
 ==== Layout coordination
 
-*Placement:* default mount is `.adt-site-navbar` (`.adt-navbar-search`). With `placement: dock` the same partial is moved to the end of `.adt-shell` (the page column that ends immediately before `footer.footer`) and sticks to the bottom of the viewport while that column is on screen. Its in-flow box sits between the article and the footer, so the footer, edit link, and extension lister stay clickable. Capability strip on the outer rounded box, stacked scope-above-input card inside, and the scope menu, Lunr results, and Ask panel all open *upward* above the dock (shipped in 0.1.7; navbar remains the default until consumers opt in). Dock width is independent of `--adt-doc-max`. Search-chat owns the control and result zones; layout must not clip overflow on the dock or upward results stack. Search menus/results use `--adt-search-top-z` so they paint above the doc mast and all page chrome. The column receives `adt-search-dock-column`; `body` receives `adt-search-dock-active`.
+*Placement:* default mount is `.valentus-site-navbar` (`.valentus-navbar-search`). With `placement: dock` the same partial is moved to the end of `.valentus-shell` (the page column that ends immediately before `footer.footer`) and sticks to the bottom of the viewport while that column is on screen. Its in-flow box sits between the article and the footer, so the footer, edit link, and extension lister stay clickable. Capability strip on the outer rounded box, stacked scope-above-input card inside, and the scope menu, Lunr results, and Ask panel all open *upward* above the dock (shipped in 0.1.7; navbar remains the default until consumers opt in). Dock width is independent of `--valentus-doc-max`. Search-chat owns the control and result zones; layout must not clip overflow on the dock or upward results stack. Search menus/results use `--valentus-search-top-z` so they paint above the doc mast and all page chrome. The column receives `valentus-search-dock-column`; `body` receives `valentus-search-dock-active`.
 
-*Collapse-to-icon*:: When leftover middle space is too narrow (high zoom / mobile), `site-search-chat.js` adds `.is-collapsed` and shows a search icon toggle. Opening it drops `.adt-search-chat__popover` under the icon with the full compound (scope + input + Ask) and lunr results. `/` and `?` open the popover. Themes should keep `.adt-navbar-search` in normal flow (not absolute-centered with a large `min-width`) so brand/title and search never paint on top of each other.
+*Collapse-to-icon*:: When leftover middle space is too narrow (high zoom / mobile), `site-search-chat.js` adds `.is-collapsed` and shows a search icon toggle. Opening it drops `.valentus-search-chat__popover` under the icon with the full compound (scope + input + Ask) and lunr results. `/` and `?` open the popover. Themes should keep `.valentus-navbar-search` in normal flow (not absolute-centered with a large `min-width`) so brand/title and search never paint on top of each other.
 
-*Do not* set `overflow: hidden` on `#search-field` / `.adt-search-compound` *or* `.adt-search-input-wrap`. Lunr's `search-ui.js` mounts `.search-result-dropdown-menu` on `#search-input.parentNode` (`position:absolute; top:100%`). With compound markup that parent is `.adt-search-input-wrap`, not `#search-field` — so clipping the wrap (a common "move overflow off the compound" mistake) still hides all results. Keep compound, input-wrap, *and* `.adt-search-scope-slot` `overflow: visible` (the scope tree menu drops below the slot). Clip typed text on `#search-input` itself (`overflow: hidden`); truncate the closed scope label on `.adt-search-scope-face` / `.adt-search-scope-label`.
+*Do not* set `overflow: hidden` on `#search-field` / `.valentus-search-compound` *or* `.valentus-search-input-wrap`. Lunr's `search-ui.js` mounts `.search-result-dropdown-menu` on `#search-input.parentNode` (`position:absolute; top:100%`). With compound markup that parent is `.valentus-search-input-wrap`, not `#search-field` — so clipping the wrap (a common "move overflow off the compound" mistake) still hides all results. Keep compound, input-wrap, *and* `.valentus-search-scope-slot` `overflow: visible` (the scope tree menu drops below the slot). Clip typed text on `#search-input` itself (`overflow: hidden`); truncate the closed scope label on `.valentus-search-scope-face` / `.valentus-search-scope-label`.
 
-*Horizontal alignment*:: Scope menu and search result panels align to the full stacked card width (`100cqi` on `.adt-search-compound` with `container-type: inline-size`), not the input cell alone.
+*Horizontal alignment*:: Scope menu and search result panels align to the full stacked card width (`100cqi` on `.valentus-search-compound` with `container-type: inline-size`), not the input cell alone.
 
 === No speculative AI on keystrokes
 
@@ -202,10 +202,10 @@ Phase 1 stops at a stub Ask path (no network call unless `backend_url` is set; t
 
 Layout owns placement; search-chat owns the control:
 
-* Slot: left nav, above the tree (`.adt-nav-search`), in a tool band *outside* the 3-col shell.
+* Slot: left nav, above the tree (`.valentus-nav-search`), in a tool band *outside* the 3-col shell.
 * Keep `#search-input` so lunr and any residual layout focus helpers keep working (omnibox may reuse this id for the shared field).
 * One query field. Typing searches; Enter asks. `/` focuses the field.
-* Scope: dropdown on the *row above* the field (`.adt-search-scope-row`) — static tree *All docs* → *{component}* → *version …*; defaults per <<_default_scope_recommendation>>. It stays visible.
+* Scope: dropdown on the *row above* the field (`.valentus-search-scope-row`) — static tree *All docs* → *{component}* → *version …*; defaults per <<_default_scope_recommendation>>. It stays visible.
 
 Phase 1 stub note:: The scaffold may still render tabbed Search/Ask panels and navbar placement; stacked scope+input markup is in place for the floating dock. Treat transitional tabs/navbar slot as temporary; product target is bottom dock + scope above input + dual result zones above.
 
@@ -228,7 +228,7 @@ When focus is *not* in an `input` / `textarea` / `select` / `contenteditable`:
 
 *Keyboard caveat:* Listen for `key === '?'` *or* (`key === '/'` && `shiftKey`). Some layouts emit `?` directly; others keep `/` with Shift. Ignore when `metaKey` / `ctrlKey` / `altKey` are held.
 
-When `[data-adt-search-chat]` is present, layout `site-visual.js` should *not* also handle `/` (search-chat owns both shortcuts).
+When `[data-valentus-search-chat]` is present, layout `site-visual.js` should *not* also handle `/` (search-chat owns both shortcuts).
 
 == Configuration keys
 
@@ -284,7 +284,7 @@ Runtime payload (`window.__ADT_SEARCH_CHAT__`) includes `askEnabled`, `backendUr
 
 === Theme integration (plain `#search-input`)
 
-Themes may still fall back to a plain lunr field (`placeholder="Search"`) when `SITE_SEARCH_CHAT` is unset. This package’s partial sets the query placeholder to *Search or ask... /*. Themes that keep only `#search-input` should prefer `{{> adt-search-chat}}` when the extension is registered.
+Themes may still fall back to a plain lunr field (`placeholder="Search"`) when `SITE_SEARCH_CHAT` is unset. This package’s partial sets the query placeholder to *Search or ask... /*. Themes that keep only `#search-input` should prefer `{{> valentus-search-chat}}` when the extension is registered.
 
 == Privacy and API keys
 

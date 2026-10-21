@@ -1,18 +1,18 @@
 /**
  * Mount the dock in the page column so it occupies layout space above the
- * footer. Valentus ends `.adt-shell` immediately before `footer.footer`;
+ * footer. Valentus ends `.valentus-shell` immediately before `footer.footer`;
  * appending there makes that column the sticky containing block. A
  * `position: fixed` overlay on `<body>` covers footer links.
  *
  * Returns the column the dock was attached to.
  */
 function placeSearchDock (doc, root) {
-  var slot = typeof root.closest === 'function' ? root.closest('.adt-navbar-search') : null
+  var slot = typeof root.closest === 'function' ? root.closest('.valentus-navbar-search') : null
   if (!slot) slot = root.parentElement
-  if (slot && slot !== root && slot.classList) slot.classList.add('adt-search-slot-vacated')
-  if (doc.body && doc.body.classList) doc.body.classList.add('adt-search-dock-active')
+  if (slot && slot !== root && slot.classList) slot.classList.add('valentus-search-slot-vacated')
+  if (doc.body && doc.body.classList) doc.body.classList.add('valentus-search-dock-active')
 
-  var shell = doc.querySelector('.adt-shell')
+  var shell = doc.querySelector('.valentus-shell')
   var footer = doc.querySelector('footer.footer') || doc.querySelector('footer')
   var column = shell
   if (!column) {
@@ -32,7 +32,7 @@ function placeSearchDock (doc, root) {
   }
 
   if (column && column.classList && (!footer || !column.contains(footer))) {
-    column.classList.add('adt-search-dock-column')
+    column.classList.add('valentus-search-dock-column')
   }
   return column || root.parentElement
 }
@@ -42,26 +42,26 @@ if (typeof document !== 'undefined') {
   'use strict'
 
   var cfg = window.__ADT_SEARCH_CHAT__ || {}
-  var root = document.querySelector('[data-adt-search-chat]')
+  var root = document.querySelector('[data-valentus-search-chat]')
   if (!root) return
 
-  var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-adt-search-tab]'))
-  var form = root.querySelector('[data-adt-search-ask-form]')
-  var inputWrap = root.querySelector('[data-adt-search-input-wrap]')
-  var askWrap = root.querySelector('[data-adt-ask-wrap]')
-  var input = root.querySelector('[data-adt-ask-input]')
-  var result = root.querySelector('[data-adt-ask-result]')
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-valentus-search-tab]'))
+  var form = root.querySelector('[data-valentus-search-ask-form]')
+  var inputWrap = root.querySelector('[data-valentus-search-input-wrap]')
+  var askWrap = root.querySelector('[data-valentus-ask-wrap]')
+  var input = root.querySelector('[data-valentus-ask-input]')
+  var result = root.querySelector('[data-valentus-ask-result]')
   var searchInput =
-    root.querySelector('[data-adt-search-input]') || document.getElementById('search-input')
-  var ph = root.querySelector('[data-adt-search-ph]')
-  var scopeValueInput = root.querySelector('[data-adt-search-scope]')
-  var scopeSlot = root.querySelector('[data-adt-search-scope-slot]')
-  var scopeTrigger = root.querySelector('[data-adt-search-scope-trigger]')
-  var scopeMenu = root.querySelector('[data-adt-search-scope-menu]')
-  var scopeLabel = root.querySelector('[data-adt-search-scope-label]')
-  var toggle = root.querySelector('[data-adt-search-toggle]')
-  var popover = root.querySelector('[data-adt-search-popover]')
-  var searchSlot = root.closest('.adt-navbar-search') || root.parentElement
+    root.querySelector('[data-valentus-search-input]') || document.getElementById('search-input')
+  var ph = root.querySelector('[data-valentus-search-ph]')
+  var scopeValueInput = root.querySelector('[data-valentus-search-scope]')
+  var scopeSlot = root.querySelector('[data-valentus-search-scope-slot]')
+  var scopeTrigger = root.querySelector('[data-valentus-search-scope-trigger]')
+  var scopeMenu = root.querySelector('[data-valentus-search-scope-menu]')
+  var scopeLabel = root.querySelector('[data-valentus-search-scope-label]')
+  var toggle = root.querySelector('[data-valentus-search-toggle]')
+  var popover = root.querySelector('[data-valentus-search-popover]')
+  var searchSlot = root.closest('.valentus-navbar-search') || root.parentElement
   var semanticEnabled =
     typeof cfg.semanticEnabled === 'boolean'
       ? cfg.semanticEnabled
@@ -99,8 +99,8 @@ if (typeof document !== 'undefined') {
 
   // Capability strip: Keyword always on (Lunr); Semantic / Chat reflect config.
   var levels = cfg.levels || {}
-  root.querySelectorAll('[data-adt-capability]').forEach(function (box) {
-    var level = box.getAttribute('data-adt-capability')
+  root.querySelectorAll('[data-valentus-capability]').forEach(function (box) {
+    var level = box.getAttribute('data-valentus-capability')
     var on =
       level === 'keyword'
         ? levels.keyword !== false
@@ -108,12 +108,12 @@ if (typeof document !== 'undefined') {
           ? !!levels.semantic || semanticEnabled
           : !!levels.chat || askEnabled
     box.checked = !!on
-    var label = box.closest('.adt-search-capability')
+    var label = box.closest('.valentus-search-capability')
     if (label) label.classList.toggle('is-off', !on)
   })
 
   function getScopeOptions () {
-    return Array.prototype.slice.call(root.querySelectorAll('[data-adt-search-scope-option]'))
+    return Array.prototype.slice.call(root.querySelectorAll('[data-valentus-search-scope-option]'))
   }
 
   function pageContext () {
@@ -156,17 +156,17 @@ if (typeof document !== 'undefined') {
 
   function refreshSearchContextFromDocument (doc) {
     if (!doc) return
-    var freshRoot = doc.querySelector('[data-adt-search-chat]')
+    var freshRoot = doc.querySelector('[data-valentus-search-chat]')
     if (!freshRoot) return
 
     copySearchContextAttributes(freshRoot)
 
-    var freshMenu = freshRoot.querySelector('[data-adt-search-scope-menu]')
+    var freshMenu = freshRoot.querySelector('[data-valentus-search-scope-menu]')
     if (scopeMenu && freshMenu) {
       scopeMenu.innerHTML = freshMenu.innerHTML
     }
 
-    var freshScopeValue = freshRoot.querySelector('[data-adt-search-scope]')
+    var freshScopeValue = freshRoot.querySelector('[data-valentus-search-scope]')
     if (scopeValueInput && freshScopeValue) {
       scopeValueInput.value = freshScopeValue.value || 'all'
       if (freshScopeValue.hasAttribute('data-version')) {
@@ -236,8 +236,8 @@ if (typeof document !== 'undefined') {
 
     scopeOptions.forEach(function (opt) {
       var scope = opt.getAttribute('data-scope') || ''
-      var textEl = opt.querySelector('[data-adt-search-scope-option-text]') ||
-        opt.querySelector('.adt-search-scope-option-text')
+      var textEl = opt.querySelector('[data-valentus-search-scope-option-text]') ||
+        opt.querySelector('.valentus-search-scope-option-text')
       if (scope === 'all') {
         opt.setAttribute('data-label', 'All docs')
         if (textEl) textEl.textContent = 'All docs'
@@ -384,7 +384,7 @@ if (typeof document !== 'undefined') {
 
     scopeMenu.addEventListener('click', function (e) {
       var opt =
-        e.target && e.target.closest && e.target.closest('[data-adt-search-scope-option]')
+        e.target && e.target.closest && e.target.closest('[data-valentus-search-scope-option]')
       if (!opt || !scopeMenu.contains(opt)) return
       e.preventDefault()
       e.stopPropagation()
@@ -440,7 +440,7 @@ if (typeof document !== 'undefined') {
         return
       }
       if (e.key === 'Enter' || e.key === ' ') {
-        if (active && active.getAttribute && active.hasAttribute('data-adt-search-scope-option')) {
+        if (active && active.getAttribute && active.hasAttribute('data-valentus-search-scope-option')) {
           e.preventDefault()
           active.click()
         }
@@ -490,15 +490,15 @@ if (typeof document !== 'undefined') {
 
   function makeZone (name, label) {
     var zone = document.createElement('div')
-    zone.className = 'adt-search-zone adt-search-zone--' + name
-    zone.setAttribute('data-adt-search-zone', name)
+    zone.className = 'valentus-search-zone valentus-search-zone--' + name
+    zone.setAttribute('data-valentus-search-zone', name)
     var title = document.createElement('div')
-    title.className = 'adt-search-zone__title'
+    title.className = 'valentus-search-zone__title'
     title.textContent = label
     zone.appendChild(title)
     if (name === 'semantic') {
       var empty = document.createElement('p')
-      empty.className = 'adt-search-zone__empty'
+      empty.className = 'valentus-search-zone__empty'
       empty.textContent = 'No semantic results.'
       zone.appendChild(empty)
     }
@@ -506,7 +506,7 @@ if (typeof document !== 'undefined') {
   }
 
   function ensureZone (dd, name, label) {
-    var zone = dd.querySelector('[data-adt-search-zone="' + name + '"]')
+    var zone = dd.querySelector('[data-valentus-search-zone="' + name + '"]')
     if (zone) return zone
     zone = makeZone(name, label)
     dd.appendChild(zone)
@@ -520,19 +520,19 @@ if (typeof document !== 'undefined') {
       var dataset = dd.querySelector('.search-result-dataset')
       if (!dataset) {
         dd.classList.add('is-idle')
-        dd.classList.remove('adt-search-results--split')
+        dd.classList.remove('valentus-search-results--split')
         return
       }
       dd.classList.remove('is-idle')
       if (!semanticEnabled) {
-        dd.classList.remove('adt-search-results--split')
+        dd.classList.remove('valentus-search-results--split')
         if (dataset.parentElement !== dd) dd.appendChild(dataset)
-        Array.prototype.slice.call(dd.querySelectorAll('[data-adt-search-zone]')).forEach(function (zone) {
+        Array.prototype.slice.call(dd.querySelectorAll('[data-valentus-search-zone]')).forEach(function (zone) {
           zone.remove()
         })
         return
       }
-      dd.classList.add('adt-search-results--split')
+      dd.classList.add('valentus-search-results--split')
       var keyword = ensureZone(dd, 'keyword', 'Keyword')
       if (dataset.parentElement !== keyword) keyword.appendChild(dataset)
       var semantic = ensureZone(dd, 'semantic', 'Semantic')
@@ -547,11 +547,11 @@ if (typeof document !== 'undefined') {
 
   function watchResultsMenu (dd) {
     if (!dd) return
-    if (dd.getAttribute('data-adt-results-watch') === '1') {
+    if (dd.getAttribute('data-valentus-results-watch') === '1') {
       organizeSearchResults(dd)
       return
     }
-    dd.setAttribute('data-adt-results-watch', '1')
+    dd.setAttribute('data-valentus-results-watch', '1')
     organizeSearchResults(dd)
     if (typeof MutationObserver === 'function') {
       new MutationObserver(function () {
@@ -661,7 +661,7 @@ if (typeof document !== 'undefined') {
 
   tabs.forEach(function (tab) {
     tab.addEventListener('click', function () {
-      activate(tab.getAttribute('data-adt-search-tab'))
+      activate(tab.getAttribute('data-valentus-search-tab'))
     })
   })
 
@@ -730,10 +730,10 @@ if (typeof document !== 'undefined') {
    * Measures leftover middle space (navbar − brand − actions − gaps). Hysteresis avoids flicker.
    */
   function measureAvailableSearchWidth () {
-    var navbar = document.querySelector('.adt-site-navbar')
+    var navbar = document.querySelector('.valentus-site-navbar')
     if (!navbar) return Infinity
-    var brand = navbar.querySelector('.adt-header-brand')
-    var actions = navbar.querySelector('.adt-header-actions') || navbar.querySelector('.adt-topbar')
+    var brand = navbar.querySelector('.valentus-header-brand')
+    var actions = navbar.querySelector('.valentus-header-actions') || navbar.querySelector('.valentus-topbar')
     var navW = navbar.clientWidth
     var brandW = brand ? Math.ceil(brand.getBoundingClientRect().width) : 0
     var actionsW = actions ? Math.ceil(actions.getBoundingClientRect().width) : 0
@@ -766,12 +766,12 @@ if (typeof document !== 'undefined') {
   updateCollapseMode()
   window.addEventListener('resize', scheduleCollapseCheck, { passive: true })
   if (typeof ResizeObserver === 'function') {
-    var navbarEl = document.querySelector('.adt-site-navbar')
+    var navbarEl = document.querySelector('.valentus-site-navbar')
     if (navbarEl) {
       var ro = new ResizeObserver(scheduleCollapseCheck)
       ro.observe(navbarEl)
-      var brandEl = navbarEl.querySelector('.adt-header-brand')
-      var actionsEl = navbarEl.querySelector('.adt-header-actions')
+      var brandEl = navbarEl.querySelector('.valentus-header-brand')
+      var actionsEl = navbarEl.querySelector('.valentus-header-actions')
       if (brandEl) ro.observe(brandEl)
       if (actionsEl) ro.observe(actionsEl)
     }
@@ -785,8 +785,8 @@ if (typeof document !== 'undefined') {
   }
 
   function bindNavigationRefresh () {
-    if (typeof adtChromeBind === 'function') {
-      adtChromeBind({
+    if (typeof bindSoftNavContext === 'function') {
+      bindSoftNavContext({
         onContext: function (ctx) {
           applyChromePageContext(ctx)
         },

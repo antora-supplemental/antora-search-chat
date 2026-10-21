@@ -7,11 +7,15 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+=== Changed
+
+* **Breaking:** search partial and hooks use the `valentus-*` namespace (`valentus-search-chat` partial, `data-valentus-search-chat`, `--valentus-search-*` tokens) instead of legacy `adt-*`.
+
 === Fixed
 
-* **AdtChrome:** when `@antora-supplemental/adt-chrome` is present, scope labels follow `AdtChrome.on('context')`; full scope tree still refreshes from `detail.doc` on `loaded`.
-* **Scope menu after SoftNav:** refresh `data-adt-search-chat` attributes and scope tree from `soft-nav:loaded` / `SoftNav.on('loaded')` (`detail.doc`) so context rows do not go blank when the navbar/dock omnibox survives in-component navigation.
-* **Dock flush to viewport bottom:** sticky dock uses `--adt-search-viewport-bottom-gap` instead of `bottom: 0`; navbar placement keeps a small omnibox margin.
+* **SoftNavContext:** when `@antora-supplemental/soft-nav-context` is present, scope labels follow `SoftNavContext.on('context')`; full scope tree still refreshes from `detail.doc` on `loaded`.
+* **Scope menu after SoftNav:** refresh `data-valentus-search-chat` attributes and scope tree from `soft-nav:loaded` / `SoftNav.on('loaded')` (`detail.doc`) so context rows do not go blank when the navbar/dock omnibox survives in-component navigation.
+* **Dock flush to viewport bottom:** sticky dock uses `--valentus-search-viewport-bottom-gap` instead of `bottom: 0`; navbar placement keeps a small omnibox margin.
 
 == [0.1.19] - 2026-10-20
 
@@ -36,13 +40,13 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 === Fixed
 
-* **Search dock covered the footer.** The dock is no longer a fixed overlay on the body. It mounts at the end of the page column (`.adt-shell`, marked `adt-search-dock-column`) and uses sticky positioning, so it stays on screen while scrolling and its layout box sits between the article and the footer. Footer links, the edit link, and the extension lister receive clicks.
+* **Search dock covered the footer.** The dock is no longer a fixed overlay on the body. It mounts at the end of the page column (`.valentus-shell`, marked `valentus-search-dock-column`) and uses sticky positioning, so it stays on screen while scrolling and its layout box sits between the article and the footer. Footer links, the edit link, and the extension lister receive clicks.
 
 == [0.1.16] - 2026-10-19
 
 === Fixed
 
-* **Search overlay shell was still see-through.** Valentus paints `.adt-nav-search` (including hover and focus-within) with `background: transparent !important`. The dock root carries that class, so the outer shell, mode tabs, and padding showed the page even when the inner card was filled. Search chrome now uses literal hex fills and higher-specificity `!important` rules so the dock, compound, scope menu, Lunr hits, Ask panel, capability chips, keyboard hints, and inputs stay opaque. Disabled scope and off capabilities no longer fade with `opacity`.
+* **Search overlay shell was still see-through.** Valentus paints `.valentus-nav-search` (including hover and focus-within) with `background: transparent !important`. The dock root carries that class, so the outer shell, mode tabs, and padding showed the page even when the inner card was filled. Search chrome now uses literal hex fills and higher-specificity `!important` rules so the dock, compound, scope menu, Lunr hits, Ask panel, capability chips, keyboard hints, and inputs stay opaque. Disabled scope and off capabilities no longer fade with `opacity`.
 
 == [0.1.15] - 2026-10-19
 
@@ -54,13 +58,13 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 === Fixed
 
-* **Opaque search chrome (follow-up):** scope/menu/result hovers and Lunr hit rows use `--adt-search-surface-hover` and solid `--adt-search-surface` fills instead of transparent theme soft tokens or Lunr defaults.
+* **Opaque search chrome (follow-up):** scope/menu/result hovers and Lunr hit rows use `--valentus-search-surface-hover` and solid `--valentus-search-surface` fills instead of transparent theme soft tokens or Lunr defaults.
 
 == [0.1.14] - 2026-10-19
 
 === Fixed
 
-* **Transparent search chrome:** dock, compound, scope menu, collapsed popover, and Lunr results now use opaque `--adt-search-surface` fills. Lunr’s `.search-result-dropdown-menu` default (`background: transparent`) no longer lets page content show through; rims use accent-on-border `color-mix` with optional soft outer rings in the shadow only.
+* **Transparent search chrome:** dock, compound, scope menu, collapsed popover, and Lunr results now use opaque `--valentus-search-surface` fills. Lunr’s `.search-result-dropdown-menu` default (`background: transparent`) no longer lets page content show through; rims use accent-on-border `color-mix` with optional soft outer rings in the shadow only.
 
 == [0.1.13] - 2026-10-19
 
@@ -72,19 +76,19 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 === Fixed
 
-* **Dock anchored to the header, not the viewport:** the theme header's `will-change: transform` makes it the containing block for fixed descendants, so the dock rendered at the header instead of the bottom of the screen. The dock root is now portaled to `<body>` on init (capability/scope/result refs preserved), the vacated navbar slot collapses via an `adt-search-slot-vacated` class, and the scope menu + Lunr results are portaled to direct dock children so they open above the whole dock box.
+* **Dock anchored to the header, not the viewport:** the theme header's `will-change: transform` makes it the containing block for fixed descendants, so the dock rendered at the header instead of the bottom of the screen. The dock root is now portaled to `<body>` on init (capability/scope/result refs preserved), the vacated navbar slot collapses via an `valentus-search-slot-vacated` class, and the scope menu + Lunr results are portaled to direct dock children so they open above the whole dock box.
 
 == [0.1.11] - 2026-10-19
 
 === Fixed
 
-* **Dock placement was hidden by its own navbar slot:** the vacated `.adt-navbar-search` host now collapses to a zero-size, overflow-visible box instead of `display: none`, which had hidden the fixed dock descendant as well.
+* **Dock placement was hidden by its own navbar slot:** the vacated `.valentus-navbar-search` host now collapses to a zero-size, overflow-visible box instead of `display: none`, which had hidden the fixed dock descendant as well.
 
 == [0.1.10] - 2026-10-17
 
 === Fixed
 
-* **Scope dropdown hidden behind the doc mast:** scope menu, collapsed popover, Lunr results, and Ask panel now use a top-layer z-index (`--adt-search-top-z: 200`); paired with Valentus lifting `.adt-site-navbar` above `.adt-doc-mast` inside the sticky header, so search menus paint on top of everything.
+* **Scope dropdown hidden behind the doc mast:** scope menu, collapsed popover, Lunr results, and Ask panel now use a top-layer z-index (`--valentus-search-top-z: 200`); paired with Valentus lifting `.valentus-site-navbar` above `.valentus-doc-mast` inside the sticky header, so search menus paint on top of everything.
 
 === Added
 
@@ -95,7 +99,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 === Changed
 
 * Placeholder copy: main label is *Semantic Search* when the semantic level is enabled, else *Search* (*… or Ask* appended when chat is on). The muted note now reads *(Chat unavailable)* instead of *(AI mode not configured)*.
-* Stacked search layout released: context selector above the input (`.adt-search-compound--stacked`); ARCHITECTURE and compound diagram updated.
+* Stacked search layout released: context selector above the input (`.valentus-search-compound--stacked`); ARCHITECTURE and compound diagram updated.
 * README: canonical hub GitHub topics URL → `docs.antora-supplemental.org/docs/hub-github-topics/`.
 
 == [0.1.6] - 2026-10-17
@@ -117,7 +121,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [0.1.3] - 2026-08-01
 
-* *Fix:* Theme toggle light↔dark — opaque omnibox chrome (`.adt-search-compound`, scope slot, collapse toggle / popover, Ask panel) now transitions `background-color` / `color` / `border-color` with the page instead of snapping. Adds `--adt-search-theme-transition` aligned with Valentus `--adt-transition`.
+* *Fix:* Theme toggle light↔dark — opaque omnibox chrome (`.valentus-search-compound`, scope slot, collapse toggle / popover, Ask panel) now transitions `background-color` / `color` / `border-color` with the page instead of snapping. Adds `--valentus-search-theme-transition` aligned with Valentus `--valentus-transition`.
 
 == [0.1.2] - 2026-07-25
 

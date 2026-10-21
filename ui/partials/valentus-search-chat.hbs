@@ -1,0 +1,166 @@
+{{!-- Search/Ask omnibox — sticky in-flow dock or navbar slot (see ARCHITECTURE.adoc).
+     One shell: scope row + one query field + optional Ask result.
+     Capability indicators sit at the bottom of the dock. / focuses the field.
+     Dock placement is moved to the end of .valentus-shell so it occupies space above the footer. --}}
+<div
+  class="search valentus-nav-search valentus-search-chat"
+  data-valentus-search-chat
+  data-active-tab="search"
+  data-ask-enabled="false"
+  data-semantic-enabled="false"
+  data-placement="navbar"
+  {{#with page.component}}
+  data-component-name="{{./name}}"
+  data-component-title="{{./title}}"
+  {{/with}}
+  {{#if page.version}}
+  data-version="{{page.version}}"
+  {{/if}}
+  {{#with page.componentVersion}}
+  data-version-display="{{#if ./displayVersion}}{{./displayVersion}}{{else}}{{@root.page.version}}{{/if}}"
+  {{/with}}
+>
+  <button
+    type="button"
+    class="valentus-search-chat__toggle"
+    data-valentus-search-toggle
+    aria-expanded="false"
+    aria-controls="valentus-search-popover"
+    aria-label="Open search"
+    hidden
+  >
+    <svg class="valentus-search-chat__toggle-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <div
+    class="valentus-search-chat__popover"
+    id="valentus-search-popover"
+    data-valentus-search-popover
+  >
+    <div class="valentus-search-chat__body" data-valentus-search-body>
+      <form class="valentus-search-chat__omnibox" data-valentus-search-ask-form>
+        <div id="search-field" class="valentus-search-chat__field valentus-search-compound valentus-search-compound--stacked">
+          <div class="valentus-search-scope-slot valentus-search-scope-row" data-valentus-search-scope-slot>
+            <button
+              type="button"
+              id="valentus-search-scope"
+              class="valentus-search-scope-trigger"
+              data-valentus-search-scope-trigger
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="valentus-search-scope-menu"
+              aria-label="Search scope"
+            >
+              <span class="valentus-search-scope-face" aria-hidden="true" data-valentus-search-scope-face>
+                <span class="valentus-search-scope-label" data-valentus-search-scope-label></span>
+              </span>
+            </button>
+            <ul
+              id="valentus-search-scope-menu"
+              class="valentus-search-scope-menu"
+              role="listbox"
+              tabindex="-1"
+              hidden
+              data-valentus-search-scope-menu
+              aria-labelledby="valentus-search-scope"
+            >
+              <li
+                class="valentus-search-scope-option valentus-search-scope-option--depth-0"
+                role="option"
+                data-valentus-search-scope-option
+                data-scope="all"
+                data-depth="0"
+                data-label="All docs"
+              >
+                <span class="valentus-search-scope-option-text">All docs</span>
+              </li>
+              {{#with page.component}}
+              <li
+                class="valentus-search-scope-option valentus-search-scope-option--depth-1"
+                role="option"
+                data-valentus-search-scope-option
+                data-scope="component"
+                data-depth="1"
+                data-component-name="{{./name}}"
+                data-label="{{#if ./title}}{{./title}}{{else}}{{./name}}{{/if}}"
+                aria-selected="true"
+              >
+                <span class="valentus-search-scope-tree-mark" aria-hidden="true">&gt;</span>
+                <span class="valentus-search-scope-option-text">{{#if ./title}}{{./title}}{{else}}{{./name}}{{/if}}</span>
+              </li>
+              {{#each ./versions}}
+              <li
+                class="valentus-search-scope-option valentus-search-scope-option--depth-2"
+                role="option"
+                data-valentus-search-scope-option
+                data-scope="version"
+                data-depth="2"
+                data-version="{{./version}}"
+                data-version-display="{{#if ./displayVersion}}{{./displayVersion}}{{else}}{{./version}}{{/if}}"
+              >
+                <span class="valentus-search-scope-tree-mark" aria-hidden="true">&gt;</span>
+                <span class="valentus-search-scope-option-text" data-valentus-search-scope-option-text></span>
+              </li>
+              {{/each}}
+              {{/with}}
+            </ul>
+            <input type="hidden" data-valentus-search-scope value="component" />
+          </div>
+
+          <div class="valentus-search-chat__query-slot" data-valentus-search-query-slot>
+            <div class="valentus-search-input-wrap" data-valentus-search-input-wrap>
+              <span class="valentus-search-ph" aria-hidden="true" data-valentus-search-ph>
+                <span class="valentus-search-ph-main">Search or ask...</span><code class="valentus-search-ph-code">/</code>
+              </span>
+              <input
+                id="search-input"
+                type="text"
+                placeholder=""
+                autocomplete="off"
+                aria-label="Search or ask... /"
+                data-valentus-search-input
+              >
+            </div>
+            <div class="valentus-search-ask-wrap" data-valentus-ask-wrap hidden>
+              <label class="valentus-search-chat__ask-label visually-hidden" for="valentus-ask-input">Ask</label>
+              <textarea
+                id="valentus-ask-input"
+                class="valentus-search-chat__ask-input"
+                rows="2"
+                placeholder="Ask about this site…"
+                data-valentus-ask-input
+                aria-label="Ask a question about this site"
+              ></textarea>
+              <kbd class="valentus-search-chat__field-hint" aria-hidden="true">?</kbd>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="valentus-search-chat__ask-result"
+          data-valentus-ask-result
+          hidden
+          aria-live="polite"
+        ></div>
+      </form>
+    </div>
+
+    <div class="valentus-search-capabilities" data-valentus-search-capabilities aria-label="Search capabilities">
+      <label class="valentus-search-capability" data-capability="keyword">
+        <input type="checkbox" disabled checked data-valentus-capability="keyword">
+        <span>Keyword</span>
+      </label>
+      <label class="valentus-search-capability" data-capability="semantic">
+        <input type="checkbox" disabled data-valentus-capability="semantic">
+        <span>Semantic</span>
+      </label>
+      <label class="valentus-search-capability" data-capability="chat">
+        <input type="checkbox" disabled data-valentus-capability="chat">
+        <span>Chat</span>
+      </label>
+    </div>
+  </div>
+</div>

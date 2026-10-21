@@ -94,10 +94,10 @@ function docFrom (body) {
 function valentusPage () {
   const body = createEl('body', 'article')
   const header = createEl('header', 'header')
-  const shell = createEl('div', 'adt-shell')
-  const adtBody = createEl('div', 'body adt-body')
-  const slot = createEl('div', 'adt-navbar-search')
-  const dock = createEl('div', 'search adt-nav-search adt-search-chat')
+  const shell = createEl('div', 'valentus-shell')
+  const adtBody = createEl('div', 'body valentus-body')
+  const slot = createEl('div', 'valentus-navbar-search')
+  const dock = createEl('div', 'search valentus-nav-search valentus-search-chat')
   const footer = createEl('footer', 'footer')
   body.appendChild(header)
   body.appendChild(shell)
@@ -117,9 +117,9 @@ test('dock mounts in the page column above the footer', () => {
   assert.equal(dock.parentElement, shell)
   assert.equal(shell.children[shell.children.length - 1], dock)
   assert.ok(shell.children.indexOf(dock) > shell.children.indexOf(adtBody))
-  assert.ok(shell.className.split(/\s+/).includes('adt-search-dock-column'))
-  assert.ok(body.className.split(/\s+/).includes('adt-search-dock-active'))
-  assert.ok(slot.className.split(/\s+/).includes('adt-search-slot-vacated'))
+  assert.ok(shell.className.split(/\s+/).includes('valentus-search-dock-column'))
+  assert.ok(body.className.split(/\s+/).includes('valentus-search-dock-active'))
+  assert.ok(slot.className.split(/\s+/).includes('valentus-search-slot-vacated'))
   assert.equal(dock.parentElement === body, false)
   assert.equal(footer.contains(dock), false)
   assert.equal(footer.parentElement, body)
@@ -127,9 +127,9 @@ test('dock mounts in the page column above the footer', () => {
 
 test('dock is inserted before a footer that lives inside the column', () => {
   const body = createEl('body', 'article')
-  const shell = createEl('div', 'adt-shell')
-  const slot = createEl('div', 'adt-navbar-search')
-  const dock = createEl('div', 'adt-search-chat')
+  const shell = createEl('div', 'valentus-shell')
+  const slot = createEl('div', 'valentus-navbar-search')
+  const dock = createEl('div', 'valentus-search-chat')
   const footer = createEl('footer', 'footer')
   body.appendChild(shell)
   shell.appendChild(slot)
@@ -140,7 +140,7 @@ test('dock is inserted before a footer that lives inside the column', () => {
 
   assert.equal(dock.parentElement, shell)
   assert.ok(shell.children.indexOf(dock) < shell.children.indexOf(footer))
-  assert.equal(shell.className.split(/\s+/).includes('adt-search-dock-column'), false)
+  assert.equal(shell.className.split(/\s+/).includes('valentus-search-dock-column'), false)
 })
 
 test('dock CSS sticks inside the page column and is not a fixed overlay', () => {
@@ -151,7 +151,7 @@ test('dock CSS sticks inside the page column and is not a fixed overlay', () => 
   const code = css.replace(/\/\*[\s\S]*?\*\//g, '')
   assert.match(
     code,
-    /\.adt-search-dock-column\s*>\s*\.adt-search-chat\[data-placement='dock'\]\s*\{[^}]*position:\s*sticky/
+    /\.valentus-search-dock-column\s*>\s*\.valentus-search-chat\[data-placement='dock'\]\s*\{[^}]*position:\s*sticky/
   )
   assert.doesNotMatch(code, /position:\s*fixed/)
 })

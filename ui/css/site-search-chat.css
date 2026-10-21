@@ -1,35 +1,35 @@
-/* Search / Ask control — owns the centered navbar search slot (.adt-navbar-search). */
+/* Search / Ask control — owns the centered navbar search slot (.valentus-navbar-search). */
 :root {
-  /* Match Valentus --adt-transition so light↔dark does not snap the omnibox chrome. */
-  --adt-search-theme-transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+  /* Match Valentus --valentus-transition so light↔dark does not snap the omnibox chrome. */
+  --valentus-search-theme-transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
     box-shadow 0.25s ease;
-  /* Opaque fills only. Literal hex — never var(--adt-border) / --adt-accent-soft (those are rgba). */
-  --adt-search-surface: #ffffff;
-  --adt-search-surface-hover: #deefed;
-  --adt-search-rim: #acced2;
-  --adt-search-ink: #141820;
-  --adt-search-muted: #5a6270;
-  --adt-search-chip: #f3f5f8;
-  --adt-search-ask: #e7f4f3;
-  --adt-search-ask-error: #f7e4e4;
-  --adt-search-hit: #e8f1fb;
+  /* Opaque fills only. Literal hex — never var(--valentus-border) / --valentus-accent-soft (those are rgba). */
+  --valentus-search-surface: #ffffff;
+  --valentus-search-surface-hover: #deefed;
+  --valentus-search-rim: #acced2;
+  --valentus-search-ink: #141820;
+  --valentus-search-muted: #5a6270;
+  --valentus-search-chip: #f3f5f8;
+  --valentus-search-ask: #e7f4f3;
+  --valentus-search-ask-error: #f7e4e4;
+  --valentus-search-hit: #e8f1fb;
   /* Gap between sticky dock / floating menus and the viewport bottom edge. */
-  --adt-search-viewport-bottom-gap: 0.75rem;
+  --valentus-search-viewport-bottom-gap: 0.75rem;
 }
 
 html.dark-theme {
-  --adt-search-surface: #141a22;
-  --adt-search-surface-hover: #193b3e;
-  --adt-search-rim: #3a4454;
-  --adt-search-ink: #e8ebf0;
-  --adt-search-muted: #9aa3b2;
-  --adt-search-chip: #1e2630;
-  --adt-search-ask: #16323a;
-  --adt-search-ask-error: #281a21;
-  --adt-search-hit: #1d3042;
+  --valentus-search-surface: #141a22;
+  --valentus-search-surface-hover: #193b3e;
+  --valentus-search-rim: #3a4454;
+  --valentus-search-ink: #e8ebf0;
+  --valentus-search-muted: #9aa3b2;
+  --valentus-search-chip: #1e2630;
+  --valentus-search-ask: #16323a;
+  --valentus-search-ask-error: #281a21;
+  --valentus-search-hit: #1d3042;
 }
 
-.adt-search-chat {
+.valentus-search-chat {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -40,15 +40,15 @@ html.dark-theme {
 }
 
 /* Navbar: one column for the scope row and the query field. */
-.adt-site-navbar .adt-search-chat,
-.adt-navbar-search .adt-search-chat {
+.valentus-site-navbar .valentus-search-chat,
+.valentus-navbar-search .valentus-search-chat {
   gap: 0;
   min-height: 2.15rem;
   /* Breathe off the navbar bottom border / viewport edge when the bar is flush. */
   margin-bottom: 0.35rem;
 }
 
-.adt-search-chat__popover {
+.valentus-search-chat__popover {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -58,13 +58,13 @@ html.dark-theme {
   box-sizing: border-box;
 }
 
-.adt-search-chat__body {
+.valentus-search-chat__body {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-.adt-search-chat__omnibox {
+.valentus-search-chat__omnibox {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -73,7 +73,7 @@ html.dark-theme {
 }
 
 /* ——— Collapse-to-icon (narrow / collision) ——— */
-.adt-search-chat__toggle {
+.valentus-search-chat__toggle {
   display: none;
   align-items: center;
   justify-content: center;
@@ -82,43 +82,43 @@ html.dark-theme {
   height: 2.15rem;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--adt-search-rim);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 0.5rem;
-  background: var(--adt-elevated, #fff);
-  color: var(--adt-ink, #141820);
+  background: var(--valentus-elevated, #fff);
+  color: var(--valentus-ink, #141820);
   cursor: pointer;
   box-sizing: border-box;
-  transition: var(--adt-search-theme-transition);
+  transition: var(--valentus-search-theme-transition);
 }
 
-.adt-search-chat__toggle:hover,
-.adt-search-chat__toggle:focus-visible {
-  border-color: var(--adt-accent, #0d9488);
-  background-color: var(--adt-search-surface-hover);
+.valentus-search-chat__toggle:hover,
+.valentus-search-chat__toggle:focus-visible {
+  border-color: var(--valentus-accent, #0d9488);
+  background-color: var(--valentus-search-surface-hover);
   outline: none;
 }
 
-.adt-search-chat__toggle:focus-visible {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--adt-accent, #0d9488) 35%, transparent);
+.valentus-search-chat__toggle:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--valentus-accent, #0d9488) 35%, transparent);
 }
 
-.adt-search-chat__toggle-icon {
+.valentus-search-chat__toggle-icon {
   display: block;
 }
 
-html.dark-theme .adt-search-chat__toggle {
-  background: var(--adt-elevated, #1a1a1a);
-  color: var(--adt-ink, #e8eaed);
-  border-color: var(--adt-search-rim);
+html.dark-theme .valentus-search-chat__toggle {
+  background: var(--valentus-elevated, #1a1a1a);
+  color: var(--valentus-ink, #e8eaed);
+  border-color: var(--valentus-search-rim);
 }
 
-html.dark-theme .adt-search-chat__toggle:hover,
-html.dark-theme .adt-search-chat__toggle:focus-visible {
-  background-color: var(--adt-search-surface-hover);
+html.dark-theme .valentus-search-chat__toggle:hover,
+html.dark-theme .valentus-search-chat__toggle:focus-visible {
+  background-color: var(--valentus-search-surface-hover);
 }
 
 /* Collapsed to icon: only the toggle shows until opened. */
-.adt-search-chat.is-collapsed {
+.valentus-search-chat.is-collapsed {
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
@@ -126,11 +126,11 @@ html.dark-theme .adt-search-chat__toggle:focus-visible {
   min-width: 0;
 }
 
-.adt-search-chat.is-collapsed .adt-search-chat__toggle {
+.valentus-search-chat.is-collapsed .valentus-search-chat__toggle {
   display: inline-flex;
 }
 
-.adt-search-chat.is-collapsed .adt-search-chat__popover {
+.valentus-search-chat.is-collapsed .valentus-search-chat__popover {
   display: none;
   position: absolute;
   z-index: 40;
@@ -139,38 +139,38 @@ html.dark-theme .adt-search-chat__toggle:focus-visible {
   width: min(36rem, calc(100vw - 1.5rem));
   min-width: min(18rem, calc(100vw - 1.5rem));
   padding: 0.55rem;
-  border: 1px solid var(--adt-search-rim);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 0.65rem;
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--adt-ink, #141820) 5%, transparent),
-    0 0.45rem 1.25rem color-mix(in srgb, var(--adt-ink, #141820) 14%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--valentus-ink, #141820) 5%, transparent),
+    0 0.45rem 1.25rem color-mix(in srgb, var(--valentus-ink, #141820) 14%, transparent);
   box-sizing: border-box;
-  transition: var(--adt-search-theme-transition);
+  transition: var(--valentus-search-theme-transition);
 }
 
-.adt-search-chat.is-collapsed.is-open .adt-search-chat__popover {
+.valentus-search-chat.is-collapsed.is-open .valentus-search-chat__popover {
   display: block;
 }
 
-.adt-search-chat.is-collapsed.is-open .adt-search-chat__toggle {
-  border-color: var(--adt-accent, #0d9488);
-  color: var(--adt-accent, #0d9488);
+.valentus-search-chat.is-collapsed.is-open .valentus-search-chat__toggle {
+  border-color: var(--valentus-accent, #0d9488);
+  color: var(--valentus-accent, #0d9488);
 }
 
-html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
-  background: var(--adt-search-surface);
-  background-color: var(--adt-search-surface);
-  border-color: var(--adt-search-rim);
+html.dark-theme .valentus-search-chat.is-collapsed .valentus-search-chat__popover {
+  background: var(--valentus-search-surface);
+  background-color: var(--valentus-search-surface);
+  border-color: var(--valentus-search-rim);
 }
 
-.adt-search-chat__tabs {
+.valentus-search-chat__tabs {
   display: flex;
   gap: 0.35rem;
   order: 0;
 }
 
-.adt-search-chat__tab {
+.valentus-search-chat__tab {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -178,10 +178,10 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   flex: 1 1 auto;
   margin: 0;
   padding: 0.35rem 0.5rem;
-  border: 1px solid var(--adt-search-rim);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 0.35rem;
-  background: var(--adt-search-surface);
-  background-color: var(--adt-search-surface);
+  background: var(--valentus-search-surface);
+  background-color: var(--valentus-search-surface);
   color: inherit;
   font: inherit;
   font-size: 0.8rem;
@@ -189,18 +189,18 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   cursor: pointer;
 }
 
-.adt-search-chat__hint,
-.adt-search-chat__field-hint {
+.valentus-search-chat__hint,
+.valentus-search-chat__field-hint {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 1.15rem;
   padding: 0.05rem 0.3rem;
-  border: 1px solid var(--adt-search-rim);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 0.25rem;
-  background: var(--adt-search-chip);
-  background-color: var(--adt-search-chip);
-  color: var(--adt-search-muted);
+  background: var(--valentus-search-chip);
+  background-color: var(--valentus-search-chip);
+  color: var(--valentus-search-muted);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.7rem;
   font-weight: 500;
@@ -208,43 +208,43 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   opacity: 1;
 }
 
-.adt-search-chat__field {
+.valentus-search-chat__field {
   position: relative;
 }
 
 /* Stacked scope + input: one rounded card, scope row on top, query field below.
-   Must stay overflow:visible — legacy lunr mounts results on .adt-search-input-wrap;
+   Must stay overflow:visible — legacy lunr mounts results on .valentus-search-input-wrap;
    hybrid dock will mount dual zones above the whole compound.
    container-type: inline-size → 100cqi = full dock width for results alignment. */
-.adt-search-compound {
+.valentus-search-compound {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   width: 100%;
   box-sizing: border-box;
   min-height: 2.15rem;
-  border: 1px solid var(--adt-search-rim);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 0.5rem;
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
   overflow: visible;
-  color: var(--adt-ink, #141820);
+  color: var(--valentus-ink, #141820);
   container-type: inline-size;
-  container-name: adt-search-compound;
-  transition: var(--adt-search-theme-transition);
+  container-name: valentus-search-compound;
+  transition: var(--valentus-search-theme-transition);
 }
 
 /* Accent border whenever something inside is focused; glow only while typing. */
-.adt-search-compound:focus-within {
-  border-color: var(--adt-accent, #0d9488);
+.valentus-search-compound:focus-within {
+  border-color: var(--valentus-accent, #0d9488);
 }
 
-.adt-search-compound:focus-within:has(#search-input:focus) {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--adt-accent, #0d9488) 35%, transparent);
+.valentus-search-compound:focus-within:has(#search-input:focus) {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--valentus-accent, #0d9488) 35%, transparent);
 }
 
 /* Scope/context row — full width above the input (floating dock layout).
    overflow stays visible so the tree menu can drop below the trigger. */
-.adt-search-scope-slot {
+.valentus-search-scope-slot {
   position: relative;
   flex: 0 0 auto;
   width: 100%;
@@ -252,19 +252,19 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   min-height: 2rem;
   box-sizing: border-box;
   border-inline-end: 0;
-  border-block-end: 1px solid var(--adt-search-rim);
+  border-block-end: 1px solid var(--valentus-search-rim);
   border-start-start-radius: calc(0.5rem - 1px);
   border-start-end-radius: calc(0.5rem - 1px);
   border-end-start-radius: 0;
   border-end-end-radius: 0;
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
   overflow: visible;
   cursor: default;
-  transition: var(--adt-search-theme-transition);
+  transition: var(--valentus-search-theme-transition);
 }
 
 /* Closed face: selected scope label only (no Antora "Component"/"Version" kind prefix). */
-.adt-search-scope-face {
+.valentus-search-scope-face {
   display: flex;
   align-items: center;
   min-width: 0;
@@ -277,16 +277,16 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   overflow: hidden;
 }
 
-.adt-search-scope-label {
+.valentus-search-scope-label {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--adt-ink, #141820);
+  color: var(--valentus-ink, #141820);
 }
 
 /* Chevron lives on the slot (::after). */
-.adt-search-scope-slot::after {
+.valentus-search-scope-slot::after {
   content: "";
   position: absolute;
   right: 0.45rem;
@@ -296,7 +296,7 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   height: 0.55rem;
   transform: translateY(-50%);
   pointer-events: none;
-  color: var(--adt-ink-muted, #5a6270);
+  color: var(--valentus-ink-muted, #5a6270);
   background-color: currentColor;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 6L8 11L12.5 6' stroke='black' stroke-width='1.85' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 6L8 11L12.5 6' stroke='black' stroke-width='1.85' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -310,7 +310,7 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
 
 /* One hit target for the whole visible bar. The slot paints the rounded fill;
    this button covers that box (including the lower half) without a second layer. */
-.adt-search-scope-trigger {
+.valentus-search-scope-trigger {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -336,15 +336,15 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   box-shadow: none;
 }
 
-.adt-search-scope-trigger:focus,
-.adt-search-scope-trigger:focus-visible,
-.adt-search-scope-trigger:active {
+.valentus-search-scope-trigger:focus,
+.valentus-search-scope-trigger:focus-visible,
+.valentus-search-scope-trigger:active {
   outline: none;
   box-shadow: none;
 }
 
 /* Static hierarchy tree (All docs → component → versions). Not expandable. */
-.adt-search-scope-menu {
+.valentus-search-scope-menu {
   position: absolute;
   top: calc(100% + 0.25rem);
   left: 0;
@@ -355,19 +355,19 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   padding: 0.35rem 0;
   list-style: none;
   border-radius: 0.45rem;
-  background-color: var(--adt-search-surface);
-  border: 1px solid var(--adt-search-rim);
+  background-color: var(--valentus-search-surface);
+  border: 1px solid var(--valentus-search-rim);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--adt-ink, #141820) 5%, transparent),
-    0 0.45rem 1.1rem color-mix(in srgb, var(--adt-ink, #141820) 12%, transparent);
-  color: var(--adt-ink, #141820);
+    0 0 0 1px color-mix(in srgb, var(--valentus-ink, #141820) 5%, transparent),
+    0 0.45rem 1.1rem color-mix(in srgb, var(--valentus-ink, #141820) 12%, transparent);
+  color: var(--valentus-ink, #141820);
   font-size: 0.78rem;
   line-height: 1.25;
-  max-height: calc(100dvh - 5.5rem - var(--adt-search-viewport-bottom-gap));
+  max-height: calc(100dvh - 5.5rem - var(--valentus-search-viewport-bottom-gap));
   overflow-y: auto;
 }
 
-.adt-search-scope-option {
+.valentus-search-scope-option {
   display: flex;
   align-items: baseline;
   gap: 0.35rem;
@@ -378,98 +378,98 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   white-space: nowrap;
 }
 
-.adt-search-scope-option--depth-1 {
+.valentus-search-scope-option--depth-1 {
   padding-inline-start: 1.15rem;
 }
 
-.adt-search-scope-option--depth-2 {
+.valentus-search-scope-option--depth-2 {
   padding-inline-start: 2rem;
 }
 
-.adt-search-scope-tree-mark {
+.valentus-search-scope-tree-mark {
   flex: 0 0 auto;
-  color: var(--adt-ink-muted, #5a6270);
+  color: var(--valentus-ink-muted, #5a6270);
   font-weight: 500;
 }
 
-.adt-search-scope-option-text {
+.valentus-search-scope-option-text {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.adt-search-scope-option:hover,
-.adt-search-scope-option:focus {
-  background-color: var(--adt-search-surface-hover);
+.valentus-search-scope-option:hover,
+.valentus-search-scope-option:focus {
+  background-color: var(--valentus-search-surface-hover);
 }
 
-.adt-search-scope-option.is-selected {
+.valentus-search-scope-option.is-selected {
   font-weight: 600;
 }
 
-.adt-search-scope-option[hidden] {
+.valentus-search-scope-option[hidden] {
   display: none !important;
 }
 
-html.dark-theme .adt-search-compound,
-html.dark-theme .adt-search-scope-slot,
-html.dark-theme .adt-search-scope-menu {
-  background-color: var(--adt-elevated, #1a1a1a);
-  color: var(--adt-ink, #e8eaed);
+html.dark-theme .valentus-search-compound,
+html.dark-theme .valentus-search-scope-slot,
+html.dark-theme .valentus-search-scope-menu {
+  background-color: var(--valentus-elevated, #1a1a1a);
+  color: var(--valentus-ink, #e8eaed);
 }
 
-html.dark-theme .adt-search-scope-label {
-  color: var(--adt-ink, #e8eaed);
+html.dark-theme .valentus-search-scope-label {
+  color: var(--valentus-ink, #e8eaed);
 }
 
-html.dark-theme .adt-search-scope-slot {
-  border-inline-end-color: var(--adt-search-rim);
+html.dark-theme .valentus-search-scope-slot {
+  border-inline-end-color: var(--valentus-search-rim);
 }
 
-html.dark-theme .adt-search-scope-slot::after,
-html.dark-theme .adt-search-scope-tree-mark {
-  color: var(--adt-ink-muted, #9aa3b2);
+html.dark-theme .valentus-search-scope-slot::after,
+html.dark-theme .valentus-search-scope-tree-mark {
+  color: var(--valentus-ink-muted, #9aa3b2);
 }
 
-html.dark-theme .adt-search-scope-menu {
-  border-color: var(--adt-search-rim);
+html.dark-theme .valentus-search-scope-menu {
+  border-color: var(--valentus-search-rim);
   box-shadow: 0 0.45rem 1.1rem #000000;
 }
 
 /* Soft fill on the whole left segment. */
-.adt-search-scope-slot:hover,
-.adt-search-scope-slot:focus-within,
-.adt-search-scope-slot.is-open {
-  background-color: var(--adt-search-surface-hover);
+.valentus-search-scope-slot:hover,
+.valentus-search-scope-slot:focus-within,
+.valentus-search-scope-slot.is-open {
+  background-color: var(--valentus-search-surface-hover);
 }
 
-.adt-search-scope-slot.is-disabled,
-.adt-search-scope-slot.is-disabled:hover,
-.adt-search-scope-slot.is-disabled:focus-within {
-  background-color: var(--adt-search-chip);
-  color: var(--adt-search-muted);
+.valentus-search-scope-slot.is-disabled,
+.valentus-search-scope-slot.is-disabled:hover,
+.valentus-search-scope-slot.is-disabled:focus-within {
+  background-color: var(--valentus-search-chip);
+  color: var(--valentus-search-muted);
   cursor: not-allowed;
   opacity: 1;
 }
 
-.adt-search-scope-slot.is-disabled .adt-search-scope-trigger {
+.valentus-search-scope-slot.is-disabled .valentus-search-scope-trigger {
   cursor: not-allowed;
   pointer-events: none;
 }
 
-html.dark-theme .adt-search-scope-slot:hover,
-html.dark-theme .adt-search-scope-slot:focus-within,
-html.dark-theme .adt-search-scope-slot.is-open {
-  background-color: var(--adt-search-surface-hover);
+html.dark-theme .valentus-search-scope-slot:hover,
+html.dark-theme .valentus-search-scope-slot:focus-within,
+html.dark-theme .valentus-search-scope-slot.is-open {
+  background-color: var(--valentus-search-surface-hover);
 }
 
-html.dark-theme .adt-search-scope-option:hover,
-html.dark-theme .adt-search-scope-option:focus {
-  background-color: var(--adt-search-surface-hover);
+html.dark-theme .valentus-search-scope-option:hover,
+html.dark-theme .valentus-search-scope-option:focus {
+  background-color: var(--valentus-search-surface-hover);
 }
 
 /* Query slot: stable height when swapping Search input vs Ask textarea. */
-.adt-search-chat__query-slot {
+.valentus-search-chat__query-slot {
   position: relative;
   flex: 1 1 auto;
   width: 100%;
@@ -480,10 +480,10 @@ html.dark-theme .adt-search-scope-option:focus {
   border-end-start-radius: calc(0.5rem - 1px);
   border-end-end-radius: calc(0.5rem - 1px);
   overflow: visible;
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
 }
 
-.adt-search-ask-wrap {
+.valentus-search-ask-wrap {
   position: relative;
   display: flex;
   align-items: stretch;
@@ -491,19 +491,19 @@ html.dark-theme .adt-search-scope-option:focus {
   min-height: inherit;
   border-end-start-radius: calc(0.5rem - 1px);
   border-end-end-radius: calc(0.5rem - 1px);
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
 }
 
-.adt-search-ask-wrap[hidden] {
+.valentus-search-ask-wrap[hidden] {
   display: none !important;
 }
 
-.adt-search-input-wrap[hidden] {
+.valentus-search-input-wrap[hidden] {
   display: none !important;
 }
 
 /* Input + fake placeholder — full width under the scope row. */
-.adt-search-input-wrap {
+.valentus-search-input-wrap {
   position: relative;
   flex: 1 1 auto;
   width: 100%;
@@ -511,12 +511,12 @@ html.dark-theme .adt-search-scope-option:focus {
   display: flex;
   align-items: stretch;
   overflow: visible;
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
 }
 
 /* Results menu spans the full stacked compound width (100cqi), not the input cell only. */
-.adt-search-compound .search-result-dropdown-menu,
-.adt-search-input-wrap > .search-result-dropdown-menu {
+.valentus-search-compound .search-result-dropdown-menu,
+.valentus-search-input-wrap > .search-result-dropdown-menu {
   left: auto;
   right: 0;
   width: 100cqi;
@@ -524,13 +524,13 @@ html.dark-theme .adt-search-scope-option:focus {
   max-width: 100cqi;
   box-sizing: border-box;
   z-index: 40;
-  max-height: calc(100dvh - 5.5rem - var(--adt-search-viewport-bottom-gap));
+  max-height: calc(100dvh - 5.5rem - var(--valentus-search-viewport-bottom-gap));
   overflow-y: auto;
 }
 
-/* Beat theme .adt-nav-search #search-input !important rules.
+/* Beat theme .valentus-nav-search #search-input !important rules.
    Clip typed text on the input itself (not the wrap that hosts lunr results). */
-.adt-search-compound #search-input {
+.valentus-search-compound #search-input {
   position: relative;
   z-index: 1;
   flex: 1 1 auto;
@@ -542,11 +542,11 @@ html.dark-theme .adt-search-scope-option:focus {
   padding: 0.35rem 0.65rem !important;
   border: 0 !important;
   border-radius: 0 !important;
-  background: var(--adt-search-surface) !important;
-  background-color: var(--adt-search-surface) !important;
+  background: var(--valentus-search-surface) !important;
+  background-color: var(--valentus-search-surface) !important;
   box-shadow: none !important;
   box-sizing: border-box !important;
-  color: var(--adt-ink, #141820) !important;
+  color: var(--valentus-ink, #141820) !important;
   font: inherit;
   font-size: 0.875rem;
   -webkit-user-select: text;
@@ -557,30 +557,30 @@ html.dark-theme .adt-search-scope-option:focus {
   transition: color 0.2s ease;
 }
 
-.adt-search-compound #search-input::placeholder {
-  color: var(--adt-search-muted);
+.valentus-search-compound #search-input::placeholder {
+  color: var(--valentus-search-muted);
   opacity: 1;
 }
 
-.adt-search-compound #search-input:hover,
-.adt-search-compound #search-input:focus {
-  background: var(--adt-search-surface) !important;
-  background-color: var(--adt-search-surface) !important;
-  border-color: var(--adt-search-surface) !important;
+.valentus-search-compound #search-input:hover,
+.valentus-search-compound #search-input:focus {
+  background: var(--valentus-search-surface) !important;
+  background-color: var(--valentus-search-surface) !important;
+  border-color: var(--valentus-search-surface) !important;
   box-shadow: none !important;
   outline: none;
 }
 
-/* Compound field uses .adt-search-chat__field-hint; hide theme ::after "/" badge. */
-.adt-search-chat #search-field::after,
-.adt-search-compound::after {
+/* Compound field uses .valentus-search-chat__field-hint; hide theme ::after "/" badge. */
+.valentus-search-chat #search-field::after,
+.valentus-search-compound::after {
   content: none !important;
   display: none !important;
 }
 
 /* Native <input placeholder> cannot style part of the string — overlay instead.
    pointer-events: none is required so clicks/dblclick reach #search-input. */
-.adt-search-ph {
+.valentus-search-ph {
   position: absolute;
   inset-inline-start: 0.65rem;
   inset-inline-end: 0.65rem;
@@ -597,7 +597,7 @@ html.dark-theme .adt-search-scope-option:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   pointer-events: none;
-  color: var(--adt-search-muted);
+  color: var(--valentus-search-muted);
   font: inherit;
   font-size: 0.875rem;
   font-weight: 400;
@@ -606,39 +606,39 @@ html.dark-theme .adt-search-scope-option:focus {
   user-select: none;
 }
 
-.adt-search-ph.is-hidden {
+.valentus-search-ph.is-hidden {
   visibility: hidden;
 }
 
-.adt-search-ph-main {
+.valentus-search-ph-main {
   color: inherit;
 }
 
 /* Slash shortcut, set as inline code. Same mono family as site <code> (IBM Plex Mono). */
-.adt-search-ph-code {
+.valentus-search-ph-code {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin: 0;
   padding: 0.05em 0.35em;
-  border: 1px solid var(--adt-search-rim);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 0.25rem;
-  background: var(--adt-search-chip);
-  background-color: var(--adt-search-chip);
-  color: var(--adt-search-ink);
-  font-family: var(--adt-font-mono, "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  background: var(--valentus-search-chip);
+  background-color: var(--valentus-search-chip);
+  color: var(--valentus-search-ink);
+  font-family: var(--valentus-font-mono, "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
   font-size: 0.85em;
   font-weight: 500;
   line-height: 1.2;
 }
 
-.adt-search-chat__field:not(.adt-search-compound) #search-input {
+.valentus-search-chat__field:not(.valentus-search-compound) #search-input {
   width: 100%;
   box-sizing: border-box;
   padding-inline-end: 1.75rem;
 }
 
-.adt-search-chat__field-hint {
+.valentus-search-chat__field-hint {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -646,29 +646,29 @@ html.dark-theme .adt-search-scope-option:focus {
   pointer-events: none;
 }
 
-.adt-search-ask-wrap .adt-search-chat__field-hint {
+.valentus-search-ask-wrap .valentus-search-chat__field-hint {
   top: 0.5rem;
 }
 
-.adt-search-chat__tab.is-active {
-  border-color: var(--adt-accent, #0d9488);
-  color: var(--adt-accent, #0d9488);
+.valentus-search-chat__tab.is-active {
+  border-color: var(--valentus-accent, #0d9488);
+  color: var(--valentus-accent, #0d9488);
 }
 
-.adt-search-chat__tab:focus-visible {
-  outline: 2px solid var(--adt-accent, #0d9488);
+.valentus-search-chat__tab:focus-visible {
+  outline: 2px solid var(--valentus-accent, #0d9488);
   outline-offset: 2px;
 }
 
-.adt-search-chat__ask-input {
+.valentus-search-chat__ask-input {
   width: 100%;
   box-sizing: border-box;
   margin: 0;
   padding: 0.35rem 1.75rem 0.35rem 0.65rem;
   border: 0;
   border-radius: 0;
-  background-color: var(--adt-search-surface);
-  color: var(--adt-ink, inherit);
+  background-color: var(--valentus-search-surface);
+  color: var(--valentus-ink, inherit);
   font: inherit;
   font-size: 0.875rem;
   resize: vertical;
@@ -677,18 +677,18 @@ html.dark-theme .adt-search-scope-option:focus {
   box-shadow: none;
 }
 
-.adt-search-chat__ask-result {
+.valentus-search-chat__ask-result {
   margin: 0;
   padding: 0.5rem 0.6rem;
   border-radius: 0.35rem;
   font-size: 0.8rem;
   line-height: 1.4;
-  background-color: var(--adt-search-ask);
-  border: 1px solid var(--adt-search-rim);
+  background-color: var(--valentus-search-ask);
+  border: 1px solid var(--valentus-search-rim);
 }
 
-.adt-search-chat__ask-result.is-error {
-  background-color: var(--adt-search-ask-error);
+.valentus-search-chat__ask-result.is-error {
+  background-color: var(--valentus-search-ask-error);
   border-color: #b91c1c;
 }
 
@@ -706,23 +706,23 @@ html.dark-theme .adt-search-scope-option:focus {
 
 /* ——— Top layer: search menus/results above everything ———
    The scope menu, collapsed popover, Ask panel, and Lunr results must paint
-   over the doc mast and page chrome. Valentus lifts .adt-site-navbar above
-   .adt-doc-mast inside the sticky header; these z-indexes win inside that
+   over the doc mast and page chrome. Valentus lifts .valentus-site-navbar above
+   .valentus-doc-mast inside the sticky header; these z-indexes win inside that
    context and against body-level layers. */
 :root {
-  --adt-search-top-z: 200;
+  --valentus-search-top-z: 200;
 }
 
-.adt-search-chat .adt-search-scope-menu:not([hidden]),
-.adt-search-chat.is-collapsed .adt-search-chat__popover {
-  z-index: var(--adt-search-top-z);
+.valentus-search-chat .valentus-search-scope-menu:not([hidden]),
+.valentus-search-chat.is-collapsed .valentus-search-chat__popover {
+  z-index: var(--valentus-search-top-z);
 }
 
-.adt-search-chat .search-result-dropdown-menu {
-  z-index: var(--adt-search-top-z);
+.valentus-search-chat .search-result-dropdown-menu {
+  z-index: var(--valentus-search-top-z);
   /* Lunr default: background transparent — only .search-result-dataset is filled. */
-  background-color: var(--adt-search-surface);
-  border: 1px solid var(--adt-search-rim);
+  background-color: var(--valentus-search-surface);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 0.55rem;
   padding: 0;
   /* One scrollport for keyword results. Empty menus are hidden below. */
@@ -730,15 +730,15 @@ html.dark-theme .adt-search-scope-option:focus {
   overflow-x: hidden;
   overflow-y: auto;
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--adt-ink, #141820) 5%, transparent),
-    0 0.45rem 1.25rem color-mix(in srgb, var(--adt-ink, #141820) 14%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--valentus-ink, #141820) 5%, transparent),
+    0 0.45rem 1.25rem color-mix(in srgb, var(--valentus-ink, #141820) 14%, transparent);
 }
 
-.adt-search-chat .search-result-dataset {
-  background-color: var(--adt-search-surface);
+.valentus-search-chat .search-result-dataset {
+  background-color: var(--valentus-search-surface);
   border: none;
   border-radius: calc(0.55rem - 1px);
-  color: var(--adt-ink, #141820);
+  color: var(--valentus-ink, #141820);
   /* Lunr sets overflow:auto and a max-height taller than the menu, which
      nested a second scrollbar. The menu (or a result zone) is the scrollport. */
   max-height: none !important;
@@ -748,9 +748,9 @@ html.dark-theme .adt-search-scope-option:focus {
 
 /* Lunr inserts an empty .search-result-dropdown-menu before any query.
    Its border paints a stray line until the first search. */
-.adt-search-chat .search-result-dropdown-menu:empty,
-.adt-search-chat .search-result-dropdown-menu:not(:has(.search-result-dataset)),
-.adt-search-chat .search-result-dropdown-menu.is-idle {
+.valentus-search-chat .search-result-dropdown-menu:empty,
+.valentus-search-chat .search-result-dropdown-menu:not(:has(.search-result-dataset)),
+.valentus-search-chat .search-result-dropdown-menu.is-idle {
   display: none !important;
   border: none !important;
   box-shadow: none !important;
@@ -762,29 +762,29 @@ html.dark-theme .adt-search-scope-option:focus {
   overflow: hidden !important;
 }
 
-.adt-search-chat .search-result-component-header,
-.adt-search-chat .search-result-document-title,
-.adt-search-chat .search-result-document-hit,
-.adt-search-chat .search-result-document {
-  background-color: var(--adt-search-surface);
+.valentus-search-chat .search-result-component-header,
+.valentus-search-chat .search-result-document-title,
+.valentus-search-chat .search-result-document-hit,
+.valentus-search-chat .search-result-document {
+  background-color: var(--valentus-search-surface);
 }
 
-.adt-search-chat .search-result-component-header {
-  border-bottom-color: var(--adt-search-rim);
+.valentus-search-chat .search-result-component-header {
+  border-bottom-color: var(--valentus-search-rim);
 }
 
-.adt-search-chat .search-result-document-title {
-  border-right-color: var(--adt-search-rim);
+.valentus-search-chat .search-result-document-title {
+  border-right-color: var(--valentus-search-rim);
 }
 
-.adt-search-chat .search-result-document-hit:hover,
-.adt-search-chat .search-result-document-hit:focus-within {
-  background-color: var(--adt-search-surface-hover);
+.valentus-search-chat .search-result-document-hit:hover,
+.valentus-search-chat .search-result-document-hit:focus-within {
+  background-color: var(--valentus-search-surface-hover);
 }
 
 /* ——— Capability strip (Keyword / Semantic / Chat status) ———
    Bottom of the overlay (dock); hidden in navbar where space is tight. */
-.adt-search-capabilities {
+.valentus-search-capabilities {
   display: none;
   flex-wrap: wrap;
   gap: 0.25rem 0.9rem;
@@ -792,42 +792,42 @@ html.dark-theme .adt-search-scope-option:focus {
   order: 2;
   margin-top: auto;
   padding: 0.45rem 0.1rem 0.1rem;
-  border-top: 1px solid var(--adt-search-rim);
+  border-top: 1px solid var(--valentus-search-rim);
   font-size: 0.72rem;
-  color: var(--adt-muted, #5b6472);
-  background-color: var(--adt-search-surface);
+  color: var(--valentus-muted, #5b6472);
+  background-color: var(--valentus-search-surface);
 }
 
-.adt-search-chat[data-placement='dock'] .adt-search-capabilities {
+.valentus-search-chat[data-placement='dock'] .valentus-search-capabilities {
   display: flex;
 }
 
-.adt-search-capability {
+.valentus-search-capability {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
   padding: 0.12rem 0.45rem;
   border-radius: 999px;
-  background-color: var(--adt-search-chip);
+  background-color: var(--valentus-search-chip);
   cursor: default;
 }
 
-.adt-search-capability input {
+.valentus-search-capability input {
   margin: 0;
-  accent-color: var(--adt-accent, #0d9488);
+  accent-color: var(--valentus-accent, #0d9488);
 }
 
-.adt-search-capability.is-off {
+.valentus-search-capability.is-off {
   opacity: 1;
-  color: var(--adt-search-muted);
-  background-color: var(--adt-search-chip);
+  color: var(--valentus-search-muted);
+  background-color: var(--valentus-search-chip);
 }
 
 /* Dock placement vacates the navbar slot. The dock node is moved into the
    page column, so this only collapses the empty host (no leftover gap). */
-.adt-navbar-search:has(> .adt-search-chat[data-placement='dock']),
-.adt-navbar-search.adt-search-slot-vacated,
-.adt-site-navbar .adt-nav-search:has(> .adt-search-chat[data-placement='dock']) {
+.valentus-navbar-search:has(> .valentus-search-chat[data-placement='dock']),
+.valentus-navbar-search.valentus-search-slot-vacated,
+.valentus-site-navbar .valentus-nav-search:has(> .valentus-search-chat[data-placement='dock']) {
   flex: 0 0 0;
   width: 0;
   min-width: 0;
@@ -838,15 +838,15 @@ html.dark-theme .adt-search-scope-option:focus {
 }
 
 /* ——— In-flow sticky dock ———
-   JS appends the dock to .adt-shell (class adt-search-dock-column), the
+   JS appends the dock to .valentus-shell (class valentus-search-dock-column), the
    page column that ends immediately before footer.footer. Sticky keeps the
    bar on screen while that column fills the viewport; the dock's own flow
    box stays between the article and the footer, so footer links, the edit
    link, and the extension lister are not under a fixed overlay.
    Scope menu, Lunr results, and Ask panel still open UPWARD. */
-.adt-search-chat[data-placement='dock'] {
+.valentus-search-chat[data-placement='dock'] {
   position: relative;
-  z-index: var(--adt-search-top-z);
+  z-index: var(--valentus-search-top-z);
   align-self: center;
   flex: 0 0 auto;
   width: min(42rem, calc(100% - 2rem));
@@ -856,26 +856,26 @@ html.dark-theme .adt-search-scope-option:focus {
   margin-inline: auto;
   overflow-anchor: none;
   padding: 0.65rem 0.65rem 0.55rem;
-  border: 1px solid var(--adt-search-rim);
+  border: 1px solid var(--valentus-search-rim);
   border-radius: 1rem;
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
   isolation: isolate;
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--adt-accent, #0d9488) 12%, transparent),
-    0 0.75rem 2rem color-mix(in srgb, var(--adt-ink, #141820) 16%, transparent);
-  color: var(--adt-ink, #141820);
-  transition: var(--adt-search-theme-transition);
+    0 0 0 1px color-mix(in srgb, var(--valentus-accent, #0d9488) 12%, transparent),
+    0 0.75rem 2rem color-mix(in srgb, var(--valentus-ink, #141820) 16%, transparent);
+  color: var(--valentus-ink, #141820);
+  transition: var(--valentus-search-theme-transition);
 }
 
-/* Sticky only when the column ends before the footer (adt-search-dock-column).
+/* Sticky only when the column ends before the footer (valentus-search-dock-column).
    Otherwise the dock stays in normal flow directly above the footer. */
-.adt-search-dock-column > .adt-search-chat[data-placement='dock'] {
+.valentus-search-dock-column > .valentus-search-chat[data-placement='dock'] {
   position: sticky;
-  bottom: var(--adt-search-viewport-bottom-gap);
+  bottom: var(--valentus-search-viewport-bottom-gap);
 }
 
 /* Dock: scope menu opens upward above the scope row. */
-.adt-search-chat[data-placement='dock'] .adt-search-scope-menu {
+.valentus-search-chat[data-placement='dock'] .valentus-search-scope-menu {
   top: auto;
   bottom: calc(100% + 0.35rem);
   /* (top:auto above cancels the navbar drop-down anchor) */
@@ -883,7 +883,7 @@ html.dark-theme .adt-search-scope-option:focus {
 }
 
 /* Dock: Lunr results pop above the input wrap instead of below it. */
-.adt-search-chat[data-placement='dock'] .search-result-dropdown-menu {
+.valentus-search-chat[data-placement='dock'] .search-result-dropdown-menu {
   top: auto !important;
   bottom: calc(100% + 0.35rem);
   box-shadow: 0 -0.45rem 1.25rem color-mix(in srgb, currentColor 14%, transparent);
@@ -892,7 +892,7 @@ html.dark-theme .adt-search-scope-option:focus {
 /* Dock: JS portals the scope menu and Lunr results to direct children of the
    dock root, so they anchor above the whole outer box (capability strip
    included), not just above the input row. */
-.adt-search-chat[data-placement='dock'] > .adt-search-scope-menu {
+.valentus-search-chat[data-placement='dock'] > .valentus-search-scope-menu {
   top: auto;
   bottom: calc(100% + 0.5rem);
   inset-inline: 0;
@@ -901,7 +901,7 @@ html.dark-theme .adt-search-scope-option:focus {
   max-width: none;
 }
 
-.adt-search-chat[data-placement='dock'] > .search-result-dropdown-menu {
+.valentus-search-chat[data-placement='dock'] > .search-result-dropdown-menu {
   top: auto !important;
   bottom: calc(100% + 0.5rem);
   inset-inline: 0;
@@ -913,7 +913,7 @@ html.dark-theme .adt-search-scope-option:focus {
 }
 
 /* Semantic on: two stacked zones, each its own scrollport. The menu does not scroll. */
-.adt-search-chat .search-result-dropdown-menu.adt-search-results--split {
+.valentus-search-chat .search-result-dropdown-menu.valentus-search-results--split {
   display: flex;
   flex-direction: column;
   height: min(65vh, calc(100vh - 12rem));
@@ -921,25 +921,25 @@ html.dark-theme .adt-search-scope-option:focus {
   overflow: hidden !important;
 }
 
-.adt-search-chat[data-placement='dock'] > .search-result-dropdown-menu.adt-search-results--split {
+.valentus-search-chat[data-placement='dock'] > .search-result-dropdown-menu.valentus-search-results--split {
   overflow: hidden !important;
 }
 
-.adt-search-zone {
+.valentus-search-zone {
   flex: 1 1 0;
   min-height: 0;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: var(--adt-search-surface);
+  background-color: var(--valentus-search-surface);
 }
 
-.adt-search-zone + .adt-search-zone {
-  border-top: 1px solid var(--adt-search-rim);
+.valentus-search-zone + .valentus-search-zone {
+  border-top: 1px solid var(--valentus-search-rim);
 }
 
-.adt-search-zone__title {
+.valentus-search-zone__title {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -949,138 +949,138 @@ html.dark-theme .adt-search-scope-option:focus {
   font-size: 0.72rem;
   font-weight: 600;
   line-height: 1.2;
-  color: var(--adt-search-muted);
-  background-color: var(--adt-search-surface);
-  border-bottom: 1px solid var(--adt-search-rim);
+  color: var(--valentus-search-muted);
+  background-color: var(--valentus-search-surface);
+  border-bottom: 1px solid var(--valentus-search-rim);
 }
 
-.adt-search-zone__empty {
+.valentus-search-zone__empty {
   margin: 0;
   padding: 0.55rem 0.75rem;
-  color: var(--adt-search-muted);
+  color: var(--valentus-search-muted);
   font-size: 0.8rem;
   line-height: 1.35;
 }
 
-.adt-search-chat:not([data-semantic-enabled='true']) .adt-search-zone--semantic {
+.valentus-search-chat:not([data-semantic-enabled='true']) .valentus-search-zone--semantic {
   display: none !important;
 }
 
 /* Dock: Ask answers stay in-flow under the query field (same shell as search). */
-.adt-search-chat[data-placement='dock'] .adt-search-chat__ask-result:not([hidden]) {
+.valentus-search-chat[data-placement='dock'] .valentus-search-chat__ask-result:not([hidden]) {
   max-height: min(40vh, 14rem);
   overflow-y: auto;
 }
 
-/* Valentus sets `.adt-nav-search` (and :hover / :focus / :focus-within) to
+/* Valentus sets `.valentus-nav-search` (and :hover / :focus / :focus-within) to
    `background: transparent !important`. The dock root carries that class, so
    the overlay shell was see-through even when the inner card was solid.
    These selectors are more specific and !important, and every fill is a hex
    custom property (no rgba, no color-mix with a translucent theme token). */
-.adt-search-chat.adt-nav-search,
-.adt-search-chat.adt-tool-search,
-.adt-search-chat.adt-nav-search:hover,
-.adt-search-chat.adt-nav-search:focus,
-.adt-search-chat.adt-nav-search:focus-within,
-.adt-search-chat.adt-tool-search:hover,
-.adt-search-chat.adt-tool-search:focus,
-.adt-search-chat.adt-tool-search:focus-within,
-.adt-search-chat[data-placement='dock'],
-.adt-search-chat[data-placement='dock']:hover,
-.adt-search-chat[data-placement='dock']:focus,
-.adt-search-chat[data-placement='dock']:focus-within {
-  background: var(--adt-search-surface) !important;
-  border-color: var(--adt-search-rim) !important;
+.valentus-search-chat.valentus-nav-search,
+.valentus-search-chat.valentus-tool-search,
+.valentus-search-chat.valentus-nav-search:hover,
+.valentus-search-chat.valentus-nav-search:focus,
+.valentus-search-chat.valentus-nav-search:focus-within,
+.valentus-search-chat.valentus-tool-search:hover,
+.valentus-search-chat.valentus-tool-search:focus,
+.valentus-search-chat.valentus-tool-search:focus-within,
+.valentus-search-chat[data-placement='dock'],
+.valentus-search-chat[data-placement='dock']:hover,
+.valentus-search-chat[data-placement='dock']:focus,
+.valentus-search-chat[data-placement='dock']:focus-within {
+  background: var(--valentus-search-surface) !important;
+  border-color: var(--valentus-search-rim) !important;
 }
 
-.adt-search-chat .adt-search-chat__popover,
-.adt-search-chat .adt-search-compound,
-.adt-search-chat .adt-search-scope-slot,
-.adt-search-chat .adt-search-scope-menu,
-.adt-search-chat .adt-search-scope-option,
-.adt-search-chat .adt-search-chat__query-slot,
-.adt-search-chat .adt-search-input-wrap,
-.adt-search-chat .adt-search-ask-wrap,
-.adt-search-chat .adt-search-chat__ask-input,
-.adt-search-chat .adt-search-chat__tabs,
-.adt-search-chat .adt-search-chat__tab,
-.adt-search-chat .adt-search-capabilities,
-.adt-search-chat .adt-search-chat__toggle,
-.adt-search-chat .search-result-dropdown-menu,
-.adt-search-chat .search-result-dataset,
-.adt-search-chat .adt-search-zone,
-.adt-search-chat .adt-search-zone__title,
-.adt-search-chat .search-result-component-header,
-.adt-search-chat .search-result-document-title,
-.adt-search-chat .search-result-document-hit,
-.adt-search-chat .search-result-document {
-  background: var(--adt-search-surface) !important;
+.valentus-search-chat .valentus-search-chat__popover,
+.valentus-search-chat .valentus-search-compound,
+.valentus-search-chat .valentus-search-scope-slot,
+.valentus-search-chat .valentus-search-scope-menu,
+.valentus-search-chat .valentus-search-scope-option,
+.valentus-search-chat .valentus-search-chat__query-slot,
+.valentus-search-chat .valentus-search-input-wrap,
+.valentus-search-chat .valentus-search-ask-wrap,
+.valentus-search-chat .valentus-search-chat__ask-input,
+.valentus-search-chat .valentus-search-chat__tabs,
+.valentus-search-chat .valentus-search-chat__tab,
+.valentus-search-chat .valentus-search-capabilities,
+.valentus-search-chat .valentus-search-chat__toggle,
+.valentus-search-chat .search-result-dropdown-menu,
+.valentus-search-chat .search-result-dataset,
+.valentus-search-chat .valentus-search-zone,
+.valentus-search-chat .valentus-search-zone__title,
+.valentus-search-chat .search-result-component-header,
+.valentus-search-chat .search-result-document-title,
+.valentus-search-chat .search-result-document-hit,
+.valentus-search-chat .search-result-document {
+  background: var(--valentus-search-surface) !important;
 }
 
-.adt-search-chat .adt-search-scope-trigger,
-.adt-search-chat .adt-search-scope-trigger:hover,
-.adt-search-chat .adt-search-scope-trigger:focus,
-.adt-search-chat .adt-search-scope-trigger:focus-visible {
+.valentus-search-chat .valentus-search-scope-trigger,
+.valentus-search-chat .valentus-search-scope-trigger:hover,
+.valentus-search-chat .valentus-search-scope-trigger:focus,
+.valentus-search-chat .valentus-search-scope-trigger:focus-visible {
   background: transparent !important;
   background-color: transparent !important;
 }
 
-.adt-search-chat .adt-search-ph-code {
-  background: var(--adt-search-chip) !important;
-  background-color: var(--adt-search-chip) !important;
+.valentus-search-chat .valentus-search-ph-code {
+  background: var(--valentus-search-chip) !important;
+  background-color: var(--valentus-search-chip) !important;
 }
 
-.adt-search-compound #search-input,
-.adt-search-compound #search-input:hover,
-.adt-search-compound #search-input:focus,
-.adt-nav-search.adt-search-chat #search-input,
-.adt-nav-search.adt-search-chat #search-input:hover,
-.adt-nav-search.adt-search-chat #search-input:focus,
-.adt-tool-search.adt-search-chat #search-input,
-.adt-tool-search.adt-search-chat #search-input:hover,
-.adt-tool-search.adt-search-chat #search-input:focus {
-  background: var(--adt-search-surface) !important;
+.valentus-search-compound #search-input,
+.valentus-search-compound #search-input:hover,
+.valentus-search-compound #search-input:focus,
+.valentus-nav-search.valentus-search-chat #search-input,
+.valentus-nav-search.valentus-search-chat #search-input:hover,
+.valentus-nav-search.valentus-search-chat #search-input:focus,
+.valentus-tool-search.valentus-search-chat #search-input,
+.valentus-tool-search.valentus-search-chat #search-input:hover,
+.valentus-tool-search.valentus-search-chat #search-input:focus {
+  background: var(--valentus-search-surface) !important;
 }
 
-.adt-search-chat .adt-search-scope-slot:hover,
-.adt-search-chat .adt-search-scope-slot:focus-within,
-.adt-search-chat .adt-search-scope-slot.is-open,
-.adt-search-chat .adt-search-scope-option:hover,
-.adt-search-chat .adt-search-scope-option:focus,
-.adt-search-chat .search-result-document-hit:hover,
-.adt-search-chat .search-result-document-hit:focus-within,
-.adt-search-chat .search-result-document-hit > a:hover,
-.adt-search-chat .search-result-document-hit > a:focus,
-.adt-search-chat .adt-search-chat__tab:hover,
-.adt-search-chat .adt-search-chat__tab:focus-visible,
-.adt-search-chat .adt-search-chat__tab.is-active,
-.adt-search-chat .adt-search-chat__toggle:hover,
-.adt-search-chat .adt-search-chat__toggle:focus-visible {
-  background: var(--adt-search-surface-hover) !important;
+.valentus-search-chat .valentus-search-scope-slot:hover,
+.valentus-search-chat .valentus-search-scope-slot:focus-within,
+.valentus-search-chat .valentus-search-scope-slot.is-open,
+.valentus-search-chat .valentus-search-scope-option:hover,
+.valentus-search-chat .valentus-search-scope-option:focus,
+.valentus-search-chat .search-result-document-hit:hover,
+.valentus-search-chat .search-result-document-hit:focus-within,
+.valentus-search-chat .search-result-document-hit > a:hover,
+.valentus-search-chat .search-result-document-hit > a:focus,
+.valentus-search-chat .valentus-search-chat__tab:hover,
+.valentus-search-chat .valentus-search-chat__tab:focus-visible,
+.valentus-search-chat .valentus-search-chat__tab.is-active,
+.valentus-search-chat .valentus-search-chat__toggle:hover,
+.valentus-search-chat .valentus-search-chat__toggle:focus-visible {
+  background: var(--valentus-search-surface-hover) !important;
 }
 
-.adt-search-chat .adt-search-scope-slot.is-disabled,
-.adt-search-chat .adt-search-scope-slot.is-disabled:hover,
-.adt-search-chat .adt-search-scope-slot.is-disabled:focus-within,
-.adt-search-chat .adt-search-capability,
-.adt-search-chat .adt-search-capability.is-off,
-html.dark-theme .adt-search-chat kbd.adt-search-chat__hint,
-html.dark-theme .adt-search-chat kbd.adt-search-chat__field-hint,
-.adt-search-chat kbd.adt-search-chat__hint,
-.adt-search-chat kbd.adt-search-chat__field-hint {
-  background: var(--adt-search-chip) !important;
+.valentus-search-chat .valentus-search-scope-slot.is-disabled,
+.valentus-search-chat .valentus-search-scope-slot.is-disabled:hover,
+.valentus-search-chat .valentus-search-scope-slot.is-disabled:focus-within,
+.valentus-search-chat .valentus-search-capability,
+.valentus-search-chat .valentus-search-capability.is-off,
+html.dark-theme .valentus-search-chat kbd.valentus-search-chat__hint,
+html.dark-theme .valentus-search-chat kbd.valentus-search-chat__field-hint,
+.valentus-search-chat kbd.valentus-search-chat__hint,
+.valentus-search-chat kbd.valentus-search-chat__field-hint {
+  background: var(--valentus-search-chip) !important;
   opacity: 1 !important;
 }
 
-.adt-search-chat .adt-search-chat__ask-result {
-  background: var(--adt-search-ask) !important;
+.valentus-search-chat .valentus-search-chat__ask-result {
+  background: var(--valentus-search-ask) !important;
 }
 
-.adt-search-chat .adt-search-chat__ask-result.is-error {
-  background: var(--adt-search-ask-error) !important;
+.valentus-search-chat .valentus-search-chat__ask-result.is-error {
+  background: var(--valentus-search-ask-error) !important;
 }
 
-.adt-search-chat .search-result-highlight,
-html.dark-theme .adt-search-chat .search-result-document-hit .search-result-highlight {
-  background: var(--adt-search-hit) !important;
+.valentus-search-chat .search-result-highlight,
+html.dark-theme .valentus-search-chat .search-result-document-hit .search-result-highlight {
+  background: var(--valentus-search-hit) !important;
 }

@@ -127,11 +127,11 @@ antora:
 
 === Theme integration contract
 
-The extension injects CSS/JS/partials into the UI catalog and sets `SITE_SEARCH_CHAT` so a theme can prefer `{{> adt-search-chat}}` over a plain lunr field.
+The extension injects CSS/JS/partials into the UI catalog and sets `SITE_SEARCH_CHAT` so a theme can prefer `{{> valentus-search-chat}}` over a plain lunr field.
 
 Chrome hooks themes should provide (or accept the injected partial owning the slot):
 
-* A search host such as `.adt-nav-search` / `.adt-navbar-search` / `#search-field` with `#search-input` (lunr contract).
+* A search host such as `.valentus-nav-search` / `.valentus-navbar-search` / `#search-field` with `#search-input` (lunr contract).
 * Room for the compound pill (scope + field) and results dropdown without clipping (`overflow: visible` on ancestors).
 
 Reference integration: https://github.com/antora-supplemental/valentus-theme[Valentus theme] places the omnibox in the site navbar center.
@@ -150,7 +150,7 @@ Optional site key:: `site.keys.askEnabled` — theme mirror if you wire a plain 
 
 * *One omnibox* — `/` and `?` set Search vs Ask mode on the **same** field (not two widgets).
 * *Scope control* — selector in a full-width row *above* the input (stacked, not conjoined on the left). Closed face shows the selected label (component title, version, or *All docs*) with no *Component*/*Version* kind prefix. Open menu is a static tree: *All docs* → current component → that component's versions (`version X - current` on the page version).
-* *Compound UI* — one stacked card: `[ {scope} ▾ ]` over `[ Search… ]` (`.adt-search-compound--stacked` + `.adt-search-scope-row` + `.adt-search-input-wrap`); shared outer border, horizontal rule between rows.
+* *Compound UI* — one stacked card: `[ {scope} ▾ ]` over `[ Search… ]` (`.valentus-search-compound--stacked` + `.valentus-search-scope-row` + `.valentus-search-input-wrap`); shared outer border, horizontal rule between rows.
 * *Placement* — `navbar` (default) or `dock`: sticky bar in the page column, above the footer, with a Keyword / Semantic / Chat capability strip; menus and results open upward above the dock. Typing searches on keystroke; Enter asks. The scope selector stays visible.
 * *Default scope* — *Current component* on docs pages when detectable; *All* on home / when ambiguous. See ARCHITECTURE.
 * *Collapse* — on narrow / collision, omnibox collapses to a search icon; popover holds scope + input + Ask + lunr results.
