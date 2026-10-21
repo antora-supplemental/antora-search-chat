@@ -175,3 +175,20 @@ test('dock shell is layout-only; portaled results match compound width', () => {
     /\.valentus-search-chat\[data-placement='dock'\]\s*>\s*\.search-result-dropdown-menu\s*\{[^}]*left:\s*0\s*!important/
   )
 })
+
+test('search compound has resting elevation shadow', () => {
+  const css = fs.readFileSync(
+    path.join(__dirname, '../ui/css/site-search-chat.css'),
+    'utf8'
+  )
+  const code = css.replace(/\/\*[\s\S]*?\*\//g, '')
+  assert.match(code, /--valentus-search-compound-shadow:/)
+  assert.match(
+    code,
+    /\.valentus-search-compound\s*\{[^}]*box-shadow:\s*var\(--valentus-search-compound-shadow\)/
+  )
+  assert.match(
+    code,
+    /\.valentus-search-chat\[data-placement='dock'\]\s*\{[^}]*box-shadow:\s*none/
+  )
+})

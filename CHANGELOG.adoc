@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on https://keepachangelog.com/en/1.1.0/[Keep a Changelog],
 and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
+== [0.1.24] - 2026-10-21
+
+=== Changed
+
+* **Search compound elevation:** `.valentus-search-compound` gains a subtle downward drop shadow (light and dark tokens via `--valentus-search-compound-shadow`, with `--valentus-shadow-float` when Valentus defines it). The dock layout shell stays flat; focus ring stacks on top of the resting shadow.
+
 == [0.1.23] - 2026-10-21
 
 === Fixed

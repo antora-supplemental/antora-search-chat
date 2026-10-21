@@ -15,6 +15,12 @@
   --valentus-search-hit: #e8f1fb;
   /* Gap between sticky dock / floating menus and the viewport bottom edge. */
   --valentus-search-viewport-bottom-gap: 0.75rem;
+  /* Resting elevation under the stacked scope + input card (navbar or dock). */
+  --valentus-search-compound-shadow: var(
+    --valentus-shadow-float,
+    0 0 0 1px color-mix(in srgb, var(--valentus-ink, #141820) 5%, transparent),
+    0 0.35rem 0.9rem color-mix(in srgb, var(--valentus-ink, #141820) 10%, transparent)
+  );
 }
 
 html.dark-theme {
@@ -27,6 +33,11 @@ html.dark-theme {
   --valentus-search-ask: #16323a;
   --valentus-search-ask-error: #281a21;
   --valentus-search-hit: #1d3042;
+  --valentus-search-compound-shadow: var(
+    --valentus-shadow-float,
+    0 0 0 1px color-mix(in srgb, var(--valentus-ink, #e8ebf0) 6%, transparent),
+    0 0.4rem 1rem rgba(0, 0, 0, 0.42)
+  );
 }
 
 .valentus-search-chat {
@@ -230,6 +241,7 @@ html.dark-theme .valentus-search-chat.is-collapsed .valentus-search-chat__popove
   color: var(--valentus-ink, #141820);
   container-type: inline-size;
   container-name: valentus-search-compound;
+  box-shadow: var(--valentus-search-compound-shadow);
   transition: var(--valentus-search-theme-transition);
 }
 
@@ -239,7 +251,9 @@ html.dark-theme .valentus-search-chat.is-collapsed .valentus-search-chat__popove
 }
 
 .valentus-search-compound:focus-within:has(#search-input:focus) {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--valentus-accent, #0d9488) 35%, transparent);
+  box-shadow:
+    var(--valentus-search-compound-shadow),
+    0 0 0 2px color-mix(in srgb, var(--valentus-accent, #0d9488) 35%, transparent);
 }
 
 /* Scope/context row — full width above the input (floating dock layout).
