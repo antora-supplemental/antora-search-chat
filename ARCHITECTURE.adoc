@@ -133,11 +133,16 @@ Rules:
 
 Scope → lunr filters is still a later pass; labels/default selection are wired from page context now.
 
-==== Soft navigation (SoftNav)
+==== Soft navigation (SoftNav + SoftNavContext)
 
 The omnibox lives in the site navbar, which SoftNav does *not* swap on in-component navigation. Without a refresh hook, `data-component-*` / `data-version-*` on `[data-valentus-search-chat]` and the static scope tree (`{{#with page.component}}` in the partial) stay frozen from the first full page load — the scope menu can look empty or stale after soft-nav (e.g. site home → component doc).
 
-`site-search-chat.js` listens for `SoftNav.on('loaded')` or `soft-nav:loaded`, then copies context attributes and scope-menu markup from `detail.doc` and re-runs label/selection sync. Requires SoftNav to pass `ctx.doc` on the loaded event (chassis `soft-nav.js` does).
+`site-search-chat.js` uses `bindSoftNavContext`:
+
+* `onContext` — copy component/version attributes from `SoftNavContext.context` (chassis `@antora-supplemental/soft-nav-context`)
+* `onLoaded` — refresh scope-menu markup from `detail.doc` (needs full partial HTML from the fetched page)
+
+Fallback without SoftNavContext: `SoftNav.on('loaded')` / `soft-nav:loaded` and scope refresh from `detail.doc` only. See chassis `packages/soft-nav-context/ARCHITECTURE.adoc`.
 
 ==== Upstream lunr-extension (propose, do not fork)
 

@@ -10,6 +10,7 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 === Changed
 
 * **Breaking:** search partial and hooks use the `valentus-*` namespace (`valentus-search-chat` partial, `data-valentus-search-chat`, `--valentus-search-*` tokens) instead of legacy `adt-*`.
+* **Docs:** `ARCHITECTURE.adoc` documents SoftNav vs SoftNavContext split (`onContext` + `onLoaded`) for omnibox scope refresh.
 
 === Fixed
 
