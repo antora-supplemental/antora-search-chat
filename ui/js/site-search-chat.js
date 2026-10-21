@@ -784,12 +784,48 @@ if (typeof document !== 'undefined') {
     result.classList.toggle('is-error', !!isError)
   }
 
+  function softNavSignals () {
+    if (typeof SoftNavSignals !== 'undefined') return SoftNavSignals
+    if (typeof SoftNavContext !== 'undefined' && SoftNavContext.signals) {
+      return SoftNavContext.signals
+    }
+    return null
+  }
+
   function bindNavigationRefresh () {
+    var signals = softNavSignals()
+    if (signals) {
+      function setRootData (attr, val) {
+        if (val) root.setAttribute(attr, val)
+        else root.removeAttribute(attr)
+      }
+      signals.subscribe('componentName', function (n) {
+        setRootData('data-component-name', n)
+      })
+      signals.subscribe('componentTitle', function (n) {
+        setRootData('data-component-title', n)
+      })
+      signals.subscribe('versionName', function (n) {
+        setRootData('data-version', n)
+      })
+      signals.subscribe('versionDisplay', function (n) {
+        setRootData('data-version-display', n)
+      })
+      signals.subscribe('context', function () {
+        syncScopeLabels()
+      })
+      if (typeof bindSoftNavContext === 'function') {
+        bindSoftNavContext({
+          onLoaded: function (detail) {
+            refreshSearchContextFromDocument(detail && detail.doc)
+          },
+        })
+        return
+      }
+    }
     if (typeof bindSoftNavContext === 'function') {
       bindSoftNavContext({
-        onContext: function (ctx) {
-          applyChromePageContext(ctx)
-        },
+        onContext: applyChromePageContext,
         onLoaded: function (detail) {
           refreshSearchContextFromDocument(detail && detail.doc)
         },
