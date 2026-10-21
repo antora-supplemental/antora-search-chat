@@ -133,6 +133,12 @@ Rules:
 
 Scope → lunr filters is still a later pass; labels/default selection are wired from page context now.
 
+==== Soft navigation (SoftNav)
+
+The omnibox lives in the site navbar, which SoftNav does *not* swap on in-component navigation. Without a refresh hook, `data-component-*` / `data-version-*` on `[data-adt-search-chat]` and the static scope tree (`{{#with page.component}}` in the partial) stay frozen from the first full page load — the scope menu can look empty or stale after soft-nav (e.g. site home → component doc).
+
+`site-search-chat.js` listens for `SoftNav.on('loaded')` or `soft-nav:loaded`, then copies context attributes and scope-menu markup from `detail.doc` and re-runs label/selection sync. Requires SoftNav to pass `ctx.doc` on the loaded event (chassis `soft-nav.js` does).
+
 ==== Upstream lunr-extension (propose, do not fork)
 
 Lunr's UI today is weak for multi-value facets (often a single checkbox-style filter). *Propose upstream* a documented filter API / multi-value facet UI on `@antora/lunr-extension` — tracked in https://gitlab.com/antora/antora-lunr-extension/-/work_items/87[antora/antora-lunr-extension#87]. Until that lands, this package ships the scope dropdown in *search-chat*, wrapping *existing* lunr store metadata (component / version / etc.) first — compose layer, not a fork of index build.

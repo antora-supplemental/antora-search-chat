@@ -7,6 +7,11 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+=== Fixed
+
+* **Scope menu after SoftNav:** refresh `data-adt-search-chat` attributes and scope tree from `soft-nav:loaded` / `SoftNav.on('loaded')` (`detail.doc`) so context rows do not go blank when the navbar/dock omnibox survives in-component navigation.
+* **Dock flush to viewport bottom:** sticky dock uses `--adt-search-viewport-bottom-gap` instead of `bottom: 0`; navbar placement keeps a small omnibox margin.
+
 == [0.1.19] - 2026-10-20
 
 === Fixed

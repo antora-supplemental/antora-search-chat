@@ -13,6 +13,8 @@
   --adt-search-ask: #e7f4f3;
   --adt-search-ask-error: #f7e4e4;
   --adt-search-hit: #e8f1fb;
+  /* Gap between sticky dock / floating menus and the viewport bottom edge. */
+  --adt-search-viewport-bottom-gap: 0.75rem;
 }
 
 html.dark-theme {
@@ -42,6 +44,8 @@ html.dark-theme {
 .adt-navbar-search .adt-search-chat {
   gap: 0;
   min-height: 2.15rem;
+  /* Breathe off the navbar bottom border / viewport edge when the bar is flush. */
+  margin-bottom: 0.35rem;
 }
 
 .adt-search-chat__popover {
@@ -359,6 +363,8 @@ html.dark-theme .adt-search-chat.is-collapsed .adt-search-chat__popover {
   color: var(--adt-ink, #141820);
   font-size: 0.78rem;
   line-height: 1.25;
+  max-height: calc(100dvh - 5.5rem - var(--adt-search-viewport-bottom-gap));
+  overflow-y: auto;
 }
 
 .adt-search-scope-option {
@@ -518,6 +524,8 @@ html.dark-theme .adt-search-scope-option:focus {
   max-width: 100cqi;
   box-sizing: border-box;
   z-index: 40;
+  max-height: calc(100dvh - 5.5rem - var(--adt-search-viewport-bottom-gap));
+  overflow-y: auto;
 }
 
 /* Beat theme .adt-nav-search #search-input !important rules.
@@ -863,7 +871,7 @@ html.dark-theme .adt-search-scope-option:focus {
    Otherwise the dock stays in normal flow directly above the footer. */
 .adt-search-dock-column > .adt-search-chat[data-placement='dock'] {
   position: sticky;
-  bottom: 0;
+  bottom: var(--adt-search-viewport-bottom-gap);
 }
 
 /* Dock: scope menu opens upward above the scope row. */

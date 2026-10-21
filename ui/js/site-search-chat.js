@@ -59,9 +59,6 @@ if (typeof document !== 'undefined') {
   var scopeTrigger = root.querySelector('[data-adt-search-scope-trigger]')
   var scopeMenu = root.querySelector('[data-adt-search-scope-menu]')
   var scopeLabel = root.querySelector('[data-adt-search-scope-label]')
-  var scopeOptions = Array.prototype.slice.call(
-    root.querySelectorAll('[data-adt-search-scope-option]')
-  )
   var toggle = root.querySelector('[data-adt-search-toggle]')
   var popover = root.querySelector('[data-adt-search-popover]')
   var searchSlot = root.closest('.adt-navbar-search') || root.parentElement
@@ -115,12 +112,66 @@ if (typeof document !== 'undefined') {
     if (label) label.classList.toggle('is-off', !on)
   })
 
+  function getScopeOptions () {
+    return Array.prototype.slice.call(root.querySelectorAll('[data-adt-search-scope-option]'))
+  }
+
   function pageContext () {
     return {
       componentTitle: (root.getAttribute('data-component-title') || '').trim(),
       componentName: (root.getAttribute('data-component-name') || '').trim(),
       versionDisplay: (root.getAttribute('data-version-display') || '').trim(),
       version: (root.getAttribute('data-version') || '').trim(),
+    }
+  }
+
+  function copySearchContextAttributes (fromEl) {
+    if (!fromEl) return
+    ;['data-component-name', 'data-component-title', 'data-version', 'data-version-display'].forEach(
+      function (name) {
+        if (fromEl.hasAttribute(name)) root.setAttribute(name, fromEl.getAttribute(name))
+        else root.removeAttribute(name)
+      }
+    )
+  }
+
+  /**
+   * SoftNav swaps mast/nav/article only — the navbar omnibox stays in the DOM.
+   * Rebuild scope tree + data-* from the fetched page so labels do not go stale/blank.
+   */
+  function refreshSearchContextFromDocument (doc) {
+    if (!doc) return
+    var freshRoot = doc.querySelector('[data-adt-search-chat]')
+    if (!freshRoot) return
+
+    copySearchContextAttributes(freshRoot)
+
+    var freshMenu = freshRoot.querySelector('[data-adt-search-scope-menu]')
+    if (scopeMenu && freshMenu) {
+      scopeMenu.innerHTML = freshMenu.innerHTML
+    }
+
+    var freshScopeValue = freshRoot.querySelector('[data-adt-search-scope]')
+    if (scopeValueInput && freshScopeValue) {
+      scopeValueInput.value = freshScopeValue.value || 'all'
+      if (freshScopeValue.hasAttribute('data-version')) {
+        scopeValueInput.setAttribute('data-version', freshScopeValue.getAttribute('data-version'))
+      } else {
+        scopeValueInput.removeAttribute('data-version')
+      }
+    }
+
+    setScopeMenuOpen(false)
+    syncScopeLabels()
+  }
+
+  function onSoftNavLoaded (fn) {
+    if (window.SoftNav && typeof window.SoftNav.on === 'function') {
+      window.SoftNav.on('loaded', fn)
+    } else {
+      document.addEventListener('soft-nav:loaded', function (e) {
+        fn(e.detail || {})
+      })
     }
   }
 
@@ -137,6 +188,7 @@ if (typeof document !== 'undefined') {
   }
 
   function findOption (scope, version) {
+    var scopeOptions = getScopeOptions()
     for (var i = 0; i < scopeOptions.length; i++) {
       var opt = scopeOptions[i]
       if ((opt.getAttribute('data-scope') || '') !== scope) continue
@@ -159,6 +211,7 @@ if (typeof document !== 'undefined') {
   }
 
   function syncScopeLabels () {
+    var scopeOptions = getScopeOptions()
     if (!scopeOptions.length) return
     var ctx = pageContext()
     var comp = componentLabel(ctx)
@@ -232,7 +285,7 @@ if (typeof document !== 'undefined') {
     }
 
     var selected = findOption(scope, version)
-    scopeOptions.forEach(function (opt) {
+    getScopeOptions().forEach(function (opt) {
       var on = opt === selected
       opt.classList.toggle('is-selected', on)
       if (on) {
@@ -275,7 +328,7 @@ if (typeof document !== 'undefined') {
   }
 
   function visibleScopeOptions () {
-    return scopeOptions.filter(function (opt) {
+    return getScopeOptions().filter(function (opt) {
       return !opt.hidden
     })
   }
@@ -314,19 +367,19 @@ if (typeof document !== 'undefined') {
       setScopeMenuOpen(!isScopeMenuOpen())
     })
 
-    scopeOptions.forEach(function (opt) {
-      opt.setAttribute('tabindex', '-1')
-      opt.addEventListener('click', function (e) {
-        e.preventDefault()
-        e.stopPropagation()
-        if (opt.hidden) return
-        setScopeSelection(
-          opt.getAttribute('data-scope') || 'all',
-          opt.getAttribute('data-version') || ''
-        )
-        setScopeMenuOpen(false)
-        scopeTrigger.focus()
-      })
+    scopeMenu.addEventListener('click', function (e) {
+      var opt =
+        e.target && e.target.closest && e.target.closest('[data-adt-search-scope-option]')
+      if (!opt || !scopeMenu.contains(opt)) return
+      e.preventDefault()
+      e.stopPropagation()
+      if (opt.hidden) return
+      setScopeSelection(
+        opt.getAttribute('data-scope') || 'all',
+        opt.getAttribute('data-version') || ''
+      )
+      setScopeMenuOpen(false)
+      scopeTrigger.focus()
     })
 
     scopeTrigger.addEventListener('keydown', function (e) {
@@ -715,6 +768,10 @@ if (typeof document !== 'undefined') {
     result.textContent = text
     result.classList.toggle('is-error', !!isError)
   }
+
+  onSoftNavLoaded(function (detail) {
+    refreshSearchContextFromDocument(detail && detail.doc)
+  })
 
   if (form) {
     form.addEventListener('submit', function (event) {
