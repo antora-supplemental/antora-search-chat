@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on https://keepachangelog.com/en/1.1.0/[Keep a Changelog],
 and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Versioning].
 
+== [Unreleased]
+
+=== Changed
+
+* **Package description:** the short description now states only the main behavior in full sentences. The optional local tier-0 and remote backend moved to `antoraRegistry.longDescription`, shown as the full description in the extension registry.
+
 == [0.1.24] - 2026-10-21
 
 === Changed
