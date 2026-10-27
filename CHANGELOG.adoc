@@ -7,6 +7,16 @@ and this project adheres to https://semver.org/spec/v2.0.0.html[Semantic Version
 
 == [Unreleased]
 
+== [0.1.25] - 2026-10-26
+
+=== Fixed
+
+* **Dark-mode search results contrast:** Lunr's light-mode ink on the results (component header #1e1e1e, document title #02060c, section title #303030, highlights #174d8c) measured 1.04-1.59:1 on the dark result surface. Dark mode now uses `--valentus-search-ink` / `--valentus-search-muted`. Light mode is unchanged.
+
+=== Added
+
+* **Contrast-check fixture:** registers `search-results` on `window.contrastCheckFixtures` so `@antora-supplemental/contrast-check` (`fixtures` state, 0.3.0+) opens populated results in both color schemes.
+
 === Changed
 
 * **Package description:** the short description now states only the main behavior in full sentences. The optional local tier-0 and remote backend moved to `antoraRegistry.longDescription`, shown as the full description in the extension registry.

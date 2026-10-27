@@ -1070,3 +1070,26 @@ html.dark-theme .valentus-search-chat kbd.valentus-search-chat__field-hint,
 html.dark-theme .valentus-search-chat .search-result-document-hit .search-result-highlight {
   background: var(--valentus-search-hit) !important;
 }
+
+/* Dark mode: Lunr's search.css hard-codes light-mode ink on the results
+   (#1e1e1e component header, #02060c document title, #303030 section title,
+   #174d8c highlights). On the dark result surface those measured 1.0-1.6:1.
+   Light mode keeps Lunr's colors. */
+html.dark-theme .valentus-search-chat .search-result-component-header,
+html.dark-theme .valentus-search-chat .search-result-document-title,
+html.dark-theme .search-result-dropdown-menu .search-result-component-header,
+html.dark-theme .search-result-dropdown-menu .search-result-document-title {
+  color: var(--valentus-search-ink) !important;
+}
+
+html.dark-theme .valentus-search-chat .search-result-section-title,
+html.dark-theme .valentus-search-chat .search-result-document-hit > a,
+html.dark-theme .search-result-dropdown-menu .search-result-section-title,
+html.dark-theme .search-result-dropdown-menu .search-result-document-hit > a {
+  color: var(--valentus-search-muted) !important;
+}
+
+html.dark-theme .valentus-search-chat .search-result-highlight,
+html.dark-theme .search-result-dropdown-menu .search-result-highlight {
+  color: var(--valentus-search-ink) !important;
+}

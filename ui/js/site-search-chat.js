@@ -889,3 +889,20 @@ if (typeof document !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { placeSearchDock }
 }
+
+// Contrast-check fixture (@antora-supplemental/contrast-check `fixtures` state):
+// type a sample query so the results dropdown opens and is populated.
+if (typeof window !== 'undefined') {
+  window.contrastCheckFixtures = (window.contrastCheckFixtures || []).concat({
+    name: 'search-results',
+    run: function () {
+      var input = document.getElementById('search-input')
+      if (!input) return
+      input.focus()
+      input.value = 'a'
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, key: 'a' }))
+      return new Promise(function (resolve) { setTimeout(resolve, 400) })
+    },
+  })
+}
