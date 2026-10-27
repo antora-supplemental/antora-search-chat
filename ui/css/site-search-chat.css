@@ -981,14 +981,11 @@ html.dark-theme .valentus-search-scope-option:focus {
   box-shadow: none !important;
 }
 
-.valentus-search-chat .valentus-search-chat__popover,
 .valentus-search-chat .valentus-search-compound,
 .valentus-search-chat .valentus-search-scope-slot,
 .valentus-search-chat .valentus-search-scope-menu,
 .valentus-search-chat .valentus-search-scope-option,
 .valentus-search-chat .valentus-search-chat__query-slot,
-.valentus-search-chat .valentus-search-input-wrap,
-.valentus-search-chat .valentus-search-ask-wrap,
 .valentus-search-chat .valentus-search-chat__ask-input,
 .valentus-search-chat .valentus-search-chat__tabs,
 .valentus-search-chat .valentus-search-chat__tab,
@@ -1002,6 +999,28 @@ html.dark-theme .valentus-search-scope-option:focus {
 .valentus-search-chat .search-result-document-hit,
 .valentus-search-chat .search-result-document {
   background: var(--valentus-search-surface) !important;
+}
+
+/* Corner bleed fix (v0.1.26): square wrappers around / inside the rounded compound
+   must not paint the surface - otherwise the fill shows past the 0.5rem corners.
+   The compound (and rounded scope/query slots) own the fill; the popover only
+   paints when it is the floating collapsed card, which has its own radius. */
+.valentus-search-chat .valentus-search-chat__popover,
+.valentus-search-chat .valentus-search-input-wrap,
+.valentus-search-chat .valentus-search-ask-wrap {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.valentus-search-chat.is-collapsed .valentus-search-chat__popover {
+  background: var(--valentus-search-surface) !important;
+  background-color: var(--valentus-search-surface) !important;
+}
+
+.valentus-search-chat .valentus-search-compound,
+.valentus-search-chat .valentus-search-scope-slot,
+.valentus-search-chat .valentus-search-chat__query-slot {
+  background-clip: padding-box !important;
 }
 
 .valentus-search-chat .valentus-search-scope-trigger,
@@ -1026,7 +1045,8 @@ html.dark-theme .valentus-search-scope-option:focus {
 .valentus-tool-search.valentus-search-chat #search-input,
 .valentus-tool-search.valentus-search-chat #search-input:hover,
 .valentus-tool-search.valentus-search-chat #search-input:focus {
-  background: var(--valentus-search-surface) !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .valentus-search-chat .valentus-search-scope-slot:hover,

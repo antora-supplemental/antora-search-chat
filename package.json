@@ -1,6 +1,6 @@
 {
   "name": "@antora-supplemental/antora-search-chat",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "description": "Antora extension that wraps @antora/lunr-extension with a Search/Ask omnibox. Lunr answers first, and lunr is not forked.",
   "antoraRegistry": {
     "longDescription": "The omnibox puts Search and Ask in one box on top of @antora/lunr-extension. Lunr results always come first, and the extension wraps lunr instead of forking it.\n\nTwo extra answer tiers are optional. A local tier-0 answers from the built site, and a remote backend handles questions the local tiers cannot. Without them, the omnibox behaves as plain Lunr search."
